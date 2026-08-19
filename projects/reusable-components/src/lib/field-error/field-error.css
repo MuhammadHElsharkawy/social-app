@@ -1,0 +1,43 @@
+:host {
+  display: block;
+
+  --field-error-color: #ec003f;
+  --field-error-font-size: .75rem;
+  --field-error-font-weight: 600;
+}
+
+:host-context(.dark),
+:root.dark :host {
+  --field-error-color: #fb7185;
+}
+
+.field-error__message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--field-error-gap);
+  margin: 0.25rem 0 0;
+  color: var(--field-error-color);
+  font-size: var(--field-error-font-size);
+  font-weight: var(--field-error-font-weight);
+  line-height: 1.35;
+
+  /* Entrance is subtle on purpose — a field turning red is already the signal. */
+  animation: field-error-in 120ms ease-out;
+}
+
+@keyframes field-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field-error__message {
+    animation: none;
+  }
+}

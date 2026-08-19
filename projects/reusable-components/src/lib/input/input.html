@@ -1,0 +1,49 @@
+<div class="flex flex-col gap-1.5">
+  @if (label()) {
+    <label [for]="inputId()" class="block text-sm font-bold text-slate-700 dark:text-slate-300">
+      {{ label() }}
+    </label>
+  }
+
+  <div class="relative">
+    <input
+      [readonly]="isReadonly()"
+      [id]="inputId()"
+      [type]="type() === 'password' ? (isPasswordVisible() ? 'text' : 'password') : type()"
+      [placeholder]="placeholder()"
+      [value]="value()"
+      (input)="handleInput($event)"
+      (blur)="onBlur()"
+      [disabled]="isDisabled()"
+      class="w-full rounded-xl border bg-slate-50 py-3 pr-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:bg-white dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-900"
+      [class]="styleClass()"
+      [class.pl-11]="hasIcon()"
+      [class.pl-4]="!hasIcon()"
+      [class]="
+        isInvalid()
+          ? 'border-rose-300 focus:border-rose-400 dark:border-rose-400 dark:focus:border-rose-300'
+          : 'border-slate-200 focus:border-[#00298d] dark:border-slate-700 dark:focus:border-blue-400'
+      "
+    />
+    @if (type() == 'password') {
+      <div>
+        <button
+          type="button"
+          class="absolute bottom-0 right-1.75 cursor-pointer bg-transparent p-2 text-slate-400 transition hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+          (click)="togglePasswordVisibility()"
+        >
+          @if (isPasswordVisible()) {
+            <svg lucideEye class="opacity-75" strokeWidth="1.5"></svg>
+          }
+          @if (!isPasswordVisible()) {
+            <svg lucideEyeOff class="opacity-75" strokeWidth="1.5"></svg>
+          }
+        </button>
+      </div>
+    }
+
+    <div class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
+      <ng-content />
+    </div>
+  </div>
+</div>
