@@ -1,0 +1,19 @@
+<button
+  type="button"
+  class="overflow-hidden relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-700 shadow-sm transition-colors hover:bg-neutral-100 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
+  [attr.aria-pressed]="themeService.isDarkMode()"
+  [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
+  (click)="themeService.toggleTheme()"
+>
+  <svg
+    lucideSun
+    class="size-5 absolute icon"
+    [class.icon-active]="!themeService.isDarkMode()"
+  ></svg>
+
+  <svg
+    lucideMoon
+    class="icon absolute size-5"
+    [class.icon-active]="themeService.isDarkMode()"
+  ></svg>
+</button>
