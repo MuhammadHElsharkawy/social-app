@@ -8,7 +8,20 @@
   "projects": {
     "app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "type": "component"
+        },
+        "@schematics/angular:service": {
+          "type": "service"
+        },
+        "@schematics/angular:interface": {
+          "type": "interface"
+        },
+        "@schematics/angular:directive": {
+          "type": "directive"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
