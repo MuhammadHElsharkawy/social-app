@@ -11,6 +11,9 @@
     "isolatedModules": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "paths": {
+      "reusable-components": ["./dist/reusable-components"]
+    },
     "target": "ES2022",
     "module": "preserve"
   },
@@ -26,6 +29,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/reusable-components/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/reusable-components/tsconfig.spec.json"
     }
   ]
 }
