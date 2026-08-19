@@ -1,0 +1,237 @@
+<section>
+  <div class="head">
+    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Create a new account</h2>
+    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">It's quick and easy.</p>
+  </div>
+
+  <form class="mt-5" [formGroup]="registerForm" (ngSubmit)="register()">
+    <!-- Full Name -->
+    <div class="mb-3.5">
+      <div class="relative">
+        <lib-input
+          formControlName="name"
+          inputId="registerName"
+          type="text"
+          placeholder="Full name"
+          [attr.aria-describedby]="registerNameError.id()"
+          [attr.aria-invalid]="
+            registerForm.controls['name'].invalid && registerForm.controls['name'].touched
+          "
+        >
+          <svg
+            lucideUser
+            class="size-4.5 text-slate-400 dark:text-slate-500"
+            strokeWidth="2"
+            #inputIcon
+          ></svg>
+        </lib-input>
+        <lib-field-error
+          #registerNameError
+          [control]="registerForm.controls['name']"
+          label="Full name"
+          [customMessages]="{
+            minlength: (e) => 'Name must be at least 2 characters.',
+          }"
+        >
+        </lib-field-error>
+      </div>
+    </div>
+
+    <!-- Username -->
+    <div class="mb-3.5">
+      <div class="relative">
+        <lib-input
+          formControlName="username"
+          inputId="registerUsername"
+          type="text"
+          placeholder="Username"
+          [attr.aria-describedby]="registerUsernameError.id()"
+          [attr.aria-invalid]="
+            registerForm.controls['username'].invalid && registerForm.controls['username'].touched
+          "
+        >
+          <svg
+            lucideAtSign
+            class="size-4.5 text-slate-400 dark:text-slate-500"
+            strokeWidth="2"
+            #inputIcon
+          ></svg>
+        </lib-input>
+        <lib-field-error
+          #registerUsernameError
+          [control]="registerForm.controls['username']"
+          label="Username"
+          [customMessages]="{
+            pattern: (e) => 'Username must be 3-30 chars (a-z, 0-9, _).',
+          }"
+        ></lib-field-error>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3.5">
+      <div class="relative">
+        <lib-input
+          formControlName="email"
+          inputId="registerEmail"
+          type="email"
+          placeholder="Email"
+          [attr.aria-describedby]="registerEmailError.id()"
+          [attr.aria-invalid]="
+            registerForm.controls['email'].invalid && registerForm.controls['email'].touched
+          "
+        >
+          <svg
+            lucideMail
+            class="size-4.5 text-slate-400 dark:text-slate-500"
+            strokeWidth="2"
+            #inputIcon
+          ></svg>
+        </lib-input>
+        <lib-field-error
+          #registerEmailError
+          [control]="registerForm.controls['email']"
+          label="Email"
+        ></lib-field-error>
+      </div>
+    </div>
+
+    <!-- Gender -->
+    <div class="mb-3.5">
+      <div class="relative">
+        <lib-select-input
+          inputId="registerGender"
+          formControlName="gender"
+          [options]="genderOptions"
+          [attr.aria-describedby]="registerGenderError.id()"
+          [attr.aria-invalid]="
+            registerForm.controls['gender'].invalid && registerForm.controls['gender'].touched
+          "
+        >
+          <svg
+            lucideUsers
+            class="size-4.5 text-slate-400 dark:text-slate-500"
+            strokeWidth="2"
+            #inputIcon
+          ></svg>
+        </lib-select-input>
+        <lib-field-error
+          #registerGenderError
+          [control]="registerForm.controls['gender']"
+          label="Gender"
+        ></lib-field-error>
+      </div>
+    </div>
+
+    <!-- Date of Birth -->
+    <div class="mb-3.5">
+      <div class="relative">
+        <lib-input
+          formControlName="dateOfBirth"
+          inputId="registerDate"
+          type="date"
+          [attr.aria-describedby]="registerDateError.id()"
+          [attr.aria-invalid]="
+            registerForm.controls['dateOfBirth'].invalid &&
+            registerForm.controls['dateOfBirth'].touched
+          "
+        >
+          <svg
+            lucideCalendar
+            class="size-4.5 text-slate-400 dark:text-slate-500"
+            strokeWidth="2"
+            #inputIcon
+          ></svg>
+        </lib-input>
+        <lib-field-error
+          #registerDateError
+          [control]="registerForm.controls['dateOfBirth']"
+          label="Date of birth"
+          [customMessages]="{
+            futureDate: (e) => 'Date of birth cannot be in the future.',
+          }"
+        ></lib-field-error>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3.5">
+      <div class="relative">
+        <lib-input
+          formControlName="password"
+          inputId="registerPassword"
+          type="password"
+          placeholder="Password"
+          [attr.aria-describedby]="registerPasswordError.id()"
+          [attr.aria-invalid]="
+            registerForm.controls['password'].invalid && registerForm.controls['password'].touched
+          "
+        >
+          <svg
+            lucideKeyRound
+            class="size-4.5 text-slate-400 dark:text-slate-500"
+            strokeWidth="2"
+            #inputIcon
+          ></svg>
+        </lib-input>
+        <lib-field-error
+          #registerPasswordError
+          [control]="registerForm.controls['password']"
+          label="Password"
+          [customMessages]="{
+            pattern:
+              'Password must be at least 8 characters, and include uppercase, lowercase, number, and special character.',
+          }"
+        ></lib-field-error>
+      </div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="mb-3.5">
+      <div class="relative">
+        <lib-input
+          formControlName="rePassword"
+          inputId="registerRePassword"
+          type="password"
+          placeholder="Confirm password"
+          [attr.aria-describedby]="registerRePasswordError.id()"
+          [attr.aria-invalid]="
+            registerForm.controls['rePassword'].invalid &&
+            registerForm.controls['rePassword'].touched
+          "
+        >
+          <svg
+            lucideKeyRound
+            class="size-4.5 text-slate-400 dark:text-slate-500"
+            strokeWidth="2"
+            #inputIcon
+          ></svg>
+        </lib-input>
+        <lib-field-error
+          #registerRePasswordError
+          [control]="registerForm.controls['rePassword']"
+          label="Confirm password"
+          [customMessages]="{
+            required: (e) => 'Please confirm your password.',
+            mustMatch: 'Passwords do not match.',
+          }"
+        ></lib-field-error>
+      </div>
+    </div>
+
+    <!-- Submit CTA Button -->
+    <div class="mb-3.5 text-center">
+      <button
+        [disabled]="isLoading()"
+        class="w-full rounded-xl bg-blue-900 px-4 py-3 font-bold text-white transition enabled:cursor-pointer hover:scale-105 disabled:cursor-no-drop disabled:bg-gray-500 disabled:hover:scale-100 dark:bg-blue-600 dark:hover:bg-blue-500 dark:disabled:bg-slate-700 dark:disabled:text-slate-400"
+      >
+        @if (!isLoading()) {
+          Create Account <i class="fa-solid fa-arrow-right"></i>
+        }
+        @if (isLoading()) {
+          Please wait...
+        }
+      </button>
+    </div>
+  </form>
+</section>
