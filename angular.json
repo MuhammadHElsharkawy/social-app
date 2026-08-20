@@ -41,7 +41,9 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": [
+                "social-app-virid-pi.vercel.app"
+              ]
             },
             "ssr": {
               "entry": "src/server.ts"
