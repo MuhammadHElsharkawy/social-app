@@ -1,0 +1,41 @@
+<aside class="h-fit space-y-3 lg:sticky lg:top-15">
+  <div
+    class="grid grid-cols-2 gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition-colors duration-200 lg:block lg:space-y-1.5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-xl dark:shadow-black/30"
+  >
+    <app-posts-filter-btn
+      (btnClick)="onFilterSelect(POSTS_FILTER_BTNS.FEED)"
+      [isLoading]="loadingFilter() === POSTS_FILTER_BTNS.FEED"
+      [isActive]="selectedFilter() === POSTS_FILTER_BTNS.FEED"
+      text="Feed"
+    >
+      <svg lucideNewspaper class="size-4.25"></svg>
+    </app-posts-filter-btn>
+
+    <app-posts-filter-btn
+      (btnClick)="onFilterSelect(POSTS_FILTER_BTNS.MY_POSTS)"
+      [isLoading]="loadingFilter() === POSTS_FILTER_BTNS.MY_POSTS"
+      [isActive]="selectedFilter() === POSTS_FILTER_BTNS.MY_POSTS"
+      text="My Posts"
+    >
+      <svg lucideSparkles class="size-4.25"></svg>
+    </app-posts-filter-btn>
+
+    <app-posts-filter-btn
+      (btnClick)="onFilterSelect(POSTS_FILTER_BTNS.COMMUNITY)"
+      [isLoading]="loadingFilter() === POSTS_FILTER_BTNS.COMMUNITY"
+      [isActive]="selectedFilter() === POSTS_FILTER_BTNS.COMMUNITY"
+      text="Community"
+    >
+      <svg lucideEarth class="size-4.25"></svg>
+    </app-posts-filter-btn>
+
+    <app-posts-filter-btn
+      (btnClick)="onFilterSelect(POSTS_FILTER_BTNS.SAVED)"
+      [isLoading]="loadingFilter() === POSTS_FILTER_BTNS.SAVED"
+      [isActive]="selectedFilter() === POSTS_FILTER_BTNS.SAVED"
+      text="Saved"
+    >
+      <svg lucideBookmark class="size-4.25"></svg>
+    </app-posts-filter-btn>
+  </div>
+</aside>

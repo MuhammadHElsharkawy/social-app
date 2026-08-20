@@ -1,0 +1,33 @@
+<div
+  class="mx-4 mb-4 rounded-2xl border border-slate-200 bg-slate-50 p-3 transition-colors duration-200 dark:border-slate-800 dark:bg-slate-950/60"
+>
+  <p class="mb-2 text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+    Top Comment
+  </p>
+
+  <div class="flex items-start gap-2">
+    <img
+      [alt]="topComment().commentCreator.name"
+      class="h-8 w-8 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+      [src]="topComment().commentCreator.photo"
+    />
+
+    <!-- Comment Bubble Surface -->
+    <div
+      class="min-w-0 flex-1 rounded-2xl border border-slate-100 bg-white px-3 py-2 shadow-2xs dark:border-slate-800 dark:bg-slate-900"
+    >
+      <p class="truncate text-xs font-bold text-slate-900 dark:text-slate-100">
+        {{ topComment().commentCreator.name }}
+      </p>
+      <p class="mt-0.5 whitespace-pre-wrap text-sm text-slate-700 dark:text-slate-300">
+        {{ topComment().content }}
+      </p>
+    </div>
+  </div>
+
+  <button
+    class="mt-2 cursor-pointer text-xs font-bold text-[#1877f2] hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+  >
+    View all comments
+  </button>
+</div>

@@ -1,0 +1,234 @@
+<div class="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)_300px]">
+  <app-posts-filter
+    [selectedFilter]="postFacadeService.currentFilter()"
+    (filterClick)="postFacadeService.handleFilterChange($event)"
+    [loadingFilter]="postFacadeService.activeLoadingFilter()"
+  ></app-posts-filter>
+  <div class="space-y-4">
+    <div
+      class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-200 dark:border-slate-800 dark:bg-slate-900 dark:shadow-xl dark:shadow-black/30"
+    >
+      <!-- Header: Avatar, Name & Privacy Selector -->
+      <div class="mb-3 flex items-start gap-3">
+        <img
+          alt="Muhammad Elsharkawy"
+          class="h-11 w-11 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+          src="default-profile.png"
+        />
+        <div class="flex-1">
+          <p class="text-base font-extrabold text-slate-900 dark:text-slate-100">
+            Muhammad Elsharkawy
+          </p>
+
+          <!-- Privacy Pill -->
+          <div
+            class="mt-1 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+          >
+            <svg lucideEarth class="size-3 text-slate-500 dark:text-slate-400"></svg>
+            <select
+              class="cursor-pointer bg-transparent outline-none dark:bg-slate-800 dark:text-slate-200"
+            >
+              <option value="public" class="dark:bg-slate-800 dark:text-slate-200">Public</option>
+              <option value="following" class="dark:bg-slate-800 dark:text-slate-200">
+                Followers
+              </option>
+              <option value="only_me" class="dark:bg-slate-800 dark:text-slate-200">Only me</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Textarea Area -->
+      <div class="relative">
+        <textarea
+          rows="4"
+          placeholder="What's on your mind, Muhammad?"
+          class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-[17px] leading-relaxed text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#1877f2] focus:bg-white dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:bg-slate-950"
+        ></textarea>
+      </div>
+
+      <!-- Footer Actions -->
+      <div
+        class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 pt-3 dark:border-slate-800"
+      >
+        <div class="relative flex items-center gap-2">
+          <!-- Media Upload Option -->
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+          >
+            <svg lucideImage class="size-4.5 text-emerald-600 dark:text-emerald-400"></svg>
+            <span class="hidden sm:inline">Photo/video</span>
+            <input accept="image/*" class="hidden" type="file" />
+          </label>
+
+          <!-- Feeling/Activity Option -->
+          <button
+            type="button"
+            class="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+          >
+            <svg
+              lucideFaceSlightlySmiling
+              class="size-4.5 text-amber-500 dark:text-amber-400"
+            ></svg>
+            <span class="hidden sm:inline">Feeling/activity</span>
+          </button>
+        </div>
+
+        <!-- Create Post -->
+        <div class="flex items-center gap-3">
+          <button
+            disabled=""
+            class="flex items-center gap-2 rounded-xl bg-[#1877f2] px-5 py-2 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-[#166fe5] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-500 dark:disabled:bg-slate-800 dark:disabled:text-slate-500 dark:disabled:opacity-100"
+          >
+            Post
+            <svg lucideSend class="size-4"></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="space-y-4">
+      @if (postFacadeService.isPostLoading()) {
+        <app-posts-loading></app-posts-loading>
+      } @else {
+        @if (postFacadeService.posts().length === 0) {
+          <app-empty-posts></app-empty-posts>
+        } @else {
+          @for (post of postFacadeService.posts(); track post._id) {
+            <div>
+              <app-post-card
+                [post]="post"
+                (onLike)="postFacadeService.toggleLikePost($event)"
+                (onLikesCount)="postFacadeService.getPostLikes($event)"
+                [postLikes]="postFacadeService.postLikes()"
+                [postLikesLoading]="postFacadeService.postLikesLoading()"
+              ></app-post-card>
+            </div>
+          }
+          @if (postFacadeService.hasMorePosts()) {
+            <div
+              appNearEnd
+              (nearEnd)="postFacadeService.fetchPosts(postFacadeService.currentFilter())"
+            ></div>
+          }
+          @if (postFacadeService.isNextPostsPageLoading() && postFacadeService.hasMorePosts()) {
+            <app-loading-more></app-loading-more>
+          }
+          @if (!postFacadeService.hasMorePosts()) {
+            <div class="flex min-h-10 items-center justify-center">
+              <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"
+                >You reached the end</span
+              >
+            </div>
+          }
+        }
+      }
+    </div>
+  </div>
+  <aside class="hidden h-fit lg:sticky lg:top-15 lg:block">
+    <div
+      class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-200 dark:border-slate-800 dark:bg-slate-900 dark:shadow-xl dark:shadow-black/30"
+    >
+      <!-- Header: Title & Count Badge -->
+      <div class="mb-3 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <svg lucideUsers class="size-4.5 text-[#1877f2] dark:text-blue-400"></svg>
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-slate-100">
+            Suggested Friends
+          </h3>
+        </div>
+        <span
+          class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+        >
+          5
+        </span>
+      </div>
+
+      <!-- Search Input -->
+      <div class="mb-3">
+        <label class="relative block">
+          <svg
+            lucideSearch
+            class="size-3.75 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
+          ></svg>
+          <input
+            placeholder="Search friends..."
+            class="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1877f2] focus:bg-white dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-400 dark:focus:bg-slate-950"
+            value=""
+          />
+        </label>
+      </div>
+
+      <!-- Suggested Friends List -->
+      <div class="space-y-3">
+        <div
+          class="rounded-xl border border-slate-200 p-2.5 transition-colors dark:border-slate-800 dark:bg-slate-950/40"
+        >
+          <div class="flex items-center justify-between gap-2">
+            <!-- User Info Trigger -->
+            <button
+              type="button"
+              class="flex min-w-0 cursor-pointer items-center gap-2 rounded-lg px-1 py-1 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/60"
+            >
+              <img
+                alt="Ahmed Abd Al-Muti"
+                class="h-10 w-10 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+                src="https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/1775310477363-9f97d1ff-699a-4b66-a04f-bd6dee14d2b7-496835614_1859398661547861_5183785968671576388_n.webp"
+              />
+              <div class="min-w-0">
+                <p
+                  class="truncate text-sm font-bold text-slate-900 hover:underline dark:text-slate-100"
+                >
+                  Ahmed Abd Al-Muti
+                </p>
+                <p class="truncate text-xs text-slate-500 dark:text-slate-400">@ahmedmutti</p>
+              </div>
+            </button>
+
+            <!-- Follow Button -->
+            <button
+              class="inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#e7f3ff] px-3 py-1.5 text-xs font-bold text-[#1877f2] transition hover:bg-[#d8ebff] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-blue-950/60 dark:text-blue-400 dark:hover:bg-blue-900/60"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-user-plus"
+                aria-hidden="true"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <line x1="19" x2="19" y1="8" y2="14"></line>
+                <line x1="22" x2="16" y1="11" y2="11"></line>
+              </svg>
+              Follow
+            </button>
+          </div>
+
+          <!-- Meta / Followers Badge -->
+          <div
+            class="mt-2 flex items-center gap-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400"
+          >
+            <span
+              class="rounded-full bg-slate-100 px-2 py-0.5 dark:bg-slate-800 dark:text-slate-300"
+            >
+              241 followers
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- View More Footer Button -->
+      <button
+        class="mt-3 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-200 dark:hover:bg-slate-800"
+      >
+        View more
+      </button>
+    </div>
+  </aside>
+</div>
