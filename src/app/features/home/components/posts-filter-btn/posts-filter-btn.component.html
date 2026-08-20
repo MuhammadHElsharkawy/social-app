@@ -1,0 +1,24 @@
+<button
+  (click)="handleClick()"
+  [disabled]="isLoading()"
+  class="relative w-full rounded-xl px-3 py-2 text-sm font-bold enabled:cursor-pointer active:scale-95 disabled:opacity-85 disabled:cursor-not-allowed transition-all duration-200 overflow-hidden"
+  [class]="buttonClasses()"
+>
+  <span
+    class="absolute inset-0 flex items-center justify-center transition-all duration-200 ease-in-out"
+    [class.translate-x-20]="!isLoading()"
+    [class.opacity-0]="!isLoading()"
+    [class.translate-x-0]="isLoading()"
+    [class.opacity-100]="isLoading()"
+  >
+    <svg lucideLoaderCircle [class.animate-spin]="isLoading()"></svg>
+  </span>
+  <span
+    class="flex lg:gap-3 gap-2 justify-center lg:justify-start items-center transition-all ease-in-out"
+    [class.-translate-x-32]="isLoading()"
+    [class.opacity-0]="isLoading()"
+  >
+    <ng-content></ng-content>
+    {{ text() }}
+  </span>
+</button>
