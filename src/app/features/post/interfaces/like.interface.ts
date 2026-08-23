@@ -42,4 +42,5 @@ export interface IToggleLikePostData {
 
 export interface ILikePost extends IBasePost {
   sharedPost: string;
+  user: IUser;
 }

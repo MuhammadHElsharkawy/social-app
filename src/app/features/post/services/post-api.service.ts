@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IGetBookmarksRES, IGetPostsRES } from '../interfaces/post.interfaces';
 import { PostEndPoints } from '../constants/post-endpoints';
 import { IGetPostLikesRES, IToggleLikePostRES } from '../interfaces/like.interface';
+import { ICreatePostRES } from '../create-post/interfaces/create-post.interface';
 
 @Service()
 export class PostApiService {
@@ -20,6 +21,10 @@ export class PostApiService {
   }
   getUserPosts(userId: string, page: number = 1, limit: number = 10): Observable<IGetPostsRES> {
     return this.httpClient.get<IGetPostsRES>(PostEndPoints.GetUserPosts(userId, page, limit));
+  }
+
+  createPost(data: FormData): Observable<ICreatePostRES> {
+    return this.httpClient.post<ICreatePostRES>(PostEndPoints.CreatePost, data);
   }
 
   getPostLikes(postId: string): Observable<IGetPostLikesRES> {

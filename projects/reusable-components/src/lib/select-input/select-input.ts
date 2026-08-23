@@ -1,5 +1,19 @@
-import { Component, computed, contentChild, DestroyRef, ElementRef, inject, input, signal } from '@angular/core';
-import { FormControlStatus, NgControl, StatusChangeEvent, TouchedChangeEvent } from '@angular/forms';
+import {
+  Component,
+  computed,
+  contentChild,
+  DestroyRef,
+  ElementRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
+import {
+  FormControlStatus,
+  NgControl,
+  StatusChangeEvent,
+  TouchedChangeEvent,
+} from '@angular/forms';
 import { IOption } from './types/option.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -17,16 +31,35 @@ export class SelectInput {
   touched = signal(false);
 
   isInvalid = computed(() => this.touched() && this.status() === 'INVALID');
-  
+
   constructor() {
     if (this.ngControl) this.ngControl.valueAccessor = this;
   }
 
   label = input<string>('');
   inputId = input.required<string>();
-  placeholder = input<string>('Select an option');
+  placeholder = input<string | null>(null);
   options = input.required<IOption[]>();
-  styleClass = input<string>('');
+  styleType = input<'auth' | 'create-post'>();
+
+  selectClasses = computed(() => {
+    if (this.styleType() === 'auth') {
+      return `
+      w-full rounded-xl border bg-slate-50 py-3 pr-4
+      text-sm text-slate-800 outline-none transition
+      focus:bg-white
+      dark:bg-slate-950/60 dark:text-slate-100
+      dark:focus:bg-slate-900
+      ${this.hasIcon() ? 'pl-11' : 'pl-4'}
+    `;
+    }
+
+    if (this.styleType() === 'create-post') {
+      return 'bg-transparent outline-none';
+    }
+
+    return '';
+  });
 
   value = signal('');
   isDisabled = signal(false);
