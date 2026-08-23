@@ -30,7 +30,7 @@ export interface IBasePost {
   body?: string;
   image?: string;
   privacy: PostPrivacy;
-  user: IUser | string;
+  user: IUser;
   likes: string[];
   likesCount: number;
   isShare: boolean;

@@ -4,12 +4,14 @@
   <!-- Header: Avatar, Name & Privacy Selector -->
   <div class="mb-3 flex items-start gap-3">
     <img
-      alt="Muhammad Elsharkawy"
+      [alt]="myData()?.name || 'You'"
       class="h-11 w-11 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700"
-      src="default-profile.png"
+      [src]="myData()?.photo"
     />
     <div class="flex-1">
-      <p class="text-base font-extrabold text-slate-900 dark:text-slate-100">Muhammad Elsharkawy</p>
+      <p class="text-base font-extrabold text-slate-900 dark:text-slate-100">
+        {{myData()?.name || 'You'}}
+      </p>
 
       <!-- Privacy Pill -->
       <div

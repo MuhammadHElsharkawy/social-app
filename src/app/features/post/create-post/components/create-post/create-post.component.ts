@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   LucideEarth,
@@ -11,9 +11,7 @@ import { IOption, SelectInput } from 'reusable-components';
 import { EmojiPickerComponent } from '../../../../../shared/components/emoji-picker/emoji-picker.component';
 import { ClickOutsideDirective } from '../../../../../shared/directives/click-outside.directive';
 import { PostFacadeService } from '../../../services/post-facade.service';
-import { PostApiService } from '../../../services/post-api.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpEventType } from '@angular/common/http';
+import { IUser } from '../../../../../core/interfaces/user.interface';
 
 @Component({
   imports: [
@@ -35,7 +33,8 @@ import { HttpEventType } from '@angular/common/http';
 })
 export class CreatePostComponent {
   private readonly postFacadeService = inject(PostFacadeService);
-  private readonly destroyRef = inject(DestroyRef);
+
+  myData = input.required<IUser | null>();
 
   privacyOptions: IOption[] = [
     { label: 'Public', value: 'public' },
