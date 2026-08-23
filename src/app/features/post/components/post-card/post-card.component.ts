@@ -1,7 +1,4 @@
 import { Component, computed, inject, input, output, signal } from '@angular/core';
-import { AuthService } from '../../../features/auth/services/auth.service';
-import { ILike } from '../../../features/post/interfaces/like.interface';
-import { IPost } from '../../../features/post/interfaces/post.interfaces';
 import {
   LucideEarth,
   LucideEllipsis,
@@ -12,6 +9,9 @@ import {
 } from '@lucide/angular';
 import { PostLikesComponent } from '../post-likes/post-likes.component';
 import { PostTopCommentComponent } from '../post-top-comment/post-top-comment.component';
+import { AuthService } from '../../../auth/services/auth.service';
+import { IPost } from '../../interfaces/post.interfaces';
+import { ILike } from '../../interfaces/like.interface';
 
 @Component({
   selector: 'app-post-card',

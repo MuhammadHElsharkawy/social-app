@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { finalize, Observable, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { ILike } from '../interfaces/like.interface';
 import { IPost } from '../interfaces/post.interfaces';
@@ -8,6 +8,7 @@ import { PostApiService } from './post-api.service';
 import { POSTS_FILTER, PostsFilter } from '../../home/interfaces/posts-filter.interface';
 import { toast } from 'ngx-sonner';
 import { IPagination } from '../interfaces/pagination.interface';
+import { ICreatePostRES } from '../create-post/interfaces/create-post.interface';
 
 @Service()
 export class PostFacadeService {
@@ -37,6 +38,9 @@ export class PostFacadeService {
 
   public postLikesLoading = this._postLikesLoadingState.asReadonly();
   public postLikes = this._postLikesState.asReadonly();
+
+  private _createPostLoadingState = signal<boolean>(false);
+  public createPostLoading = this._createPostLoadingState.asReadonly();
 
   resetPosts(): void {
     this._postsState.set([]);
@@ -212,6 +216,17 @@ export class PostFacadeService {
           console.log(err);
         },
       });
+  }
+
+  createPost(data: FormData): Observable<ICreatePostRES> {
+    this._createPostLoadingState.set(true);
+
+    return this.postApiService.createPost(data).pipe(
+      tap({
+        next: (res) => this._postsState.update((current) => [res.data.post, ...current]),
+      }),
+      finalize(() => this._createPostLoadingState.set(false)),
+    );
   }
 
   getPostLikes(postId: string): void {

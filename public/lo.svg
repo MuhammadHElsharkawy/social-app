@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- تدرج لوني للخلفية -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+
+    <!-- تدرج لوني للحرفين (توهج مشرق) -->
+    <linearGradient id="loomyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="50%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#F472B6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- خلفية دائرية بحواف ناعمة -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)"/>
+
+  <!-- مسار متصل يرسم الحرف L ويندمج في الـ o -->
+  <path d="M 160 120 
+           L 160 330 
+           C 160 365, 195 385, 235 370 
+           C 255 362, 270 345, 280 325
+           C 285 240, 395 240, 400 325
+           C 405 410, 295 410, 290 325" 
+        fill="none" 
+        stroke="url(#loomyGrad)" 
+        stroke-width="48" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+
+  <!-- نقطة الإضاءة والتوهج داخل الـ o -->
+  <circle cx="345" cy="325" r="18" fill="#FBBF24"/>
+</svg>

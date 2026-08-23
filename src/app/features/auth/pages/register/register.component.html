@@ -100,9 +100,11 @@
     <div class="mb-3.5">
       <div class="relative">
         <lib-select-input
+          styleType="auth"
           inputId="registerGender"
           formControlName="gender"
           [options]="genderOptions"
+          placeholder="Select gender"
           [attr.aria-describedby]="registerGenderError.id()"
           [attr.aria-invalid]="
             registerForm.controls['gender'].invalid && registerForm.controls['gender'].touched

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { ITopComment } from '../../../features/post/interfaces/comment.interface';
+import { ITopComment } from '../../interfaces/comment.interface';
 
 @Component({
   selector: 'app-post-top-comment',

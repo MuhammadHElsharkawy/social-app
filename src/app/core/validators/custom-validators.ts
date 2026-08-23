@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class CustomValidators {
   static featureDateValidation(): ValidatorFn {
@@ -53,6 +53,16 @@ export class CustomValidators {
         differingControl.setErrors(null);
         return null;
       }
+    };
+  }
+
+  static atLeastOneRequired(controlNames: string[]) {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const hasValid = controlNames.some((name) => {
+        const control = (group as FormGroup).get(name);
+        return control && control.valid && control.value;
+      });
+      return hasValid ? null : { atLeastOneRequired: true };
     };
   }
 }

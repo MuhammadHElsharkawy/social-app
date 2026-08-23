@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { ILike } from '../../../features/post/interfaces/like.interface';
+import { ILike } from '../../interfaces/like.interface';
 
 @Component({
   imports: [],

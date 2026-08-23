@@ -1,8 +1,8 @@
 import { Component, input, output } from '@angular/core';
 import { LucideUsers, LucideX } from '@lucide/angular';
-import { ILike } from '../../../features/post/interfaces/like.interface';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { PostLikeCardComponent } from "../post-like-card/post-like-card.component";
+import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import { ILike } from '../../interfaces/like.interface';
 
 @Component({
   selector: 'app-post-likes',
