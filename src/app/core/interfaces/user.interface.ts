@@ -5,8 +5,17 @@ export interface IUser {
   email: string;
   photo?: string;
   cover?: string;
+  followers?: string[];
   followersCount?: number;
+  following?: string[];
   followingCount?: number;
+  bookmarks?: string[];
   bookmarksCount?: number;
-  id?: string
+  id?: string;
+  gender?: Gender;
+  dateOfBirth?: Date;
+  createdAt?: Date;
+  passwordChangedAt?: Date;
 }
+
+export type Gender = 'male' | 'female';

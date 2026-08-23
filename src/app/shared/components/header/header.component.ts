@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import {
   LucideHouse,
   LucideMenu,
@@ -10,6 +10,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../features/auth/services/auth.service';
 import { ThemeSwitcherComponent } from '../../../features/theme-switcher/theme-switcher.component';
+import { IUser } from '../../../core/interfaces/user.interface';
 
 @Component({
   selector: 'app-header',
@@ -30,6 +31,8 @@ import { ThemeSwitcherComponent } from '../../../features/theme-switcher/theme-s
 export class HeaderComponent {
   protected readonly authService = inject(AuthService);
   protected readonly router = inject(Router);
+
+  myData = input<IUser | null>();
 
   isOpen = signal<boolean>(false);
 
