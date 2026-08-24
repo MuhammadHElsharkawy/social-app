@@ -1,5 +1,4 @@
-import { IUser } from '../../../core/interfaces/user.interface';
-import { IPagination } from './pagination.interface';
+import { IPagination } from '../../../core/interfaces/pagination.interface';
 import { IBasePost } from './post.interfaces';
 
 export interface IGetPostLikesRES {

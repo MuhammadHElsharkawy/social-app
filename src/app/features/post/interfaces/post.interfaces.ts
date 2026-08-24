@@ -1,6 +1,6 @@
+import { IPagination } from '../../../core/interfaces/pagination.interface';
 import { IUser } from '../../../core/interfaces/user.interface';
 import { ITopComment } from './comment.interface';
-import { IPagination } from './pagination.interface';
 
 export interface IGetPostsRES {
   success: boolean;
