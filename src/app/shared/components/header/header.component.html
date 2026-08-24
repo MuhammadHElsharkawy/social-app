@@ -63,7 +63,7 @@
 
             <!-- Dropdown Surface (Elevated Layer) -->
             @if (isOpen()) {
-            <div #Dropdown
+            <div
                 class="header-dropdown absolute right-0 top-full z-50 mt-2 w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-800 dark:shadow-2xl dark:shadow-black/50">
                 <button
                     class="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-white">
@@ -71,7 +71,7 @@
                     Profile
                 </button>
 
-                <button (click)="onSettingsClick()"
+                <button (click)="handleSettingsClick()"
                     class="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-white">
                     <svg lucideSettings class="size-4 text-slate-500 dark:text-slate-400"></svg>
                     Settings
@@ -79,7 +79,7 @@
 
                 <div class="my-1 border-t border-slate-200 dark:border-slate-700/80"></div>
 
-                <button (click)="authService.logOut()"
+                <button (click)="handleLogoutClick()"
                     class="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-rose-600 transition hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40">
                     Logout
                 </button>

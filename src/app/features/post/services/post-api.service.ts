@@ -5,6 +5,7 @@ import { IGetBookmarksRES, IGetPostsRES } from '../interfaces/post.interfaces';
 import { PostEndPoints } from '../constants/post-endpoints';
 import { IGetPostLikesRES, IToggleLikePostRES } from '../interfaces/like.interface';
 import { ICreatePostRES } from '../create-post/interfaces/create-post.interface';
+import { IToggleBookmarkPostRES } from '../interfaces/bookmark.interface';
 
 @Service()
 export class PostApiService {
@@ -32,5 +33,12 @@ export class PostApiService {
   }
   ToggleLikePost(postId: string): Observable<IToggleLikePostRES> {
     return this.httpClient.put<IToggleLikePostRES>(PostEndPoints.ToggleLikePost(postId), {});
+  }
+
+  toggleBookmarkPost(postId: string): Observable<IToggleBookmarkPostRES> {
+    return this.httpClient.put<IToggleBookmarkPostRES>(
+      PostEndPoints.ToggleBookmarkPost(postId),
+      {},
+    );
   }
 }

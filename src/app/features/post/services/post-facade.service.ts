@@ -37,6 +37,7 @@ export class PostFacadeService {
   public activeLoadingFilter = this._activeLoadingFilterState.asReadonly();
   public currentFilter = this._currentFilterState.asReadonly();
 
+  // Like
   private _postLikesLoadingState = signal<boolean>(false);
   private _postLikesState = signal<ILike[]>([]);
   private _pendingLikes = new Set<string>();
@@ -44,11 +45,18 @@ export class PostFacadeService {
   public postLikesLoading = this._postLikesLoadingState.asReadonly();
   public postLikes = this._postLikesState.asReadonly();
 
+  // Create Post
   private _createPostLoadingState = signal<boolean>(false);
   private _uploadingPostDataState = signal<IPostUploading | null>(null);
 
   public createPostLoading = this._createPostLoadingState.asReadonly();
   public uploadingPostData = this._uploadingPostDataState.asReadonly();
+
+  // Bookmark
+  private _pendingBookmarks = new Set<string>();
+  private _bookmarkLoadingState = signal<boolean>(false);
+
+  public bookmarkLoading = this._bookmarkLoadingState.asReadonly();
 
   resetPosts(): void {
     this._postsState.set([]);
@@ -297,7 +305,7 @@ export class PostFacadeService {
 
     this.postApiService
       .ToggleLikePost(postId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(finalize(() => this._pendingLikes.delete(postId)))
       .subscribe({
         error: () => {
           this.reverseLikeState(postId, currentUserId);
@@ -307,8 +315,6 @@ export class PostFacadeService {
           });
         },
       });
-
-    this._pendingLikes.delete(postId);
   }
 
   private reverseLikeState(postId: string, userId: string): void {
@@ -324,6 +330,43 @@ export class PostFacadeService {
         const updatedLikesCount = wasLiked ? p.likesCount - 1 : p.likesCount + 1;
 
         return { ...p, likes: updatedLikes, likesCount: updatedLikesCount };
+      }),
+    );
+  }
+
+  toggleSavePost(postId: string): void {
+    if (this._pendingBookmarks.has(postId)) return;
+    this._pendingBookmarks.add(postId);
+
+    this._bookmarkLoadingState.set(true);
+
+    this.reverseBookmarkState(postId);
+
+    this.postApiService
+      .toggleBookmarkPost(postId)
+      .pipe(
+        finalize(() => {
+          this._pendingBookmarks.delete(postId);
+          this._bookmarkLoadingState.set(false);
+        }),
+      )
+      .subscribe({
+        error: () => {
+          this.reverseBookmarkState(postId);
+          toast.error("Couldn't save this post", {
+            id: `savedpost${postId}`,
+            description: 'Check your connection and try again.',
+          });
+        },
+      });
+  }
+
+  private reverseBookmarkState(postId: string): void {
+    this._postsState.update((posts) =>
+      posts.map((p) => {
+        if (p._id !== postId) return p;
+
+        return { ...p, bookmarked: !p.bookmarked };
       }),
     );
   }

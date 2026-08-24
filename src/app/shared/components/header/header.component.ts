@@ -29,16 +29,21 @@ import { IUser } from '../../../core/interfaces/user.interface';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  protected readonly authService = inject(AuthService);
-  protected readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   myData = input<IUser | null>();
 
   isOpen = signal<boolean>(false);
 
-  onSettingsClick(): void {
+  handleSettingsClick(): void {
     this.isOpen.set(false);
     this.router.navigate(['/settings']);
+  }
+
+  handleLogoutClick(): void {
+    this.isOpen.set(false);
+    this.authService.logOut();
   }
 
   toggleDropdown(): void {

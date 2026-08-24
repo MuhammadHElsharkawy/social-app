@@ -22,7 +22,7 @@
         @if (postFacadeService.posts().length === 0) {
           <app-empty-posts></app-empty-posts>
         } @else {
-          @for (post of postFacadeService.posts(); track post._id) {
+          @for (post of postFacadeService.posts(); track $index) {
             <div>
               <app-post-card
                 [post]="post"
@@ -30,6 +30,8 @@
                 (onLikesCount)="postFacadeService.getPostLikes($event)"
                 [postLikes]="postFacadeService.postLikes()"
                 [postLikesLoading]="postFacadeService.postLikesLoading()"
+                (onSave)="postFacadeService.toggleSavePost($event)"
+                [savePostLoading]="postFacadeService.bookmarkLoading()"
               ></app-post-card>
             </div>
           }

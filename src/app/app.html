@@ -1,1 +1,22 @@
+@if (isBrowser) {
+  <ngx-sonner-toaster
+    position="bottom-center"
+    [richColors]="true"
+    [closeButton]="false"
+    theme="dark"
+    [toastOptions]="{
+      unstyled: true,
+      classes: {
+        toast:
+          'flex items-center gap-3 w-[340px] rounded-2xl border border-zinc-800 bg-zi nc-900/95 backdrop-blur px-4 py-3 shadow-xl',
+        title: 'text-sm font-medium text-zinc-100!',
+        description: 'text-xs text-zinc-400! mt-0.5',
+        actionButton:
+          'text-xs font-semibold text-white! bg-red-500! hover:bg-red-600! rounded-lg px-3 py-1.5 transition-colors',
+        error: 'border-red-500/30!',
+        success: 'border-emerald-500/30',
+      },
+    }"
+  />
+}
 <router-outlet></router-outlet>
