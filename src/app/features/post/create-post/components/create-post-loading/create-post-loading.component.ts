@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { IPostUploading } from '../../interfaces/create-post.interface';
 
 @Component({
   imports: [],
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './create-post-loading.component.css',
   templateUrl: './create-post-loading.component.html',
 })
-export class CreatePostLoadingComponent {}
+export class CreatePostLoadingComponent {
+  data = input.required<IPostUploading | null>();
+}

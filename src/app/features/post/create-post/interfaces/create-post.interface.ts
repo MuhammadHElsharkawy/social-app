@@ -1,4 +1,10 @@
-import { IBasePost, IPost } from '../../interfaces/post.interfaces';
+import { IPost, PostPrivacy } from '../../interfaces/post.interfaces';
+
+export interface ICreatePostREQ {
+  body?: string | null;
+  image?: File | null;
+  privacy?: PostPrivacy | null;
+}
 
 export interface ICreatePostRES {
   success: boolean;
@@ -8,4 +14,9 @@ export interface ICreatePostRES {
 
 interface ICreatePostData {
   post: IPost;
+}
+
+export interface IPostUploading {
+  body?: string | null;
+  previewUrl?: string | null;
 }

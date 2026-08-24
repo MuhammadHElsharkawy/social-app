@@ -1,20 +1,25 @@
 import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, Observable, tap } from 'rxjs';
+import { finalize, map, Observable, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { ILike } from '../interfaces/like.interface';
 import { IPost } from '../interfaces/post.interfaces';
 import { PostApiService } from './post-api.service';
 import { POSTS_FILTER, PostsFilter } from '../../home/interfaces/posts-filter.interface';
 import { toast } from 'ngx-sonner';
-import { IPagination } from '../interfaces/pagination.interface';
-import { ICreatePostRES } from '../create-post/interfaces/create-post.interface';
+import {
+  ICreatePostREQ,
+  ICreatePostRES,
+  IPostUploading,
+} from '../create-post/interfaces/create-post.interface';
+import { ProfileFacadeService } from '../../profile/services/profile-facade.service';
 
 @Service()
 export class PostFacadeService {
   private readonly postApiService = inject(PostApiService);
   private readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly profileFacadeService = inject(ProfileFacadeService);
 
   private _postsPage = signal<number>(1);
   private _hasMorePosts = signal<boolean>(true);
@@ -40,7 +45,10 @@ export class PostFacadeService {
   public postLikes = this._postLikesState.asReadonly();
 
   private _createPostLoadingState = signal<boolean>(false);
+  private _uploadingPostDataState = signal<IPostUploading | null>(null);
+
   public createPostLoading = this._createPostLoadingState.asReadonly();
+  public uploadingPostData = this._uploadingPostDataState.asReadonly();
 
   resetPosts(): void {
     this._postsState.set([]);
@@ -218,14 +226,44 @@ export class PostFacadeService {
       });
   }
 
-  createPost(data: FormData): Observable<ICreatePostRES> {
+  createPost(data: ICreatePostREQ): Observable<ICreatePostRES> {
     this._createPostLoadingState.set(true);
 
-    return this.postApiService.createPost(data).pipe(
+    const file = data.image;
+    const previewUrl = file instanceof File ? URL.createObjectURL(file) : null;
+    this._uploadingPostDataState.set({ body: data.body, previewUrl });
+
+    const formData: FormData = new FormData();
+    if (data.body) formData.append('body', data.body);
+    if (data.image) formData.append('image', data.image);
+    if (data.privacy) formData.append('privacy', data.privacy);
+
+    return this.postApiService.createPost(formData).pipe(
+      map((res) => {
+        const user = this.profileFacadeService.myData()!;
+
+        if (!user) return res;
+
+        return {
+          ...res,
+          data: {
+            ...res.data,
+            post: {
+              ...res.data.post,
+              user,
+            },
+          },
+        };
+      }),
       tap({
         next: (res) => this._postsState.update((current) => [res.data.post, ...current]),
       }),
-      finalize(() => this._createPostLoadingState.set(false)),
+      finalize(() => {
+        this._createPostLoadingState.set(false);
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+
+        this._uploadingPostDataState.set(null);
+      }),
     );
   }
 

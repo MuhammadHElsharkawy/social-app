@@ -12,6 +12,7 @@ import { EmojiPickerComponent } from '../../../../../shared/components/emoji-pic
 import { ClickOutsideDirective } from '../../../../../shared/directives/click-outside.directive';
 import { PostFacadeService } from '../../../services/post-facade.service';
 import { IUser } from '../../../../../core/interfaces/user.interface';
+import { ICreatePostREQ } from '../../interfaces/create-post.interface';
 
 @Component({
   imports: [
@@ -87,22 +88,18 @@ export class CreatePostComponent {
 
     const draftBody = this.body();
     const draftFile = this.selectedFile();
-    // const draftPreview = this.previewUrl();
-    // console.log('preview: ', this.previewUrl());
 
-    const data: FormData = new FormData();
-    if (this.body) data.append('body', this.body());
-    if (this.selectedFile()) data.append('image', this.selectedFile()!, this.selectedFile()?.name);
+    const data: ICreatePostREQ = {
+      body: this.body(),
+      image: this.selectedFile(),
+      privacy: 'public',
+    };
 
     this.resetForm();
 
     this.postFacadeService.createPost(data).subscribe({
       next: (res) => console.log(res),
       error: () => {
-        console.log('draft body: ', draftBody);
-        console.log('draft image: ', draftFile);
-        // console.log('draft preview: ', draftPreview);
-
         this.body.set(draftBody);
         this.selectedFile.set(draftFile);
         this.setPreview(this.selectedFile());
