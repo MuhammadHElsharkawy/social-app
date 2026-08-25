@@ -78,6 +78,10 @@ export class PostCardComponent {
     this.openOptions.set(false);
     this.onSave.emit(this.post()._id);
   }
+  handleDeleteClick(): void {
+    this.openOptions.set(false);
+    this.onDelete.emit(this.post()._id);
+  }
 
   handleCommentClick(): void {
     this.onComment.emit(this.post()._id);

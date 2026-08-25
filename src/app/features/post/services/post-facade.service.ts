@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, map, Observable, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { ILike } from '../interfaces/like.interface';
-import { IPost } from '../interfaces/post.interfaces';
+import { IDeletePostRES, IPost } from '../interfaces/post.interfaces';
 import { PostApiService } from './post-api.service';
 import { POSTS_FILTER, PostsFilter } from '../../home/interfaces/posts-filter.interface';
 import { toast } from 'ngx-sonner';
@@ -57,6 +57,11 @@ export class PostFacadeService {
   private _bookmarkLoadingState = signal<boolean>(false);
 
   public bookmarkLoading = this._bookmarkLoadingState.asReadonly();
+
+  // Delete
+  private _deletePostLoadingState = signal<boolean>(false);
+
+  public deletePostLoading = this._deletePostLoadingState.asReadonly();
 
   resetPosts(): void {
     this._postsState.set([]);
@@ -368,6 +373,17 @@ export class PostFacadeService {
 
         return { ...p, bookmarked: !p.bookmarked };
       }),
+    );
+  }
+
+  deletePost(postId: string): Observable<IDeletePostRES> {
+    this._deletePostLoadingState.set(true);
+
+    return this.postApiService.deletePost(postId).pipe(
+      tap(() => {
+        this._postsState.update((posts) => posts.filter((p) => p._id !== postId));
+      }),
+      finalize(() => this._deletePostLoadingState.set(false)),
     );
   }
 }

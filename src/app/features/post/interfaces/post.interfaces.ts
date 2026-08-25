@@ -51,3 +51,13 @@ interface Meta {
   feedMode?: string;
   pagination: IPagination;
 }
+
+export interface IDeletePostRES {
+  success: boolean;
+  message: string;
+  data: IDeletePostData;
+}
+
+interface IDeletePostData {
+  post: IPost;
+}
