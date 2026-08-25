@@ -1,7 +1,7 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IGetBookmarksRES, IGetPostsRES } from '../interfaces/post.interfaces';
+import { IDeletePostRES, IGetBookmarksRES, IGetPostsRES } from '../interfaces/post.interfaces';
 import { PostEndPoints } from '../constants/post-endpoints';
 import { IGetPostLikesRES, IToggleLikePostRES } from '../interfaces/like.interface';
 import { ICreatePostRES } from '../create-post/interfaces/create-post.interface';
@@ -40,5 +40,9 @@ export class PostApiService {
       PostEndPoints.ToggleBookmarkPost(postId),
       {},
     );
+  }
+
+  deletePost(postId: string): Observable<IDeletePostRES> {
+    return this.httpClient.delete<IDeletePostRES>(PostEndPoints.DeletePost(postId));
   }
 }
