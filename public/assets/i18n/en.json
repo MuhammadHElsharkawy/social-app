@@ -1,0 +1,15 @@
+{
+    "COMMON": {},
+    "AUTH": {
+        "LOGIN": {
+            "TITLE": "Log in to Loomy",
+            "SUBTITLE": "Log in and continue your social journey.",
+            "SUBMIT_BTN": "Log in"
+        },
+        "REGISTER": {
+            "TITLE": "Create a new account",
+            "SUBTITLE": "It's quick and easy.",
+            "SUBMIT_BTN": "Create Account"
+        }
+    }
+}

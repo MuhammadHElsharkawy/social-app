@@ -20,7 +20,7 @@
         >
           {{ post().user.name }}
         </a>
-        <div class="flex flex-wrap items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
+        <div class="flex flex-wrap items-center gap-1 text-xs dark:text-slate-400">
           @{{ post().user.username }} ·
           <button
             type="button"
@@ -29,10 +29,57 @@
             12h
           </button>
           <span class="mx-1">·</span>
-          <span class="inline-flex items-center gap-1">
-            <svg lucideEarth class="size-2.75"></svg>
-            {{ post().privacy }}
-          </span>
+          @if (isMyPost()) {
+            <span class="relative inline-flex items-center">
+              <button
+                (click)="openPrivacyOptions.set(true)"
+                [disabled]="postFacadeService.updatePostPrivacyLoading()"
+                type="button"
+                class="enabled:cursor-pointer inline-flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 capitalize dark:hover:text-slate-200 dark:hover:bg-slate-800 transition"
+              >
+                <svg lucideEarth class="size-2.75 dark:text-slate-400"></svg>
+                {{ postPrivacyLabel() }}
+                <svg lucideChevronDown class="size-3"></svg>
+              </button>
+
+              @if (openPrivacyOptions()) {
+                <div
+                  (appClickOutside)="openPrivacyOptions.set(false)"
+                  class="absolute left-0 top-[calc(100%+6px)] z-30 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg transition-colors duration-200 dark:border-slate-700 dark:bg-slate-800 dark:shadow-2xl dark:shadow-black/50"
+                >
+                  <!-- Public Option -->
+                  <button
+                    (click)="handlePrivacyOptionClick('public')"
+                    type="button"
+                    class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-white"
+                  >
+                    <svg lucideEarth class="size-3.25 dark:text-slate-400"></svg>
+                    Public
+                  </button>
+
+                  <!-- Followers Option -->
+                  <button
+                    (click)="handlePrivacyOptionClick('following')"
+                    type="button"
+                    class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-white"
+                  >
+                    <svg lucideUsers class="size-3.25 dark:text-slate-400"></svg>
+                    Followers
+                  </button>
+
+                  <!-- Only Me Option -->
+                  <button
+                    (click)="handlePrivacyOptionClick('only_me')"
+                    type="button"
+                    class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-white"
+                  >
+                    <svg lucideLock class="size-3.25 dark:text-slate-400"></svg>
+                    Only me
+                  </button>
+                </div>
+              }
+            </span>
+          }
         </div>
       </div>
 
@@ -47,13 +94,13 @@
         @if (openOptions()) {
           <div
             (appClickOutside)="openOptions.set(false)"
-            class="absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
+            class="absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg transition-colors duration-200 dark:border-slate-700 dark:bg-slate-800 dark:shadow-2xl dark:shadow-black/50"
           >
             <button
               (click)="handleSaveClick()"
-              class="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              class="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-white"
             >
-              @if (savePostLoading()) {
+              @if (postFacadeService.bookmarkLoading()) {
                 Saving...
               } @else {
                 @if (post().bookmarked) {
@@ -78,14 +125,15 @@
             </button>
             @if (isMyPost()) {
               <button
-                class="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                (click)="handleEditClick()"
+                class="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/60 dark:hover:text-white"
               >
                 <svg lucidePencil class="size-3.75"></svg>
                 Edit post
               </button>
               <button
                 (click)="handleDeleteClick()"
-                class="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-rose-600 hover:bg-rose-50"
+                class="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40"
               >
                 <svg lucideTrash2 class="size-3.75"></svg>
                 Delete post
@@ -113,23 +161,98 @@
 
     <!-- Post Text Content -->
     <div class="mt-3">
-      <p
-        class="whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-slate-800 dark:text-slate-200"
-      >
-        {{ post().body }}
-      </p>
+      @if (editMode()) {
+        <textarea
+          [(ngModel)]="body"
+          maxlength="5000"
+          class="min-h-27.5 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none ring-[#1877f2]/20 transition placeholder:text-slate-400 focus:border-[#1877f2] focus:ring-2 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:ring-blue-500/20 dark:focus:border-blue-400"
+          >{{ post().body }}</textarea>
+        <div class="mt-2 flex items-center justify-end gap-2">
+          <button
+            [disabled]="postFacadeService.updatePostContentLoading()"
+            class="enabled:cursor-pointer rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white disabled:cursor-no-drop disabled:opacity-60"
+            (click)="handleCancelEditClick()"
+          >
+            Cancel
+          </button>
+          <button
+            (click)="handleSaveEditClick()"
+            [disabled]="!body() || postFacadeService.updatePostContentLoading()"
+            class="enabled:cursor-pointer rounded-full bg-[#1877f2] px-3 py-1.5 text-xs font-bold text-white transition hover:bg-[#166fe5] disabled:cursor-no-drop disabled:opacity-60 dark:bg-blue-600 dark:hover:bg-blue-500"
+          >
+            Save
+          </button>
+        </div>
+      } @else {
+        <p
+          class="whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-slate-800 dark:text-slate-200"
+        >
+          {{ post().body }}
+        </p>
+      }
     </div>
   </div>
 
   <!-- Post Image Area -->
-  @if (post().image) {
-    <div class="max-h-155 overflow-hidden border-y border-slate-200 dark:border-slate-800">
-      <button type="button" class="group relative block w-full cursor-zoom-in">
-        <img loading="lazy" alt="post" class="w-full object-cover" [src]="post().image" />
-        <span
-          class="pointer-events-none absolute inset-0 bg-black/0 transition group-hover:bg-black/10 dark:group-hover:bg-white/5"
-        ></span>
+  @if (post().image || previewUrl()) {
+    <div class="max-h-155 overflow-hidden border-y border-slate-200 dark:border-slate-800 relative">
+      @if (editMode()) {
+        @if (previewUrl()) {
+          <img loading="lazy" alt="preview" class="w-full object-cover" [src]="previewUrl()" />
+          <button
+            [disabled]="postFacadeService.updatePostContentLoading()"
+            class="absolute bg-white rounded-full top-3 left-3 z-30 enabled:cursor-pointer disabled:cursor-no-drop disabled:opacity-60"
+            (click)="removeImage()"
+          >
+            <svg lucideX></svg>
+          </button>
+        }
+      } @else {
+        @if (post().image) {
+          <button type="button" class="group relative block w-full cursor-zoom-in">
+            <img
+              loading="lazy"
+              alt="post"
+              class="w-full object-cover"
+              [src]="post().image"
+              (click)="openPostImage.set(true)"
+            />
+            <span
+              class="pointer-events-none absolute inset-0 bg-black/0 transition group-hover:bg-black/10 dark:group-hover:bg-white/5"
+            ></span>
+          </button>
+        }
+      }
+    </div>
+  }
+
+  @if (openPostImage()) {
+    <div class="fixed inset-0 z-80 flex items-center justify-center bg-black/90 p-4 sm:p-8">
+      <button
+        (click)="openPostImage.set(false)"
+        type="button"
+        class="cursor-pointer absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+      >
+        <svg lucideX class="size-5"></svg>
       </button>
+      <img
+        (appClickOutside)="openPostImage.set(false)"
+        [alt]="post().user.name + ' post image'"
+        class="max-h-full max-w-full object-contain"
+        [src]="post().image"
+      />
+    </div>
+  }
+
+  @if (editMode()) {
+    <div class="border border-slate-300 rounded-md m-2 inline-flex items-center justify-start">
+      <label
+        class="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+      >
+        <svg lucideImage class="size-4.5 text-emerald-600 dark:text-emerald-400"></svg>
+        <span class="hidden sm:inline">Photo</span>
+        <input accept="image/*" class="hidden" type="file" (change)="onFileSelected($event)" />
+      </label>
     </div>
   }
 
@@ -183,7 +306,26 @@
       class="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg p-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:text-sm"
       [class]="likeClasses()"
     >
-      <svg lucideThumbsUp class="size-4.5"></svg>
+      @if (isLiked()) {
+        <svg
+          class="size-5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M15.03 9.684h3.965c.322 0 .64.08.925.232.286.153.532.374.717.645a2.109 2.109 0 0 1 .242 1.883l-2.36 7.201c-.288.814-.48 1.355-1.884 1.355-2.072 0-4.276-.677-6.157-1.256-.472-.145-.924-.284-1.348-.404h-.115V9.478a25.485 25.485 0 0 0 4.238-5.514 1.8 1.8 0 0 1 .901-.83 1.74 1.74 0 0 1 1.21-.048c.396.13.736.397.96.757.225.36.32.788.269 1.211l-1.562 4.63ZM4.177 10H7v8a2 2 0 1 1-4 0v-6.823C3 10.527 3.527 10 4.176 10Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      } @else {
+        <svg lucideThumbsUp class="size-4.5"></svg>
+      }
+
       <span>Like</span>
     </button>
 
@@ -208,8 +350,110 @@
 </article>
 @if (openPostLikes()) {
   <app-post-likes
-    [postLikes]="postLikes()"
-    [postLikesLoading]="postLikesLoading()"
+    [postLikes]="postFacadeService.postLikes()"
+    [postLikesLoading]="postFacadeService.postLikesLoading()"
     (closePostLikes)="openPostLikes.set(false)"
   ></app-post-likes>
+}
+
+<!-- Delete post dialog -->
+@if (openDeleteDialog()) {
+  <div
+    class="fixed inset-0 z-90 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs dark:bg-black/75"
+  >
+    <div
+      (appClickOutside)="closeDeleteDialog()"
+      class="w-full max-w-130 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl transition-colors duration-200 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/60"
+    >
+      <!-- Modal Header -->
+      <div
+        class="flex items-center justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-800"
+      >
+        <h4 class="text-base font-extrabold text-slate-900 dark:text-slate-100">Confirm action</h4>
+        <button
+          (click)="closeDeleteDialog()"
+          type="button"
+          class="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-x"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Content & Warning -->
+      <div class="flex items-start gap-3 p-4">
+        <div
+          class="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 dark:ring-1 dark:ring-rose-900/50"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-triangle-alert"
+            aria-hidden="true"
+          >
+            <path
+              d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+            ></path>
+            <path d="M12 9v4"></path>
+            <path d="M12 17h.01"></path>
+          </svg>
+        </div>
+        <div>
+          <h5 class="text-sm font-extrabold text-slate-900 dark:text-slate-100">
+            Delete this post?
+          </h5>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            This post will be permanently removed from your profile and feed.
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div
+        class="flex items-center justify-end gap-2 border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+      >
+        <button
+          (click)="closeDeleteDialog()"
+          [disabled]="postFacadeService.deletePostLoading()"
+          type="button"
+          class="cursor-pointer rounded-lg border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:bg-slate-700"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="handleConfirmDeleteClick()"
+          [disabled]="postFacadeService.deletePostLoading()"
+          type="button"
+          class="cursor-pointer rounded-lg bg-rose-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-rose-600 dark:hover:bg-rose-500"
+        >
+          @if (postFacadeService.deletePostLoading()) {
+            Deleting post...
+          } @else {
+            Delete post
+          }
+        </button>
+      </div>
+    </div>
+  </div>
 }

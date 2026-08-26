@@ -13,6 +13,7 @@ import { ClickOutsideDirective } from '../../../../../shared/directives/click-ou
 import { PostFacadeService } from '../../../services/post-facade.service';
 import { IUser } from '../../../../../core/interfaces/user.interface';
 import { ICreatePostREQ } from '../../interfaces/create-post.interface';
+import { toast } from 'ngx-sonner';
 
 @Component({
   imports: [
@@ -91,20 +92,25 @@ export class CreatePostComponent {
 
     const data: ICreatePostREQ = {
       body: this.body(),
-      image: this.selectedFile(),
+      // image: this.selectedFile(),
       privacy: 'public',
     };
 
-    this.resetForm();
+    if (this.selectedFile()) data.image = this.selectedFile()!;
 
-    this.postFacadeService.createPost(data).subscribe({
-      next: (res) => console.log(res),
-      error: () => {
-        this.body.set(draftBody);
-        this.selectedFile.set(draftFile);
-        this.setPreview(this.selectedFile());
-      },
-    });
+    this.resetForm();
+console.log(data);
+
+    // this.postFacadeService.createPost(data).subscribe({
+    //   error: (err) => {
+    //     this.body.set(draftBody);
+    //     this.selectedFile.set(draftFile);
+    //     this.setPreview(this.selectedFile());
+    //     toast.error("Couldn't Create Post", {
+    //       description: `${err.error.message}`,
+    //     });
+    //   },
+    // });
   }
 
   ngOnDestroy() {
