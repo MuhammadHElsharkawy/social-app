@@ -26,13 +26,13 @@
             <div>
               <app-post-card
                 [post]="post"
-                (onLike)="postFacadeService.toggleLikePost($event)"
-                (onLikesCount)="postFacadeService.getPostLikes($event)"
-                [postLikes]="postFacadeService.postLikes()"
-                [postLikesLoading]="postFacadeService.postLikesLoading()"
-                (onSave)="postFacadeService.toggleSavePost($event)"
-                [savePostLoading]="postFacadeService.bookmarkLoading()"
-                (onDelete)="handleDeleteClick($event)"
+                /* (onLike)="postFacadeService.toggleLikePost($event)" */
+                /* (onLikesCount)="postFacadeService.getPostLikes($event)" */
+                /* [postLikes]="postFacadeService.postLikes()" */
+                /* [postLikesLoading]="postFacadeService.postLikesLoading()" */
+                /* (onSave)="postFacadeService.toggleSavePost($event)" */
+                /* [savePostLoading]="postFacadeService.bookmarkLoading()" */
+                /* (onDelete)="handleDeleteClick($event)" */
               ></app-post-card>
             </div>
           }
@@ -163,108 +163,4 @@
       </button>
     </div>
   </aside>
-
-  <!-- Delete post dialog -->
-  @if (openDeleteDialog()) {
-    <div
-      class="fixed inset-0 z-90 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs dark:bg-black/75"
-    >
-      <div
-        (appClickOutside)="closeDeleteDialog()"
-        class="w-full max-w-130 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl transition-colors duration-200 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/60"
-      >
-        <!-- Modal Header -->
-        <div
-          class="flex items-center justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-800"
-        >
-          <h4 class="text-base font-extrabold text-slate-900 dark:text-slate-100">
-            Confirm action
-          </h4>
-          <button
-            (click)="closeDeleteDialog()"
-            type="button"
-            class="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-x"
-              aria-hidden="true"
-            >
-              <path d="M18 6 6 18"></path>
-              <path d="m6 6 12 12"></path>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Modal Content & Warning -->
-        <div class="flex items-start gap-3 p-4">
-          <div
-            class="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 dark:ring-1 dark:ring-rose-900/50"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-triangle-alert"
-              aria-hidden="true"
-            >
-              <path
-                d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
-              ></path>
-              <path d="M12 9v4"></path>
-              <path d="M12 17h.01"></path>
-            </svg>
-          </div>
-          <div>
-            <h5 class="text-sm font-extrabold text-slate-900 dark:text-slate-100">
-              Delete this post?
-            </h5>
-            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              This post will be permanently removed from your profile and feed.
-            </p>
-          </div>
-        </div>
-
-        <!-- Footer Actions -->
-        <div
-          class="flex items-center justify-end gap-2 border-t border-slate-200 px-4 py-3 dark:border-slate-800"
-        >
-          <button
-            (click)="closeDeleteDialog()"
-            [disabled]="postFacadeService.deletePostLoading()"
-            type="button"
-            class="cursor-pointer rounded-lg border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:bg-slate-700"
-          >
-            Cancel
-          </button>
-          <button
-            (click)="handleConfirmDeleteClick()"
-            [disabled]="postFacadeService.deletePostLoading()"
-            type="button"
-            class="cursor-pointer rounded-lg bg-rose-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-rose-600 dark:hover:bg-rose-500"
-          >
-            @if (postFacadeService.deletePostLoading()) {
-              Deleting post...
-            } @else {
-              Delete post
-            }
-          </button>
-        </div>
-      </div>
-    </div>
-  }
 </div>

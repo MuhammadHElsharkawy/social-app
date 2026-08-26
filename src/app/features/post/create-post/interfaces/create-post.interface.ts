@@ -1,9 +1,9 @@
 import { IPost, PostPrivacy } from '../../interfaces/post.interfaces';
 
 export interface ICreatePostREQ {
-  body?: string | null;
-  image?: File | null;
-  privacy?: PostPrivacy | null;
+  body?: string;
+  image?: File;
+  privacy?: PostPrivacy;
 }
 
 export interface ICreatePostRES {
@@ -20,3 +20,9 @@ export interface IPostUploading {
   body?: string | null;
   previewUrl?: string | null;
 }
+
+export interface IUpdatePostREQ extends ICreatePostREQ {
+  removeImage?: boolean;
+  // image?: File
+  // body?: string
+};

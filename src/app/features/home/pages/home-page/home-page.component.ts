@@ -11,8 +11,6 @@ import { PostCardComponent } from '../../../post/components/post-card/post-card.
 import { CreatePostComponent } from '../../../post/create-post/components/create-post/create-post.component';
 import { CreatePostLoadingComponent } from '../../../post/create-post/components/create-post-loading/create-post-loading.component';
 import { ProfileFacadeService } from '../../../profile/services/profile-facade.service';
-import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
-import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-home-page',
@@ -27,7 +25,6 @@ import { toast } from 'ngx-sonner';
     PostCardComponent,
     CreatePostComponent,
     CreatePostLoadingComponent,
-    ClickOutsideDirective,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -35,35 +32,6 @@ import { toast } from 'ngx-sonner';
 export class HomePageComponent implements OnInit {
   protected postFacadeService = inject(PostFacadeService);
   protected profileFacadeService = inject(ProfileFacadeService);
-
-  openDeleteDialog = signal<boolean>(false);
-  deletePostId = signal<string | null>(null);
-
-  handleDeleteClick(postId: string): void {
-    this.openDeleteDialog.set(true);
-    this.deletePostId.set(postId);
-  }
-
-  handleConfirmDeleteClick(): void {
-    if (!this.deletePostId()) return;
-
-    this.postFacadeService.deletePost(this.deletePostId()!).subscribe({
-      next: () => {
-        this.openDeleteDialog.set(false);
-        this.deletePostId.set(null);
-      },
-      error: () => {
-        toast.error("Couldn't delete this post", {
-          id: `deletedpost${this.deletePostId()}`,
-          description: 'Check your connection and try again.',
-        });
-      },
-    });
-  }
-
-  closeDeleteDialog(): void {
-    this.openDeleteDialog.set(false);
-  }
 
   ngOnInit(): void {
     this.postFacadeService.handleFilterChange(POSTS_FILTER.FEED);

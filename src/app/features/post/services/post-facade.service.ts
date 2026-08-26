@@ -1,9 +1,9 @@
 import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, map, Observable, tap } from 'rxjs';
+import { filter, finalize, map, Observable, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { ILike } from '../interfaces/like.interface';
-import { IDeletePostRES, IPost } from '../interfaces/post.interfaces';
+import { IDeletePostRES, IPost, PostPrivacy } from '../interfaces/post.interfaces';
 import { PostApiService } from './post-api.service';
 import { POSTS_FILTER, PostsFilter } from '../../home/interfaces/posts-filter.interface';
 import { toast } from 'ngx-sonner';
@@ -11,6 +11,7 @@ import {
   ICreatePostREQ,
   ICreatePostRES,
   IPostUploading,
+  IUpdatePostREQ,
 } from '../create-post/interfaces/create-post.interface';
 import { ProfileFacadeService } from '../../profile/services/profile-facade.service';
 
@@ -62,6 +63,13 @@ export class PostFacadeService {
   private _deletePostLoadingState = signal<boolean>(false);
 
   public deletePostLoading = this._deletePostLoadingState.asReadonly();
+
+  // Update
+  private _updatePostContentLoadingState = signal<boolean>(false);
+  private _updatePostPrivacyLoadingState = signal<boolean>(false);
+
+  public updatePostContentLoading = this._updatePostContentLoadingState.asReadonly();
+  public updatePostPrivacyLoading = this._updatePostPrivacyLoadingState.asReadonly();
 
   resetPosts(): void {
     this._postsState.set([]);
@@ -385,5 +393,69 @@ export class PostFacadeService {
       }),
       finalize(() => this._deletePostLoadingState.set(false)),
     );
+  }
+
+  updatePostContent(postId: string, data: IUpdatePostREQ): Observable<ICreatePostRES> {
+    this._updatePostContentLoadingState.set(true);
+
+    const formData: FormData = new FormData();
+    if (data.body) formData.append('body', data.body);
+    if (data.image) formData.append('image', data.image);
+    if (data.removeImage) formData.append('removeImage', String(data.removeImage));
+
+    return this.postApiService.updatePostContent(postId, formData).pipe(
+      tap((res) => {
+        this._postsState.update((posts) =>
+          posts.map((p) =>
+            p._id === postId
+              ? {
+                  ...p,
+                  body: res.data.post.body,
+                  image: res.data.post.image,
+                }
+              : p,
+          ),
+        );
+      }),
+      finalize(() => this._updatePostContentLoadingState.set(false)),
+    );
+  }
+
+  private updatePrivacyState(postId: string, privacy: PostPrivacy): void {
+    this._postsState.update((posts) =>
+      posts.map((p) => {
+        if (p._id !== postId) return p;
+
+        return { ...p, privacy };
+      }),
+    );
+  }
+
+  updatePostPrivacy(postId: string, newPrivacy: PostPrivacy): void {
+    const post = this._postsState().find((p) => p._id === postId);
+    if (!post || post.privacy === newPrivacy) return;
+
+    const oldPrivacy = post.privacy;
+    this.updatePrivacyState(postId, newPrivacy);
+
+    this._updatePostPrivacyLoadingState.set(true);
+
+    const data: IUpdatePostREQ = { privacy: newPrivacy };
+
+    this.postApiService
+      .updatePostPrivacy(postId, data)
+      .pipe(
+        finalize(() => this._updatePostPrivacyLoadingState.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        error: (err) => {
+          this.updatePrivacyState(postId, oldPrivacy);
+          toast.error("Couldn't Update Privacy", {
+            id: `editPrivacyPost${postId}`,
+            description: `${err.error.message}`,
+          });
+        },
+      });
   }
 }
