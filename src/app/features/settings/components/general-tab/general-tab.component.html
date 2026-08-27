@@ -1,0 +1,99 @@
+<div id="tab-general" class="tab-content">
+
+  <!-- Header with Icon -->
+  <div class="mb-6 flex items-center gap-3.5">
+    <div
+      class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-500 dark:bg-blue-950/60 dark:text-blue-400 dark:ring-1 dark:ring-blue-900/50">
+      <svg class="h-6 w-6 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+      </svg>
+    </div>
+    <div>
+      <h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">General Preferences</h2>
+      <p class="mt-0.5 text-sm text-slate-500 dark:text-slate-400">Customize your interface language and appearance theme.</p>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+
+    <!-- Language Selector (Modern Card Style) -->
+    <div>
+      <label class="mb-2.5 block text-sm font-bold text-slate-800 dark:text-slate-200">Language</label>
+      <div class="grid grid-cols-2 gap-3">
+        
+        <!-- English Option (Active State Example) -->
+        <button type="button"
+          class="group relative flex cursor-pointer items-center justify-between rounded-2xl border-2 border-blue-500 bg-blue-50/20 p-3.5 text-left transition-all dark:border-blue-500/80 dark:bg-blue-950/30">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-500 text-xs font-bold text-white shadow-sm dark:bg-blue-600">EN</span>
+            <div>
+              <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">English</p>
+              <p class="text-xs text-slate-400 dark:text-slate-400">United States</p>
+            </div>
+          </div>
+          <!-- Checked Circle Indicator -->
+          <div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white dark:bg-blue-500">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+        </button>
+
+        <!-- Arabic Option (Inactive State Example) -->
+        <button type="button"
+          class="group relative flex cursor-pointer items-center justify-between rounded-2xl border border-slate-200 bg-slate-50/50 p-3.5 text-left transition-all hover:bg-slate-100/70 dark:border-slate-800 dark:bg-slate-950/40 dark:hover:bg-slate-800/60">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-200 text-xs font-bold text-slate-600 transition-colors group-hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-slate-700">AR</span>
+            <div>
+              <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">العربية</p>
+              <p class="text-xs text-slate-400 dark:text-slate-500">Arabic</p>
+            </div>
+          </div>
+          <!-- Empty Circle Indicator -->
+          <div class="h-5 w-5 rounded-full border-2 border-slate-300 dark:border-slate-700"></div>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Theme Switcher (3 Choices: Light, Dark, System) -->
+    <div>
+      <label class="mb-2.5 block text-sm font-bold text-slate-800 dark:text-slate-200">Appearance</label>
+      <div class="grid grid-cols-3 gap-3">
+        
+        <!-- System Theme (Active State Example) -->
+        <button type="button"
+          class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-blue-500 bg-blue-50/30 py-3.5 px-2 text-blue-600 transition-all dark:border-blue-500/80 dark:bg-blue-950/40 dark:text-blue-400">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+              d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3" />
+          </svg>
+          <span class="text-xs font-semibold">System</span>
+        </button>
+
+        <!-- Light Theme -->
+        <button type="button"
+          class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/50 py-3.5 px-2 text-slate-600 transition-all hover:bg-slate-100/70 dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <span class="text-xs font-semibold">Light</span>
+        </button>
+
+        <!-- Dark Theme -->
+        <button type="button"
+          class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/50 py-3.5 px-2 text-slate-600 transition-all hover:bg-slate-100/70 dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <span class="text-xs font-semibold">Dark</span>
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+</div>

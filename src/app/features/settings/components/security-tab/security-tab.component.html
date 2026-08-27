@@ -1,0 +1,62 @@
+<div id="tab-security" class="tab-content block">
+  <div class="mb-6 flex items-center gap-3.5">
+    <div
+      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-500 dark:bg-blue-950/60 dark:text-blue-400 dark:ring-1 dark:ring-blue-900/50"
+    >
+      <svg lucideKeyRound class="size-4.5"></svg>
+    </div>
+    <div>
+      <h1 class="text-xl font-extrabold text-slate-900 sm:text-2xl">Change Password</h1>
+      <p class="text-sm text-slate-500">Keep your account secure by using a strong password.</p>
+    </div>
+  </div>
+
+  <!-- Form Elements -->
+  <form [formGroup]="changePasswordForm" (ngSubmit)="changePassword()" class="space-y-4">
+    <div>
+      <lib-input
+        inputId="ch-currentPass"
+        type="password"
+        placeholder="Enter current password"
+        label="Current password"
+        styleClass="py-2.5! px-3!"
+        formControlName="password"
+      ></lib-input>
+    </div>
+    <div>
+      <lib-input
+        inputId="ch-newPassword"
+        type="password"
+        placeholder="Enter new password"
+        label="New password"
+        styleClass="py-2.5! px-3!"
+        formControlName="newPassword"
+      ></lib-input>
+      <span class="mt-1 block text-xs text-slate-500">
+        At least 8 characters with uppercase, lowercase, number, and special character.
+      </span>
+    </div>
+    <div>
+      <lib-input
+        inputId="ch-confirmPassword"
+        type="password"
+        placeholder="Re-enter new password"
+        label="Confirm new password"
+        styleClass="py-2.5! px-3!"
+        formControlName="confirmPassword"
+      ></lib-input>
+    </div>
+    <button
+      type="submit"
+      [disabled]="changePasswordForm.invalid || isLoading()"
+      class="inline-flex w-full items-center justify-center rounded-xl bg-[#1877f2] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#166fe5] enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      @if (isLoading()) {
+        Updating password...
+      } @else {
+        Update password
+      }
+    </button>
+    <app-form-error-message [errorMessage]="errorMessage()"></app-form-error-message>
+  </form>
+</div>
