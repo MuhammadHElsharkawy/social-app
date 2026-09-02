@@ -4,10 +4,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LucideKeyRound, LucideUser } from '@lucide/angular';
-import { getSafeReturnUrl } from '../../../../core/utils/url.util';
 import { AuthService } from '../../services/auth.service';
 import { FormErrorMessageComponent } from "../../../../shared/components/form-error-message/form-error-message.component";
 import { FieldError, InputComponent } from 'reusable-components';
+import { getSafeReturnUrl } from '../../../../shared/utils/url.util';
 
 @Component({
   selector: 'app-login',

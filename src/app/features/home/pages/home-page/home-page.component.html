@@ -24,16 +24,7 @@
         } @else {
           @for (post of postFacadeService.posts(); track $index) {
             <div>
-              <app-post-card
-                [post]="post"
-                /* (onLike)="postFacadeService.toggleLikePost($event)" */
-                /* (onLikesCount)="postFacadeService.getPostLikes($event)" */
-                /* [postLikes]="postFacadeService.postLikes()" */
-                /* [postLikesLoading]="postFacadeService.postLikesLoading()" */
-                /* (onSave)="postFacadeService.toggleSavePost($event)" */
-                /* [savePostLoading]="postFacadeService.bookmarkLoading()" */
-                /* (onDelete)="handleDeleteClick($event)" */
-              ></app-post-card>
+              <app-post-card [post]="post"></app-post-card>
             </div>
           }
           @if (postFacadeService.hasMorePosts()) {

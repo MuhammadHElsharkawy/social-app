@@ -26,7 +26,8 @@ import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { IUpdatePostREQ } from '../../create-post/interfaces/create-post.interface';
-import { imageUrlToFile } from '../../../../core/utils/url-to-file';
+import { TimeAgoPipe } from '../../../../shared/pipes/time-ago-pipe';
+import { PostCommentsComponent } from '../../comment/components/post-comments/post-comments.component';
 
 @Component({
   selector: 'app-post-card',
@@ -49,6 +50,8 @@ import { imageUrlToFile } from '../../../../core/utils/url-to-file';
     LucideLock,
     LucideUsers,
     FormsModule,
+    PostCommentsComponent,
+    TimeAgoPipe,
   ],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
@@ -145,14 +148,9 @@ export class PostCardComponent {
     this.preparePostForEdit();
   }
 
-  // async getImageFile() {
-  //   if (this.previewUrl()) this.selectedFile.set(await imageUrlToFile(this.previewUrl()!));
-  // }
-
   preparePostForEdit(): void {
     this.editMode.set(true);
     this.previewUrl.set(this.post().image || null);
-    // this.getImageFile();
     this.body.set(this.post().body ?? '');
   }
 
@@ -200,6 +198,7 @@ export class PostCardComponent {
       .subscribe({
         next: () => {
           this.editMode.set(false);
+          this.resetForm();
         },
         error: (err) => {
           toast.error("Couldn't Update Post", {
@@ -216,8 +215,11 @@ export class PostCardComponent {
     this.editMode.set(false);
   }
 
-  handleCommentClick(): void {}
-  handleCommentsCountClick(): void {}
+  isCommentsOpen = signal<boolean>(false);
+
+  toggleOpenComments(): void {
+    this.isCommentsOpen.update((v) => !v);
+  }
 
   isLiked = computed(() => this.post().likes.includes(this.authService.getUserId()));
 

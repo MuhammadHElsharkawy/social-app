@@ -31,4 +31,26 @@ export const PostEndPoints = {
 
   GetUserPosts: (userId: string, page: number = 1, limit: number = 10) =>
     `${BASE_URL}/users/${userId}/posts?page=${page}&limit=${limit}`,
+
+  COMMENTS: {
+    GetPostComments: (postId: string, page: number = 1, limit: number = 10) =>
+      `${BASE_URL}/posts/${postId}/comments?page=${page}&limit=${limit}`,
+
+    CreateComment: (postId: string) => `${BASE_URL}/posts/${postId}/comments`,
+
+    GetCommentReplies: (postId: string, commentId: string, page: number = 1, limit: number = 10) =>
+      `${BASE_URL}/posts/${postId}/comments/${commentId}/replies?page=${page}&limit=${limit}`,
+
+    CreateReply: (postId: string, commentId: string) =>
+      `${BASE_URL}/posts/${postId}/comments/${commentId}/replies`,
+
+    UpdateComment: (postId: string, commentId: string) =>
+      `${BASE_URL}/posts/${postId}/comments/${commentId}`,
+
+    DeleteComment: (postId: string, commentId: string) =>
+      `${BASE_URL}/posts/${postId}/comments/${commentId}`,
+
+    ToggleLikeComment: (postId: string, commentId: string) =>
+      `${BASE_URL}/posts/${postId}/comments/${commentId}/like`,
+  },
 };
