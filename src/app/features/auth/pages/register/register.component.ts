@@ -13,9 +13,9 @@ import {
   LucideUsers,
 } from '@lucide/angular';
 import { REG_EXP } from '../../../../core/constants/regex';
-import { getSafeReturnUrl } from '../../../../core/utils/url.util';
 import { CustomValidators } from '../../../../core/validators/custom-validators';
 import { FieldError, InputComponent, IOption, SelectInput } from 'reusable-components';
+import { getSafeReturnUrl } from '../../../../shared/utils/url.util';
 
 @Component({
   selector: 'app-register',

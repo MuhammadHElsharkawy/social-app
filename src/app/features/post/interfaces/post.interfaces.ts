@@ -1,6 +1,6 @@
 import { IPagination } from '../../../core/interfaces/pagination.interface';
 import { IUser } from '../../../core/interfaces/user.interface';
-import { ITopComment } from './comment.interface';
+import { IComment } from '../comment/interfaces/comment.interface';
 
 export interface IGetPostsRES {
   success: boolean;
@@ -40,7 +40,7 @@ export interface IBasePost {
 export interface IPost extends IBasePost {
   sharedPost: IPost | null;
   commentsCount: number;
-  topComment: ITopComment | null;
+  topComment: IComment | null;
   sharesCount: number;
   bookmarked?: boolean;
 }

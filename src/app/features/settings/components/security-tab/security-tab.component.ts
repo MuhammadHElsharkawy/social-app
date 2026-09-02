@@ -43,12 +43,6 @@ export class SecurityTabComponent {
     },
   );
 
-  // test() {
-  //   toast.error("Couldn't Update Privacy");
-  //   
-  //   console.log('test');
-  // }
-
   changePassword(): void {
     if (this.changePasswordForm.invalid) return;
 

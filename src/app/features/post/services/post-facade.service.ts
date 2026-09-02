@@ -14,6 +14,7 @@ import {
   IUpdatePostREQ,
 } from '../create-post/interfaces/create-post.interface';
 import { ProfileFacadeService } from '../../profile/services/profile-facade.service';
+import { IComment, ICreateCommentREQ } from '../comment/interfaces/comment.interface';
 
 @Service()
 export class PostFacadeService {
@@ -23,53 +24,26 @@ export class PostFacadeService {
   private readonly profileFacadeService = inject(ProfileFacadeService);
 
   private _postsPage = signal<number>(1);
+
   private _hasMorePosts = signal<boolean>(true);
-  private _postsState = signal<IPost[]>([]);
-  private _postsCache = new Map<PostsFilter, IPost[]>();
-  private _isPostLoadingState = signal<boolean>(false);
-  private _isNextPostsPageLoadingState = signal<boolean>(false);
-  private _activeLoadingFilterState = signal<PostsFilter | null>(null);
-  private _currentFilterState = signal<PostsFilter>(POSTS_FILTER.FEED);
-
-  public posts = this._postsState.asReadonly();
   public hasMorePosts = this._hasMorePosts.asReadonly();
+
+  private _postsState = signal<IPost[]>([]);
+  public posts = this._postsState.asReadonly();
+
+  private _postsCache = new Map<PostsFilter, IPost[]>();
+
+  private _isPostLoadingState = signal<boolean>(false);
   public isPostLoading = this._isPostLoadingState.asReadonly();
+
+  private _isNextPostsPageLoadingState = signal<boolean>(false);
   public isNextPostsPageLoading = this._isNextPostsPageLoadingState.asReadonly();
+
+  private _activeLoadingFilterState = signal<PostsFilter | null>(null);
   public activeLoadingFilter = this._activeLoadingFilterState.asReadonly();
+
+  private _currentFilterState = signal<PostsFilter>(POSTS_FILTER.FEED);
   public currentFilter = this._currentFilterState.asReadonly();
-
-  // Like
-  private _postLikesLoadingState = signal<boolean>(false);
-  private _postLikesState = signal<ILike[]>([]);
-  private _pendingLikes = new Set<string>();
-
-  public postLikesLoading = this._postLikesLoadingState.asReadonly();
-  public postLikes = this._postLikesState.asReadonly();
-
-  // Create Post
-  private _createPostLoadingState = signal<boolean>(false);
-  private _uploadingPostDataState = signal<IPostUploading | null>(null);
-
-  public createPostLoading = this._createPostLoadingState.asReadonly();
-  public uploadingPostData = this._uploadingPostDataState.asReadonly();
-
-  // Bookmark
-  private _pendingBookmarks = new Set<string>();
-  private _bookmarkLoadingState = signal<boolean>(false);
-
-  public bookmarkLoading = this._bookmarkLoadingState.asReadonly();
-
-  // Delete
-  private _deletePostLoadingState = signal<boolean>(false);
-
-  public deletePostLoading = this._deletePostLoadingState.asReadonly();
-
-  // Update
-  private _updatePostContentLoadingState = signal<boolean>(false);
-  private _updatePostPrivacyLoadingState = signal<boolean>(false);
-
-  public updatePostContentLoading = this._updatePostContentLoadingState.asReadonly();
-  public updatePostPrivacyLoading = this._updatePostPrivacyLoadingState.asReadonly();
 
   resetPosts(): void {
     this._postsState.set([]);
@@ -77,23 +51,23 @@ export class PostFacadeService {
     this._hasMorePosts.set(true);
   }
 
-  updatePaginationState(numberOfPages: number): void {
+  updatePostsPaginationState(numberOfPages: number): void {
     this._hasMorePosts.set(this._postsPage() < numberOfPages);
     if (this._hasMorePosts()) this._postsPage.update((p) => p + 1);
   }
 
   handleFilterChange(newFilter: PostsFilter): void {
-    this.resetPosts();
-
     const isSameFilter = this._currentFilterState() === newFilter;
     const hasCachedData = this._postsCache.has(newFilter);
-
+    
     this._currentFilterState.set(newFilter);
-
+    
     if (!isSameFilter && hasCachedData) {
       this._postsState.set(this._postsCache.get(newFilter)!);
       return;
     }
+    
+    this.resetPosts();
 
     this.fetchPosts(newFilter);
   }
@@ -144,8 +118,8 @@ export class PostFacadeService {
       .subscribe({
         next: (res) => {
           this._postsState.update((current) => [...current, ...res.data.posts]);
-          this._postsCache.set(POSTS_FILTER.FEED, res.data.posts);
-          this.updatePaginationState(res.meta.pagination.numberOfPages);
+          this._postsCache.set(POSTS_FILTER.FEED, this._postsState());
+          this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
           console.log(err);
@@ -177,7 +151,7 @@ export class PostFacadeService {
         next: (res) => {
           this._postsState.update((current) => [...current, ...res.data.posts]);
           this._postsCache.set(POSTS_FILTER.COMMUNITY, res.data.posts);
-          this.updatePaginationState(res.meta.pagination.numberOfPages);
+          this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
           console.log(err);
@@ -208,7 +182,7 @@ export class PostFacadeService {
         next: (res) => {
           this._postsState.update((current) => [...current, ...res.data.bookmarks]);
           this._postsCache.set(POSTS_FILTER.SAVED, res.data.bookmarks);
-          this.updatePaginationState(res.meta.pagination.numberOfPages);
+          this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
           console.log(err);
@@ -239,13 +213,20 @@ export class PostFacadeService {
         next: (res) => {
           this._postsState.set(res.data.posts);
           this._postsCache.set(POSTS_FILTER.MY_POSTS, res.data.posts);
-          this.updatePaginationState(res.meta.pagination.numberOfPages);
+          this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
           console.log(err);
         },
       });
   }
+
+  // Create Post
+  private _createPostLoadingState = signal<boolean>(false);
+  public createPostLoading = this._createPostLoadingState.asReadonly();
+
+  private _uploadingPostDataState = signal<IPostUploading | null>(null);
+  public uploadingPostData = this._uploadingPostDataState.asReadonly();
 
   createPost(data: ICreatePostREQ): Observable<ICreatePostRES> {
     this._createPostLoadingState.set(true);
@@ -287,6 +268,15 @@ export class PostFacadeService {
       }),
     );
   }
+
+  // Like
+  private _postLikesLoadingState = signal<boolean>(false);
+  public postLikesLoading = this._postLikesLoadingState.asReadonly();
+
+  private _postLikesState = signal<ILike[]>([]);
+  public postLikes = this._postLikesState.asReadonly();
+
+  private _pendingLikes = new Set<string>();
 
   getPostLikes(postId: string): void {
     this._postLikesState.set([]);
@@ -347,6 +337,12 @@ export class PostFacadeService {
     );
   }
 
+  // Bookmark
+  private _pendingBookmarks = new Set<string>();
+  private _bookmarkLoadingState = signal<boolean>(false);
+
+  public bookmarkLoading = this._bookmarkLoadingState.asReadonly();
+
   toggleSavePost(postId: string): void {
     if (this._pendingBookmarks.has(postId)) return;
     this._pendingBookmarks.add(postId);
@@ -383,6 +379,10 @@ export class PostFacadeService {
       }),
     );
   }
+
+  // Delete
+  private _deletePostLoadingState = signal<boolean>(false);
+  public deletePostLoading = this._deletePostLoadingState.asReadonly();
 
   deletePost(postId: string): Observable<IDeletePostRES> {
     this._deletePostLoadingState.set(true);
@@ -421,6 +421,13 @@ export class PostFacadeService {
     );
   }
 
+  // Update
+  private _updatePostContentLoadingState = signal<boolean>(false);
+  public updatePostContentLoading = this._updatePostContentLoadingState.asReadonly();
+
+  private _updatePostPrivacyLoadingState = signal<boolean>(false);
+  public updatePostPrivacyLoading = this._updatePostPrivacyLoadingState.asReadonly();
+
   private updatePrivacyState(postId: string, privacy: PostPrivacy): void {
     this._postsState.update((posts) =>
       posts.map((p) => {
@@ -455,6 +462,182 @@ export class PostFacadeService {
             id: `editPrivacyPost${postId}`,
             description: `${err.error.message}`,
           });
+        },
+      });
+  }
+
+  // Post Comments
+  private _commentsPage = signal<number>(1);
+
+  private _hasMoreComments = signal<boolean>(true);
+  public hasMoreComments = this._hasMoreComments.asReadonly();
+
+  private _postCommentsState = signal<Map<string, IComment[]>>(new Map());
+  public postComments = this._postCommentsState.asReadonly();
+
+  private _commentRepliesState = signal<Map<string, IComment[]>>(new Map());
+  public commentReplies = this._commentRepliesState.asReadonly();
+
+  private _getPostCommentsLoadingState = signal<string | null>(null);
+  public getPostCommentsLoading = this._getPostCommentsLoadingState.asReadonly();
+
+  private _getCommentRepliesLoadingState = signal<string | null>(null);
+  public getCommentRepliesLoading = this._getCommentRepliesLoadingState.asReadonly();
+
+  private _toggleLikeCommentLoadingState = signal<string | null>(null);
+  public toggleLikeCommentLoading = this._toggleLikeCommentLoadingState.asReadonly();
+
+  private _createCommentLoadingState = signal<boolean>(false);
+  public createCommentLoading = this._createCommentLoadingState.asReadonly();
+
+  private _uploadingCommentState = signal<IComment | null>(null);
+  public uploadingComment = this._uploadingCommentState.asReadonly();
+
+  updateCommentsPaginationState(): void {}
+
+  getPostComments(postId: string, limit: number = 5): void {
+    this._getPostCommentsLoadingState.set(postId);
+
+    this.postApiService
+      .getPostComments(postId, 1, limit)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this._getPostCommentsLoadingState.set(null)),
+      )
+      .subscribe({
+        next: (res) => {
+          this._postCommentsState.update((current) => {
+            const newMap = new Map(current);
+            newMap.set(postId, res.data.comments);
+            return newMap;
+          });
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  }
+
+  getCommentReplies(postId: string, commentId: string, limit: number = 5): void {
+    this._getCommentRepliesLoadingState.set(commentId);
+
+    this.postApiService
+      .getCommentReplies(postId, commentId, 1, limit)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this._getCommentRepliesLoadingState.set(null)),
+      )
+      .subscribe({
+        next: (res) => {
+          this._commentRepliesState.update((current) => {
+            const newMap = new Map(current);
+            newMap.set(commentId, res.data.replies);
+            return newMap;
+          });
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  }
+
+  private reverseCommentLikeState(postId: string, commentId: string, userId: string): void {
+    this._postCommentsState.update((currentMap) => {
+      const comments = currentMap.get(postId);
+      if (!comments) return currentMap;
+
+      const updatedComments = comments.map((c) => {
+        if (c._id !== commentId) return c;
+
+        const wasLiked = c.likes.includes(userId);
+        const updatedLikes = wasLiked
+          ? c.likes.filter((id) => id !== userId)
+          : [...c.likes, userId];
+
+        return { ...c, likes: updatedLikes };
+      });
+
+      const newMap = new Map(currentMap);
+      newMap.set(postId, updatedComments);
+      return newMap;
+    });
+  }
+
+  toggleLikeComment(postId: string, commentId: string): void {
+    this._toggleLikeCommentLoadingState.set(commentId);
+
+    const currentUserId = this.authService.getUserId();
+    if (!currentUserId) return;
+
+    this.postApiService
+      .toggleLikeComment(postId, commentId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this._toggleLikeCommentLoadingState.set(null)),
+      )
+      .subscribe({
+        next: () => {
+          this.reverseCommentLikeState(postId, commentId, currentUserId);
+        },
+        error: (err) => {
+          toast.error("Couldn't Like Comment", {
+            id: `toggleLikePost${commentId}`,
+            description: `${err.error.message}`,
+          });
+        },
+      });
+  }
+
+  createTempComment(data: ICreateCommentREQ, postId: string): void {
+    const user = this.profileFacadeService.myData();
+    if (!user) return;
+
+    const now = Date.now();
+    let preview: string = '';
+    if (data.image) preview = URL.createObjectURL(data.image);
+
+    this._uploadingCommentState.set({
+      _id: `uploading${now}`,
+      content: data.content,
+      image: preview || undefined,
+      commentCreator: user,
+      createdAt: now.toString(),
+      likes: [],
+      parentComment: null,
+      post: postId,
+      repliesCount: 0,
+    });
+  }
+
+  createComment(postId: string, data: ICreateCommentREQ): void {
+    this._createCommentLoadingState.set(true);
+
+    this.createTempComment(data, postId);
+
+    const formData: FormData = new FormData();
+
+    if (data.content) formData.append('content', data.content);
+    if (data.image) formData.append('image', data.image);
+
+    this.postApiService
+      .createComment(postId, formData)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this._createCommentLoadingState.set(false)),
+      )
+      .subscribe({
+        next: (res) => {
+          this._postCommentsState.update((current) => {
+            const newMap = new Map(current);
+            const existingComments = newMap.get(postId) ?? [];
+
+            newMap.set(postId, [res.data.comment, ...existingComments]);
+            return newMap;
+          });
+          this._postsState
+        },
+        error: (err) => {
+          console.log(err);
         },
       });
   }

@@ -1,5 +1,5 @@
-import { Component, input } from '@angular/core';
-import { ITopComment } from '../../interfaces/comment.interface';
+import { Component, input, output } from '@angular/core';
+import { IComment } from '../../comment/interfaces/comment.interface';
 
 @Component({
   selector: 'app-post-top-comment',
@@ -8,5 +8,7 @@ import { ITopComment } from '../../interfaces/comment.interface';
   styleUrl: './post-top-comment.component.css',
 })
 export class PostTopCommentComponent {
-  topComment = input.required<ITopComment>();
+  topComment = input.required<IComment>();
+
+  onViewAllComments = output();
 }
