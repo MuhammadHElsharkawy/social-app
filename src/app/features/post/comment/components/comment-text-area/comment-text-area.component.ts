@@ -1,14 +1,16 @@
-import { Component, inject, OnDestroy, output, signal } from '@angular/core';
+import { Component, effect, inject, input, OnDestroy, output, signal } from '@angular/core';
 import {
   LucideFaceSlightlySmiling,
   LucideImage,
+  LucideLoaderCircle,
   LucideSendHorizontal,
   LucideX,
 } from '@lucide/angular';
-import { ProfileFacadeService } from '../../../profile/services/profile-facade.service';
-import { EmojiPickerComponent } from '../../../../shared/components/emoji-picker/emoji-picker.component';
-import { ICreateCommentREQ } from '../../comment/interfaces/comment.interface';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { EmojiPickerComponent } from '../../../../../shared/components/emoji-picker/emoji-picker.component';
+import { ProfileFacadeService } from '../../../../profile/services/profile-facade.service';
+import { ICreateCommentREQ } from '../../interfaces/comment.interface';
 
 @Component({
   imports: [
@@ -17,8 +19,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     LucideSendHorizontal,
     EmojiPickerComponent,
     LucideX,
+    LucideLoaderCircle,
     ReactiveFormsModule,
     FormsModule,
+    OverlayModule,
   ],
   selector: 'app-comment-text-area',
   styleUrl: './comment-text-area.component.css',
@@ -27,6 +31,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class CommentTextAreaComponent implements OnDestroy {
   protected readonly profileFacade = inject(ProfileFacadeService);
 
+  private wasLoading = signal<boolean>(false);
+  clearBeforeSuccess = input<boolean>(true);
+  loading = input<boolean>(false);
   onSend = output<ICreateCommentREQ>();
 
   body = signal<string>('');
@@ -34,6 +41,18 @@ export class CommentTextAreaComponent implements OnDestroy {
   previewUrl = signal<string | null>(null);
 
   showEmojiPicker = signal(false);
+
+  constructor() {
+    if (!this.clearBeforeSuccess()) {
+      effect(() => {
+        const loading = this.loading();
+
+        if (this.wasLoading() && !loading) this.resetForm();
+
+        this.wasLoading.set(loading);
+      });
+    }
+  }
 
   toggleEmojiPicker() {
     this.showEmojiPicker.update((value) => !value);
@@ -69,15 +88,19 @@ export class CommentTextAreaComponent implements OnDestroy {
     this.removeImage();
   }
 
-  onPostClick(): void {
-    if (!this.body() && !this.selectedFile()) return;
+  invalid(): boolean {
+    return (!this.body() || this.body().length < 2) && !this.selectedFile();
+  }
+
+  submit(): void {
+    if (this.invalid()) return;
 
     const data: ICreateCommentREQ = {};
 
     if (this.body()) data.content = this.body();
     if (this.selectedFile()) data.image = this.selectedFile()!;
 
-    this.resetForm();
+    if (this.clearBeforeSuccess()) this.resetForm();
 
     this.onSend.emit(data);
   }

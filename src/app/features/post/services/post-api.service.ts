@@ -8,6 +8,8 @@ import { ICreatePostRES, IUpdatePostREQ } from '../create-post/interfaces/create
 import { IToggleBookmarkPostRES } from '../interfaces/bookmark.interface';
 import {
   ICreateCommentRES,
+  ICreateReplyRES,
+  IDeleteCommentRES,
   IGetCommentRepliesRES,
   IGetPostCommentsRES,
   IToggleLikeCommentRES,
@@ -95,7 +97,16 @@ export class PostApiService {
     );
   }
 
-  createReply(postId: string, commentId: string, data: FormData): Observable<any> {
-    return this.httpClient.post(PostEndPoints.COMMENTS.CreateReply(postId, commentId), data);
+  createReply(postId: string, commentId: string, data: FormData): Observable<ICreateReplyRES> {
+    return this.httpClient.post<ICreateReplyRES>(
+      PostEndPoints.COMMENTS.CreateReply(postId, commentId),
+      data,
+    );
+  }
+
+  deleteComment(postId: string, commentId: string): Observable<IDeleteCommentRES> {
+    return this.httpClient.delete<IDeleteCommentRES>(
+      PostEndPoints.COMMENTS.DeleteComment(postId, commentId),
+    );
   }
 }

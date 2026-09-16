@@ -1,8 +1,8 @@
 import { Component, forwardRef, inject, input, OnInit } from '@angular/core';
 import { CommentCardComponent } from '../comment-card/comment-card.component';
-import { CommentTextAreaComponent } from '../../../components/comment-text-area/comment-text-area.component';
 import { PostFacadeService } from '../../../services/post-facade.service';
-import { IComment } from '../../interfaces/comment.interface';
+import { IComment, ICreateCommentREQ } from '../../interfaces/comment.interface';
+import { CommentTextAreaComponent } from '../comment-text-area/comment-text-area.component';
 
 @Component({
   imports: [forwardRef(() => CommentCardComponent), CommentTextAreaComponent],
@@ -15,6 +15,12 @@ export class CommentRepliesComponent implements OnInit {
 
   postId = input.required<string>();
   comment = input.required<IComment>();
+
+  createReply(data: ICreateCommentREQ): void {
+    console.log('test create reply');
+    
+    this.postFacade.createReply(this.postId(), this.comment()._id, data);
+  }
 
   ngOnInit(): void {
     this.postFacade.getCommentReplies(this.postId(), this.comment()._id);

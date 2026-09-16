@@ -195,7 +195,9 @@
 
   <!-- Post Image Area -->
   @if (post().image || previewUrl()) {
-    <div class="max-h-155 overflow-hidden border-y border-slate-200 dark:border-slate-800 relative">
+    <div
+      class="max-h-155 w-full max-w-full overflow-hidden border-y border-slate-200 dark:border-slate-800 relative"
+    >
       @if (editMode()) {
         @if (previewUrl()) {
           <img loading="lazy" alt="preview" class="w-full object-cover" [src]="previewUrl()" />
@@ -209,13 +211,16 @@
         }
       } @else {
         @if (post().image) {
-          <button type="button" class="group relative block w-full cursor-zoom-in">
+          <button
+            type="button"
+            class="group relative block w-full max-w-full cursor-zoom-in"
+            (click)="openPostImage.set(true)"
+          >
             <img
               loading="lazy"
-              alt="post"
-              class="w-full object-cover"
+              alt="post image"
+              class="w-full h-auto max-h-155 object-cover"
               [src]="post().image"
-              (click)="openPostImage.set(true)"
             />
             <span
               class="pointer-events-none absolute inset-0 bg-black/0 transition group-hover:bg-black/10 dark:group-hover:bg-white/5"
@@ -277,7 +282,7 @@
               : ''
           "
         >
-          {{ post().likesCount }} likes
+          {{ post().likesCount || 0 }} likes
         </button>
       </div>
 
@@ -285,9 +290,9 @@
       <div class="flex flex-wrap items-center gap-2 text-xs sm:gap-3 sm:text-sm">
         <span class="inline-flex items-center gap-1">
           <svg lucideRepeat2 class="size-3.25"></svg>
-          {{ post().sharesCount }} shares
+          {{ post().sharesCount || 0  }} shares
         </span>
-        <span>{{ post().commentsCount }} comments</span>
+        <span>{{ post().commentsCount || 0  }} comments</span>
         <button
           class="cursor-pointer rounded-md px-2 py-1 text-xs font-bold text-[#1877f2] transition hover:bg-[#e7f3ff] dark:text-blue-400 dark:hover:bg-blue-950/60"
         >

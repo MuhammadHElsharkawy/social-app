@@ -1,5 +1,7 @@
 <div class="relative mt-2 ml-5 pl-4">
-  <span class="absolute bottom-10 left-0 top-1 w-px rounded-full bg-slate-300 transition-colors dark:bg-slate-700"></span>
+  <span
+    class="absolute bottom-10 left-0 top-1 w-px rounded-full bg-slate-300 transition-colors dark:bg-slate-700"
+  ></span>
   @if (postFacade.getCommentRepliesLoading() === comment()._id) {
     <p class="text-xs text-slate-500 dark:text-slate-400">Loading replies...</p>
   } @else {
@@ -19,6 +21,10 @@
     <p class="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
       Replying to {{ comment().commentCreator.name }}
     </p>
-    <app-comment-text-area></app-comment-text-area>
+    <app-comment-text-area
+      (onSend)="createReply($event)"
+      [loading]="postFacade.createCommentLoading()"
+      [clearBeforeSuccess]="false"
+    ></app-comment-text-area>
   </div>
 </div>

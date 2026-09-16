@@ -19,9 +19,12 @@
 
   <!-- Comments Feed List -->
   <div class="space-y-2">
-    @if (postFacade.createCommentLoading()) {
+    @if (postFacade.uploadingComment()) {
       <div>
-        <app-comment-card [uploadingMode]="true" [comment]="postFacade.uploadingComment()!"></app-comment-card>
+        <app-comment-card
+          [uploadingMode]="true"
+          [comment]="postFacade.uploadingComment()!"
+        ></app-comment-card>
       </div>
     }
     @if (postFacade.getPostCommentsLoading() === postId()) {
@@ -31,7 +34,9 @@
         Loading comments...
       </div>
     } @else {
-      @if (postFacade.postComments().get(postId())?.length === 0) {
+      @if (
+        postFacade.postComments().get(postId())?.length === 0 && !postFacade.uploadingComment()
+      ) {
         <app-comments-empty></app-comments-empty>
       } @else {
         @for (comment of postFacade.postComments().get(postId()); track comment._id) {
@@ -45,6 +50,9 @@
 
   <!-- New Comment Input Box -->
   <div class="mt-3">
-    <app-comment-text-area (onSend)="createPost($event)"></app-comment-text-area>
+    <app-comment-text-area
+      (onSend)="createPost($event)"
+      [loading]="postFacade.createCommentLoading()"
+    ></app-comment-text-area>
   </div>
 </div>

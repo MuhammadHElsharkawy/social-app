@@ -14,7 +14,7 @@ import {
   IUpdatePostREQ,
 } from '../create-post/interfaces/create-post.interface';
 import { ProfileFacadeService } from '../../profile/services/profile-facade.service';
-import { IComment, ICreateCommentREQ } from '../comment/interfaces/comment.interface';
+import { IComment, ICreateCommentREQ, IReply } from '../comment/interfaces/comment.interface';
 
 @Service()
 export class PostFacadeService {
@@ -59,14 +59,14 @@ export class PostFacadeService {
   handleFilterChange(newFilter: PostsFilter): void {
     const isSameFilter = this._currentFilterState() === newFilter;
     const hasCachedData = this._postsCache.has(newFilter);
-    
+
     this._currentFilterState.set(newFilter);
-    
+
     if (!isSameFilter && hasCachedData) {
       this._postsState.set(this._postsCache.get(newFilter)!);
       return;
     }
-    
+
     this.resetPosts();
 
     this.fetchPosts(newFilter);
@@ -475,7 +475,7 @@ export class PostFacadeService {
   private _postCommentsState = signal<Map<string, IComment[]>>(new Map());
   public postComments = this._postCommentsState.asReadonly();
 
-  private _commentRepliesState = signal<Map<string, IComment[]>>(new Map());
+  private _commentRepliesState = signal<Map<string, IReply[]>>(new Map());
   public commentReplies = this._commentRepliesState.asReadonly();
 
   private _getPostCommentsLoadingState = signal<string | null>(null);
@@ -493,7 +493,82 @@ export class PostFacadeService {
   private _uploadingCommentState = signal<IComment | null>(null);
   public uploadingComment = this._uploadingCommentState.asReadonly();
 
+  private _deleteCommentLoadingState = signal<boolean>(false);
+  public deleteCommentLoading = this._deleteCommentLoadingState.asReadonly();
+
   updateCommentsPaginationState(): void {}
+
+  private addComment(postId: string, comment: IComment): void {
+    this._postCommentsState.update((current) => {
+      const newMap = new Map(current);
+      const existingComments = newMap.get(postId) ?? [];
+
+      newMap.set(postId, [comment, ...existingComments]);
+      return newMap;
+    });
+  }
+
+  private addReply(commentId: string, reply: IReply): void {
+    this._commentRepliesState.update((current) => {
+      const newMap = new Map(current);
+      const existingReplies = newMap.get(commentId) ?? [];
+
+      newMap.set(commentId, [...existingReplies, reply]);
+      return newMap;
+    });
+  }
+
+  private updatePostCommentsCount(postId: string, count: 1 | -1): void {
+    this._postsState.update((current) => {
+      return current.map((p) =>
+        p._id === postId ? { ...p, commentsCount: p.commentsCount + count } : p,
+      );
+    });
+  }
+
+  private updateCommentRepliesCount(postId: string, commentId: string, count: 1 | -1): void {
+    this._postCommentsState.update((current) => {
+      const newMap = new Map(current);
+      const existingComments = newMap.get(postId) ?? [];
+
+      const updatedComments = existingComments.map((c) =>
+        c._id === commentId ? { ...c, repliesCount: c.repliesCount + count } : c,
+      );
+
+      newMap.set(postId, updatedComments);
+      return newMap;
+    });
+  }
+
+  private removeComment(postId: string, commentId: string): void {
+    this._postCommentsState.update((current) => {
+      const newMap = new Map(current);
+      const existingComments = newMap.get(postId);
+
+      if (!existingComments) return newMap;
+
+      newMap.set(
+        postId,
+        existingComments.filter((c) => c._id !== commentId),
+      );
+      return newMap;
+    });
+  }
+
+  private removeReply(commentId: string, replyId: string): void {
+    this._commentRepliesState.update((current) => {
+      const newMap = new Map(current);
+      const existingReplies = newMap.get(commentId);
+
+      if (!existingReplies) return newMap;
+
+      newMap.set(
+        commentId,
+        existingReplies.filter((r) => r._id !== replyId),
+      );
+      return newMap;
+    });
+  }
 
   getPostComments(postId: string, limit: number = 5): void {
     this._getPostCommentsLoadingState.set(postId);
@@ -541,14 +616,14 @@ export class PostFacadeService {
       });
   }
 
-  private reverseCommentLikeState(postId: string, commentId: string, userId: string): void {
-    this._postCommentsState.update((currentMap) => {
-      const comments = currentMap.get(postId);
-      if (!comments) return currentMap;
+  private reverseCommentLikeState(postId: string, userId: string): void {
+    this._postCommentsState.update((current) => {
+      const newMap = new Map(current);
+      const postComments = newMap.get(postId);
 
-      const updatedComments = comments.map((c) => {
-        if (c._id !== commentId) return c;
+      if (!postComments) return newMap;
 
+      const updatedComments = postComments.map((c) => {
         const wasLiked = c.likes.includes(userId);
         const updatedLikes = wasLiked
           ? c.likes.filter((id) => id !== userId)
@@ -557,17 +632,37 @@ export class PostFacadeService {
         return { ...c, likes: updatedLikes };
       });
 
-      const newMap = new Map(currentMap);
       newMap.set(postId, updatedComments);
       return newMap;
     });
   }
 
-  toggleLikeComment(postId: string, commentId: string): void {
-    this._toggleLikeCommentLoadingState.set(commentId);
+  private reverseReplyLikeState(commentId: string, replyId: string, userId: string): void {
+    this._commentRepliesState.update((current) => {
+      const newMap = new Map(current);
+      const commentReplies = newMap.get(commentId);
 
+      if (!commentReplies) return newMap;
+
+      const updatedReplies = commentReplies.map((r) => {
+        const wasLiked = r.likes.includes(userId);
+        const updatedLikes = wasLiked
+          ? r.likes.filter((id) => id !== userId)
+          : [...r.likes, userId];
+
+        return { ...r, likes: updatedLikes };
+      });
+
+      newMap.set(commentId, updatedReplies);
+      return newMap;
+    });
+  }
+
+  toggleLikeComment(postId: string, commentId: string): void {
     const currentUserId = this.authService.getUserId();
     if (!currentUserId) return;
+
+    this._toggleLikeCommentLoadingState.set(commentId);
 
     this.postApiService
       .toggleLikeComment(postId, commentId)
@@ -577,11 +672,36 @@ export class PostFacadeService {
       )
       .subscribe({
         next: () => {
-          this.reverseCommentLikeState(postId, commentId, currentUserId);
+          this.reverseCommentLikeState(postId, currentUserId);
         },
         error: (err) => {
-          toast.error("Couldn't Like Comment", {
-            id: `toggleLikePost${commentId}`,
+          toast.error("Couldn't like this comment", {
+            id: `toggleLikeComment${commentId}`,
+            description: `${err.error.message}`,
+          });
+        },
+      });
+  }
+
+  toggleLikeReply(postId: string, commentId: string, replyId: string): void {
+    const currentUserId = this.authService.getUserId();
+    if (!currentUserId) return;
+
+    this._toggleLikeCommentLoadingState.set(replyId);
+
+    this.postApiService
+      .toggleLikeComment(postId, replyId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this._toggleLikeCommentLoadingState.set(null)),
+      )
+      .subscribe({
+        next: () => {
+          this.reverseReplyLikeState(commentId, replyId, currentUserId);
+        },
+        error: (err) => {
+          toast.error("Couldn't like this reply", {
+            id: `toggleLikeReply${commentId}`,
             description: `${err.error.message}`,
           });
         },
@@ -623,21 +743,85 @@ export class PostFacadeService {
       .createComment(postId, formData)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this._createCommentLoadingState.set(false)),
+        finalize(() => {
+          this._createCommentLoadingState.set(false);
+          this._uploadingCommentState.set(null);
+        }),
       )
       .subscribe({
         next: (res) => {
-          this._postCommentsState.update((current) => {
-            const newMap = new Map(current);
-            const existingComments = newMap.get(postId) ?? [];
-
-            newMap.set(postId, [res.data.comment, ...existingComments]);
-            return newMap;
-          });
-          this._postsState
+          this.addComment(postId, res.data.comment);
+          this.updatePostCommentsCount(postId, 1);
         },
         error: (err) => {
           console.log(err);
+        },
+      });
+  }
+
+  createReply(postId: string, commentId: string, data: ICreateCommentREQ): void {
+    this._createCommentLoadingState.set(true);
+
+    const formData: FormData = new FormData();
+
+    if (data.content) formData.append('content', data.content);
+    if (data.image) formData.append('image', data.image);
+
+    this.postApiService
+      .createReply(postId, commentId, formData)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this._createCommentLoadingState.set(false);
+        }),
+      )
+      .subscribe({
+        next: (res) => {
+          this.addReply(commentId, res.data.reply);
+          this.updateCommentRepliesCount(postId, commentId, 1);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  }
+
+  deleteComment(postId: string, commentId: string): void {
+    this._deleteCommentLoadingState.set(true);
+
+    this.postApiService
+      .deleteComment(postId, commentId)
+      .pipe(finalize(() => this._deleteCommentLoadingState.set(false)))
+      .subscribe({
+        next: () => {
+          this.removeComment(postId, commentId);
+          this.updatePostCommentsCount(postId, -1);
+        },
+        error: (err) => {
+          toast.error("Couldn't delete this comment", {
+            id: `deletecomment${commentId}`,
+            description: `${err.error.message}`,
+          });
+        },
+      });
+  }
+
+  deleteReply(postId: string, commentId: string, replyId: string): void {
+    this._deleteCommentLoadingState.set(true);
+
+    this.postApiService
+      .deleteComment(postId, replyId)
+      .pipe(finalize(() => this._deleteCommentLoadingState.set(false)))
+      .subscribe({
+        next: () => {
+          this.removeReply(commentId, replyId);
+          this.updateCommentRepliesCount(postId, commentId, -1);
+        },
+        error: (err) => {
+          toast.error("Couldn't delete this reply", {
+            id: `deletereply${replyId}`,
+            description: `${err.error.message}`,
+          });
         },
       });
   }
