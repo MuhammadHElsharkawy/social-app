@@ -22,7 +22,7 @@ export interface IComment {
   image?: string;
   commentCreator: IUser;
   post: string;
-  parentComment: string | null;
+  parentComment: null | string;
   likes: string[];
   createdAt: string;
   repliesCount: number;
@@ -35,7 +35,11 @@ export interface IGetCommentRepliesRES extends IBaseRES {
 }
 
 interface GetCommentRepliesData {
-  replies: IComment[];
+  replies: IReply[];
+}
+
+export interface IReply extends IComment {
+  isReply: boolean;
 }
 
 // ToggleLikeComment
@@ -61,4 +65,20 @@ export interface ICreateCommentRES extends IBaseRES {
 
 interface CreateCommentData {
   comment: IComment;
+}
+
+// DeleteComment
+export interface IDeleteCommentRES extends IBaseRES {
+  data: DeleteCommentData;
+}
+
+interface DeleteCommentData {}
+
+// Create Reply
+export interface ICreateReplyRES extends IBaseRES {
+  data: CreateReplyData;
+}
+
+interface CreateReplyData {
+  reply: IReply;
 }
