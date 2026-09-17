@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { EmojiPickerComponent } from '../../../../../shared/components/emoji-picker/emoji-picker.component';
 import { ProfileFacadeService } from '../../../../profile/services/profile-facade.service';
-import { ICreateCommentREQ } from '../../interfaces/comment.interface';
+import { ICommentContent } from '../../interfaces/comment.interface';
 
 @Component({
   imports: [
@@ -34,7 +34,7 @@ export class CommentTextAreaComponent implements OnDestroy {
   private wasLoading = signal<boolean>(false);
   clearBeforeSuccess = input<boolean>(true);
   loading = input<boolean>(false);
-  onSend = output<ICreateCommentREQ>();
+  onSend = output<ICommentContent>();
 
   body = signal<string>('');
   selectedFile = signal<File | null>(null);
@@ -43,15 +43,13 @@ export class CommentTextAreaComponent implements OnDestroy {
   showEmojiPicker = signal(false);
 
   constructor() {
-    if (!this.clearBeforeSuccess()) {
-      effect(() => {
-        const loading = this.loading();
+    effect(() => {
+      const loading = this.loading();
 
-        if (this.wasLoading() && !loading) this.resetForm();
+      if (this.wasLoading() && !loading) this.resetForm();
 
-        this.wasLoading.set(loading);
-      });
-    }
+      this.wasLoading.set(loading);
+    });
   }
 
   toggleEmojiPicker() {
@@ -95,7 +93,7 @@ export class CommentTextAreaComponent implements OnDestroy {
   submit(): void {
     if (this.invalid()) return;
 
-    const data: ICreateCommentREQ = {};
+    const data: ICommentContent = {};
 
     if (this.body()) data.content = this.body();
     if (this.selectedFile()) data.image = this.selectedFile()!;

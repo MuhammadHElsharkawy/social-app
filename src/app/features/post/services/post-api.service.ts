@@ -7,11 +7,11 @@ import { IGetPostLikesRES, IToggleLikePostRES } from '../interfaces/like.interfa
 import { ICreatePostRES, IUpdatePostREQ } from '../create-post/interfaces/create-post.interface';
 import { IToggleBookmarkPostRES } from '../interfaces/bookmark.interface';
 import {
-  ICreateCommentRES,
-  ICreateReplyRES,
   IDeleteCommentRES,
   IGetCommentRepliesRES,
   IGetPostCommentsRES,
+  ISingleCommentRES,
+  ISingleReplyRES,
   IToggleLikeCommentRES,
 } from '../comment/interfaces/comment.interface';
 
@@ -90,15 +90,15 @@ export class PostApiService {
     );
   }
 
-  createComment(postId: string, data: FormData): Observable<ICreateCommentRES> {
-    return this.httpClient.post<ICreateCommentRES>(
+  createComment(postId: string, data: FormData): Observable<ISingleCommentRES> {
+    return this.httpClient.post<ISingleCommentRES>(
       PostEndPoints.COMMENTS.CreateComment(postId),
       data,
     );
   }
 
-  createReply(postId: string, commentId: string, data: FormData): Observable<ICreateReplyRES> {
-    return this.httpClient.post<ICreateReplyRES>(
+  createReply(postId: string, commentId: string, data: FormData): Observable<ISingleReplyRES> {
+    return this.httpClient.post<ISingleReplyRES>(
       PostEndPoints.COMMENTS.CreateReply(postId, commentId),
       data,
     );
@@ -109,4 +109,18 @@ export class PostApiService {
       PostEndPoints.COMMENTS.DeleteComment(postId, commentId),
     );
   }
+
+  updateComment(postId: string, commentId: string, data: FormData): Observable<ISingleCommentRES> {
+    return this.httpClient.put<ISingleCommentRES>(
+      PostEndPoints.COMMENTS.UpdateComment(postId, commentId),
+      data,
+    );
+  }
+
+  // updateReply(postId: string, replyId: string, data: FormData): Observable<ISingleReplyRES> {
+  //   return this.httpClient.put<ISingleReplyRES>(
+  //     PostEndPoints.COMMENTS.UpdateComment(postId, replyId),
+  //     data,
+  //   );
+  // }
 }
