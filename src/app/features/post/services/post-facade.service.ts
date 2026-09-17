@@ -14,7 +14,13 @@ import {
   IUpdatePostREQ,
 } from '../create-post/interfaces/create-post.interface';
 import { ProfileFacadeService } from '../../profile/services/profile-facade.service';
-import { IComment, ICreateCommentREQ, IReply } from '../comment/interfaces/comment.interface';
+import {
+  IComment,
+  ICommentContent,
+  IReply,
+  ISingleCommentRES,
+  ISingleReplyRES,
+} from '../comment/interfaces/comment.interface';
 
 @Service()
 export class PostFacadeService {
@@ -496,49 +502,10 @@ export class PostFacadeService {
   private _deleteCommentLoadingState = signal<boolean>(false);
   public deleteCommentLoading = this._deleteCommentLoadingState.asReadonly();
 
+  private _updateCommentLoadingState = signal<boolean>(false);
+  public updateCommentLoading = this._updateCommentLoadingState.asReadonly();
+
   updateCommentsPaginationState(): void {}
-
-  private addComment(postId: string, comment: IComment): void {
-    this._postCommentsState.update((current) => {
-      const newMap = new Map(current);
-      const existingComments = newMap.get(postId) ?? [];
-
-      newMap.set(postId, [comment, ...existingComments]);
-      return newMap;
-    });
-  }
-
-  private addReply(commentId: string, reply: IReply): void {
-    this._commentRepliesState.update((current) => {
-      const newMap = new Map(current);
-      const existingReplies = newMap.get(commentId) ?? [];
-
-      newMap.set(commentId, [...existingReplies, reply]);
-      return newMap;
-    });
-  }
-
-  private updatePostCommentsCount(postId: string, count: 1 | -1): void {
-    this._postsState.update((current) => {
-      return current.map((p) =>
-        p._id === postId ? { ...p, commentsCount: p.commentsCount + count } : p,
-      );
-    });
-  }
-
-  private updateCommentRepliesCount(postId: string, commentId: string, count: 1 | -1): void {
-    this._postCommentsState.update((current) => {
-      const newMap = new Map(current);
-      const existingComments = newMap.get(postId) ?? [];
-
-      const updatedComments = existingComments.map((c) =>
-        c._id === commentId ? { ...c, repliesCount: c.repliesCount + count } : c,
-      );
-
-      newMap.set(postId, updatedComments);
-      return newMap;
-    });
-  }
 
   private removeComment(postId: string, commentId: string): void {
     this._postCommentsState.update((current) => {
@@ -708,7 +675,49 @@ export class PostFacadeService {
       });
   }
 
-  createTempComment(data: ICreateCommentREQ, postId: string): void {
+  private addComment(postId: string, comment: IComment): void {
+    this._postCommentsState.update((current) => {
+      const newMap = new Map(current);
+      const existingComments = newMap.get(postId) ?? [];
+
+      newMap.set(postId, [comment, ...existingComments]);
+      return newMap;
+    });
+  }
+
+  private addReply(commentId: string, reply: IReply): void {
+    this._commentRepliesState.update((current) => {
+      const newMap = new Map(current);
+      const existingReplies = newMap.get(commentId) ?? [];
+
+      newMap.set(commentId, [...existingReplies, reply]);
+      return newMap;
+    });
+  }
+
+  private updatePostCommentsCount(postId: string, count: 1 | -1): void {
+    this._postsState.update((current) => {
+      return current.map((p) =>
+        p._id === postId ? { ...p, commentsCount: p.commentsCount + count } : p,
+      );
+    });
+  }
+
+  private updateCommentRepliesCount(postId: string, commentId: string, count: 1 | -1): void {
+    this._postCommentsState.update((current) => {
+      const newMap = new Map(current);
+      const existingComments = newMap.get(postId) ?? [];
+
+      const updatedComments = existingComments.map((c) =>
+        c._id === commentId ? { ...c, repliesCount: c.repliesCount + count } : c,
+      );
+
+      newMap.set(postId, updatedComments);
+      return newMap;
+    });
+  }
+
+  createTempComment(data: ICommentContent, postId: string): void {
     const user = this.profileFacadeService.myData();
     if (!user) return;
 
@@ -729,7 +738,7 @@ export class PostFacadeService {
     });
   }
 
-  createComment(postId: string, data: ICreateCommentREQ): void {
+  createComment(postId: string, data: ICommentContent): void {
     this._createCommentLoadingState.set(true);
 
     this.createTempComment(data, postId);
@@ -759,7 +768,7 @@ export class PostFacadeService {
       });
   }
 
-  createReply(postId: string, commentId: string, data: ICreateCommentREQ): void {
+  createReply(postId: string, commentId: string, data: ICommentContent): void {
     this._createCommentLoadingState.set(true);
 
     const formData: FormData = new FormData();
@@ -822,6 +831,82 @@ export class PostFacadeService {
             id: `deletereply${replyId}`,
             description: `${err.error.message}`,
           });
+        },
+      });
+  }
+
+  private updateCommentContent(postId: string, commentId: string, newComment: IComment) {
+    this._postCommentsState.update((current) => {
+      const newMap = new Map(current);
+      const existingComments = newMap.get(postId) ?? [];
+
+      const updatedComments = existingComments.map((c) => {
+        if (c._id === commentId) {
+          c = newComment;
+        }
+        return c;
+      });
+
+      newMap.set(postId, updatedComments);
+      return newMap;
+    });
+  }
+
+  private updateReplyContent(commentId: string, replyId: string, newReply: IReply) {
+    this._commentRepliesState.update((current) => {
+      const newMap = new Map(current);
+      const existingReplies = newMap.get(commentId) ?? [];
+
+      if (!existingReplies || existingReplies.length === 0) return newMap;
+
+      const updatedReplies = existingReplies.map((r) => {
+        if (r._id === replyId) {
+          r = newReply;
+        }
+        return r;
+      });
+
+      newMap.set(commentId, updatedReplies);
+      return newMap;
+    });
+  }
+
+  updateComment(postId: string, commentId: string, data: ICommentContent): void {
+    this._updateCommentLoadingState.set(true);
+
+    const formData: FormData = new FormData();
+    if (data.content) formData.append('content', data.content);
+    if (data.image) formData.append('image', data.image);
+
+    this.postApiService
+      .updateComment(postId, commentId, formData)
+      .pipe(finalize(() => this._updateCommentLoadingState.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.updateCommentContent(postId, commentId, res.data.comment);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  }
+
+  updateReply(postId: string, commentId: string, replyId: string, data: ICommentContent): void {
+    this._updateCommentLoadingState.set(true);
+
+    const formData: FormData = new FormData();
+    if (data.content) formData.append('content', data.content);
+    if (data.image) formData.append('image', data.image);
+
+    this.postApiService
+      .updateComment(postId, replyId, formData)
+      .pipe(finalize(() => this._updateCommentLoadingState.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.updateReplyContent(commentId, replyId, res.data.comment as IReply);
+        },
+        error: (err) => {
+          console.log(err);
         },
       });
   }

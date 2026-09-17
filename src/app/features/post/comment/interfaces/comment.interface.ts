@@ -53,17 +53,17 @@ interface ToggleLikeCommentData {
   comment: IComment;
 }
 
-// Create Comment
-export interface ICreateCommentREQ {
+// Create Comment & Update Comment
+export interface ICommentContent {
   content?: string;
   image?: File;
 }
 
-export interface ICreateCommentRES extends IBaseRES {
-  data: CreateCommentData;
+export interface ISingleCommentRES extends IBaseRES {
+  data: SingleCommentData;
 }
 
-interface CreateCommentData {
+interface SingleCommentData {
   comment: IComment;
 }
 
@@ -74,11 +74,11 @@ export interface IDeleteCommentRES extends IBaseRES {
 
 interface DeleteCommentData {}
 
-// Create Reply
-export interface ICreateReplyRES extends IBaseRES {
-  data: CreateReplyData;
+// Create Reply & Update Reply
+export interface ISingleReplyRES extends IBaseRES {
+  data: SingleReplyData;
 }
 
-interface CreateReplyData {
+interface SingleReplyData {
   reply: IReply;
 }

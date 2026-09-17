@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import {
   LucideBookmark,
   LucideChevronDown,

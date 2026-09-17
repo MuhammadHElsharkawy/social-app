@@ -1,12 +1,13 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { LucideEllipsis, LucidePencil, LucideTrash2 } from '@lucide/angular';
-import { IComment } from '../../interfaces/comment.interface';
+import { IComment, ICommentContent } from '../../interfaces/comment.interface';
 import { TimeAgoPipe } from '../../../../../shared/pipes/time-ago-pipe';
 import { CommentRepliesComponent } from '../comment-replies/comment-replies.component';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { PostFacadeService } from '../../../services/post-facade.service';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   imports: [
@@ -17,6 +18,7 @@ import { DeleteDialogComponent } from '../../../../../shared/components/delete-d
     CommentRepliesComponent,
     OverlayModule,
     DeleteDialogComponent,
+    FormsModule,
   ],
   selector: 'app-comment-card',
   styleUrl: './comment-card.component.css',
@@ -26,13 +28,29 @@ export class CommentCardComponent {
   protected postFacade = inject(PostFacadeService);
   private readonly authService = inject(AuthService);
 
+  comment = input.required<IComment>();
+  isReply = input<boolean>(false);
+
   deleteDialogOpen = signal<boolean>(false);
   isMyComment = computed(() => this.authService.getUserId() === this.comment().commentCreator._id);
   uploadingMode = input<boolean>(false);
   optionsOpen = signal(false);
+  editMode = signal<boolean>(false);
+  editWasLoading = signal<boolean>(false);
 
-  comment = input.required<IComment>();
-  isReply = input<boolean>(false);
+  body = signal<string>('');
+  selectedFile = signal<File | null>(null);
+  previewUrl = signal<string | null>(null);
+
+  constructor() {
+    effect(() => {
+      const loading = this.postFacade.updateCommentLoading();
+
+      if (this.editWasLoading() && !loading) this.handleCancelEditClick();
+
+      this.editWasLoading.set(loading);
+    });
+  }
 
   openDeleteDialog(): void {
     this.deleteDialogOpen.set(true);
@@ -80,4 +98,65 @@ export class CommentCardComponent {
   likeClasses = computed(() =>
     this.isLiked() ? 'text-[#1877f2] dark:text-blue-400' : 'text-slate-500 dark:text-slate-400',
   );
+
+  handleEditClick(): void {
+    this.optionsOpen.set(false);
+    this.prepareCommentForEdit();
+  }
+
+  prepareCommentForEdit(): void {
+    this.editMode.set(true);
+    this.previewUrl.set(this.comment().image || null);
+    this.body.set(this.comment().content ?? '');
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file: File | null = input.files?.[0] ?? null;
+
+    if (file) this.selectedFile.set(file);
+    this.setPreview(file);
+  }
+
+  private setPreview(file: File | null) {
+    if (this.previewUrl()) URL.revokeObjectURL(this.previewUrl()!);
+
+    if (file) this.previewUrl.set(URL.createObjectURL(file));
+    else this.previewUrl.set(null);
+  }
+
+  removeImage(): void {
+    if (this.previewUrl()) URL.revokeObjectURL(this.previewUrl()!);
+    this.previewUrl.set(null);
+    this.selectedFile.set(null);
+  }
+
+  private resetForm(): void {
+    this.body.set('');
+    this.removeImage();
+  }
+
+  handleCancelEditClick(): void {
+    this.editMode.set(false);
+    this.resetForm();
+  }
+
+  handleSaveEditClick(): void {
+    if (!this.body()) return;
+
+    const data: ICommentContent = { content: this.body() };
+
+    if (this.previewUrl() && this.previewUrl() !== this.comment().image) {
+      data.image = this.selectedFile()!;
+    }
+
+    this.isReply()
+      ? this.postFacade.updateReply(
+          this.comment().post,
+          this.comment().parentComment!,
+          this.comment()._id,
+          data,
+        )
+      : this.postFacade.updateComment(this.comment().post, this.comment()._id, data);
+  }
 }
