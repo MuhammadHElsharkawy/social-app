@@ -16,7 +16,7 @@
             {{ comment().commentCreator.name }}
           </p>
           <p class="text-xs text-slate-500 dark:text-slate-400">
-            @{{ comment().commentCreator.username }}<!--  · {{ comment().createdAt | timeAgo }} -->
+            @{{ comment().commentCreator.username }}
           </p>
         </div>
         @if (uploadingMode()) {
@@ -25,11 +25,12 @@
       </div>
       @if (editMode()) {
         <textarea
+          appAutoResize
           [(ngModel)]="body"
           maxlength="5000"
-          class="min-h-27.5 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none ring-[#1877f2]/20 transition placeholder:text-slate-400 focus:border-[#1877f2] focus:ring-2 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:ring-blue-500/20 dark:focus:border-blue-400"
-          >{{ comment().content }}</textarea>
-        <div class="mt-2 flex items-center justify-end gap-2">
+          class="mt-2 w-full overflow-hidden rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none ring-[#1877f2]/20 transition placeholder:text-slate-400 focus:border-[#1877f2] focus:ring-2 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:ring-blue-500/20 dark:focus:border-blue-400"
+        ></textarea>
+        <div class="flex items-center justify-end gap-2">
           <button
             [disabled]="postFacade.updateCommentLoading()"
             class="enabled:cursor-pointer rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white disabled:cursor-no-drop disabled:opacity-60"
@@ -51,14 +52,79 @@
             {{ comment().content }}
           </p>
         }
-        @if (comment().image) {
-          <img
-            [alt]="isReply() ? 'Reply' : 'Comment'"
-            class="mt-2 max-h-52 w-full rounded-lg object-cover ring-1 ring-slate-200/50 dark:ring-slate-700"
-            [src]="comment().image"
-            loading="lazy"
-          />
-        }
+      }
+
+      @if (comment().image || previewUrl()) {
+        <div class="mt-2 max-h-52 w-full ring-1 ring-slate-200/50 dark:ring-slate-700 relative">
+          @if (editMode()) {
+            @if (previewUrl()) {
+              <img
+                alt="preview"
+                class="max-h-52 h-auto w-full rounded-lg object-cover"
+                [src]="previewUrl()"
+                loading="lazy"
+              />
+              @if (previewUrl() !== comment().image) {
+                <button
+                  [disabled]="postFacade.updateCommentLoading()"
+                  class="absolute bg-white rounded-full top-3 left-3 z-30 enabled:cursor-pointer disabled:cursor-no-drop disabled:opacity-60"
+                  (click)="backToOldImage()"
+                >
+                  <svg lucideX></svg>
+                </button>
+              }
+            }
+          } @else {
+            @if (comment().image) {
+              <img
+                [alt]="isReply() ? 'Reply image' : 'Comment image'"
+                class="h-auto max-h-52 w-full rounded-lg object-cover"
+                [src]="comment().image"
+                loading="lazy"
+              />
+            }
+          }
+        </div>
+      }
+
+      @if (editMode()) {
+        <div class="rounded-md my-2 inline-flex items-center justify-start">
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+          >
+            <svg lucideImage class="size-4.5 text-emerald-600 dark:text-emerald-400"></svg>
+            <span class="hidden sm:inline">Photo</span>
+            <input accept="image/*" class="hidden" type="file" (change)="onFileSelected($event)" />
+          </label>
+          <button
+            (click)="toggleEmojiPicker()"
+            type="button"
+            class="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            cdkOverlayOrigin
+            #emojiPickerTrigger="cdkOverlayOrigin"
+          >
+            <svg
+              lucideFaceSlightlySmiling
+              class="size-4.5 text-amber-500 dark:text-amber-400"
+            ></svg>
+            <span class="hidden sm:inline">Emoji</span>
+          </button>
+          @if (showEmojiPicker()) {
+            <ng-template
+              cdkConnectedOverlay
+              [cdkConnectedOverlayOrigin]="emojiPickerTrigger"
+              [cdkConnectedOverlayOpen]="showEmojiPicker()"
+              [cdkConnectedOverlayHasBackdrop]="true"
+              cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+              (backdropClick)="showEmojiPicker.set(false)"
+              (detach)="showEmojiPicker.set(false)"
+            >
+              <div class="ml-2 mt-2">
+                <app-emoji-picker (emojiSelected)="addEmoji($event)" />
+              </div>
+            </ng-template>
+          }
+        </div>
       }
     </div>
 

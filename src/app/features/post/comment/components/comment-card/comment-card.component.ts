@@ -1,5 +1,12 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
-import { LucideEllipsis, LucidePencil, LucideTrash2 } from '@lucide/angular';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import {
+  LucideEllipsis,
+  LucideFaceSlightlySmiling,
+  LucideImage,
+  LucidePencil,
+  LucideTrash2,
+  LucideX,
+} from '@lucide/angular';
 import { IComment, ICommentContent } from '../../interfaces/comment.interface';
 import { TimeAgoPipe } from '../../../../../shared/pipes/time-ago-pipe';
 import { CommentRepliesComponent } from '../comment-replies/comment-replies.component';
@@ -8,17 +15,24 @@ import { PostFacadeService } from '../../../services/post-facade.service';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { FormsModule } from '@angular/forms';
+import { TextareaAutoResizeDirective } from '../../../../../shared/directives/textarea-auto-resize.directive';
+import { EmojiPickerComponent } from '../../../../../shared/components/emoji-picker/emoji-picker.component';
 
 @Component({
   imports: [
     LucideEllipsis,
     LucidePencil,
     LucideTrash2,
+    LucideImage,
+    LucideFaceSlightlySmiling,
+    LucideX,
     TimeAgoPipe,
     CommentRepliesComponent,
     OverlayModule,
     DeleteDialogComponent,
     FormsModule,
+    TextareaAutoResizeDirective,
+    EmojiPickerComponent,
   ],
   selector: 'app-comment-card',
   styleUrl: './comment-card.component.css',
@@ -42,6 +56,8 @@ export class CommentCardComponent {
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
 
+  showEmojiPicker = signal(false);
+
   constructor() {
     effect(() => {
       const loading = this.postFacade.updateCommentLoading();
@@ -50,6 +66,14 @@ export class CommentCardComponent {
 
       this.editWasLoading.set(loading);
     });
+  }
+
+  toggleEmojiPicker() {
+    this.showEmojiPicker.update((value) => !value);
+  }
+
+  addEmoji(emoji: string) {
+    this.body.update((c) => c + emoji);
   }
 
   openDeleteDialog(): void {
@@ -129,6 +153,13 @@ export class CommentCardComponent {
     if (this.previewUrl()) URL.revokeObjectURL(this.previewUrl()!);
     this.previewUrl.set(null);
     this.selectedFile.set(null);
+  }
+
+  backToOldImage(): void {
+    if (this.previewUrl()) URL.revokeObjectURL(this.previewUrl()!);
+
+    if (this.comment().image) this.previewUrl.set(this.comment().image!);
+    else this.removeImage();
   }
 
   private resetForm(): void {
