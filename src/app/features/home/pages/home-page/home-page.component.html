@@ -1,4 +1,4 @@
-<div class="w-full grid gap-4 grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)_300px]">
+<div class="w-full grid lg:gap-4 grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)_300px]">
   <app-posts-filter
     [selectedFilter]="postFacadeService.currentFilter()"
     (filterClick)="postFacadeService.handleFilterChange($event)"
