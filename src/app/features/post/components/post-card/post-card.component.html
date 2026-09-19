@@ -166,7 +166,7 @@
           [(ngModel)]="body"
           maxlength="5000"
           class="min-h-27.5 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none ring-[#1877f2]/20 transition placeholder:text-slate-400 focus:border-[#1877f2] focus:ring-2 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:ring-blue-500/20 dark:focus:border-blue-400"
-          ></textarea>
+        ></textarea>
         <div class="mt-2 flex items-center justify-end gap-2">
           <button
             [disabled]="postFacadeService.updatePostContentLoading()"
@@ -213,7 +213,7 @@
         @if (post().image) {
           <button
             type="button"
-            class="group relative block w-full max-w-full cursor-zoom-in"
+            class="group relative block w-full max-w-full cursor-pointer"
             (click)="openPostImage.set(true)"
           >
             <img
@@ -232,22 +232,11 @@
   }
 
   @if (openPostImage()) {
-    <div class="fixed inset-0 z-80 flex items-center justify-center bg-black/90 p-4 sm:p-8">
-      <button
-        (click)="openPostImage.set(false)"
-        type="button"
-        class="cursor-pointer absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-      >
-        <svg lucideX class="size-5"></svg>
-      </button>
-      <img
-        (appClickOutside)="openPostImage.set(false)"
-        [alt]="post().user.name + ' post image'"
-        class="max-h-full max-w-full object-contain"
-        [src]="post().image"
-        loading="lazy"
-      />
-    </div>
+    <app-image-zoom
+      [imageSrc]="post().image!"
+      [imageAlt]="post().user.name + ' post image'"
+      (onClose)="openPostImage.set(false)"
+    ></app-image-zoom>
   }
 
   @if (editMode()) {
@@ -290,9 +279,9 @@
       <div class="flex flex-wrap items-center gap-2 text-xs sm:gap-3 sm:text-sm">
         <span class="inline-flex items-center gap-1">
           <svg lucideRepeat2 class="size-3.25"></svg>
-          {{ post().sharesCount || 0  }} shares
+          {{ post().sharesCount || 0 }} shares
         </span>
-        <span>{{ post().commentsCount || 0  }} comments</span>
+        <span>{{ post().commentsCount || 0 }} comments</span>
         <button
           class="cursor-pointer rounded-md px-2 py-1 text-xs font-bold text-[#1877f2] transition hover:bg-[#e7f3ff] dark:text-blue-400 dark:hover:bg-blue-950/60"
         >

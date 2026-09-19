@@ -28,6 +28,7 @@ import { FormsModule } from '@angular/forms';
 import { IUpdatePostREQ } from '../../create-post/interfaces/create-post.interface';
 import { TimeAgoPipe } from '../../../../shared/pipes/time-ago-pipe';
 import { PostCommentsComponent } from '../../comment/components/post-comments/post-comments.component';
+import { ImageZoomComponent } from '../../../../shared/components/image-zoom/image-zoom.component';
 
 @Component({
   selector: 'app-post-card',
@@ -52,7 +53,8 @@ import { PostCommentsComponent } from '../../comment/components/post-comments/po
     FormsModule,
     PostCommentsComponent,
     TimeAgoPipe,
-  ],
+    ImageZoomComponent
+],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
 })
