@@ -14,13 +14,12 @@
     <svg lucideLoaderCircle [class.animate-spin]="isLoading()"></svg>
   </span>
   <span
-    /* class="flex lg:gap-3 gap-2 justify-center lg:justify-start items-center transition-all ease-in-out" */
-    class="flex lg:gap-3 justify-center lg:justify-start items-center transition-all ease-in-out"
+    class="flex md:gap-2 lg:gap-3 justify-center lg:justify-start items-center transition-all ease-in-out"
     [class.-translate-x-32]="isLoading()"
     [class.opacity-0]="isLoading()"
   >
     <ng-content></ng-content>
-    <span class="hidden lg:block">
+    <span class="hidden md:block">
       {{ label() }}
     </span>
   </span>
