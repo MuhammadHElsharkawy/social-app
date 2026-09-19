@@ -17,6 +17,7 @@ import { DeleteDialogComponent } from '../../../../../shared/components/delete-d
 import { FormsModule } from '@angular/forms';
 import { TextareaAutoResizeDirective } from '../../../../../shared/directives/textarea-auto-resize.directive';
 import { EmojiPickerComponent } from '../../../../../shared/components/emoji-picker/emoji-picker.component';
+import { ImageZoomComponent } from '../../../../../shared/components/image-zoom/image-zoom.component';
 
 @Component({
   imports: [
@@ -33,6 +34,7 @@ import { EmojiPickerComponent } from '../../../../../shared/components/emoji-pic
     FormsModule,
     TextareaAutoResizeDirective,
     EmojiPickerComponent,
+    ImageZoomComponent,
   ],
   selector: 'app-comment-card',
   styleUrl: './comment-card.component.css',
@@ -41,6 +43,8 @@ import { EmojiPickerComponent } from '../../../../../shared/components/emoji-pic
 export class CommentCardComponent {
   protected postFacade = inject(PostFacadeService);
   private readonly authService = inject(AuthService);
+
+  openCommentImage = signal<boolean>(false);
 
   comment = input.required<IComment>();
   isReply = input<boolean>(false);

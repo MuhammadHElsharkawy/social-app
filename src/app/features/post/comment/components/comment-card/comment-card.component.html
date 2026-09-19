@@ -55,7 +55,7 @@
       }
 
       @if (comment().image || previewUrl()) {
-        <div class="mt-2 max-h-52 w-full ring-1 ring-slate-200/50 dark:ring-slate-700 relative">
+        <div class="mt-2 max-h-52 w-full relative">
           @if (editMode()) {
             @if (previewUrl()) {
               <img
@@ -76,15 +76,32 @@
             }
           } @else {
             @if (comment().image) {
-              <img
-                [alt]="isReply() ? 'Reply image' : 'Comment image'"
-                class="h-auto max-h-52 w-full rounded-lg object-cover"
-                [src]="comment().image"
-                loading="lazy"
-              />
+              <button
+                type="button"
+                class="group relative block w-full max-w-full cursor-pointer"
+                (click)="openCommentImage.set(true)"
+              >
+                <img
+                  [alt]="isReply() ? 'Reply image' : 'Comment image'"
+                  class="h-auto max-h-52 w-full rounded-lg object-cover ring-1 ring-slate-200/50 dark:ring-slate-700"
+                  [src]="comment().image"
+                  loading="lazy"
+                />
+                <span
+              class="pointer-events-none absolute inset-0 bg-black/0 transition group-hover:bg-black/10 dark:group-hover:bg-white/5"
+            ></span>
+              </button>
             }
           }
         </div>
+      }
+
+      @if (openCommentImage()) {
+        <app-image-zoom
+          [imageSrc]="comment().image!"
+          [imageAlt]="comment().commentCreator.name"
+          (onClose)="openCommentImage.set(false)"
+        ></app-image-zoom>
       }
 
       @if (editMode()) {
