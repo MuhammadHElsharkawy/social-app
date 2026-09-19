@@ -1,7 +1,13 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IDeletePostRES, IGetBookmarksRES, IGetPostsRES } from '../interfaces/post.interfaces';
+import {
+  IDeletePostRES,
+  IGetBookmarksRES,
+  IGetPostsRES,
+  ISharePostREQ,
+  ISharePostRES,
+} from '../interfaces/post.interfaces';
 import { PostEndPoints } from '../constants/post-endpoints';
 import { IGetPostLikesRES, IToggleLikePostRES } from '../interfaces/like.interface';
 import { ICreatePostRES, IUpdatePostREQ } from '../create-post/interfaces/create-post.interface';
@@ -117,10 +123,7 @@ export class PostApiService {
     );
   }
 
-  // updateReply(postId: string, replyId: string, data: FormData): Observable<ISingleReplyRES> {
-  //   return this.httpClient.put<ISingleReplyRES>(
-  //     PostEndPoints.COMMENTS.UpdateComment(postId, replyId),
-  //     data,
-  //   );
-  // }
+  sharePost(postId: string, data: ISharePostREQ): Observable<ISharePostRES> {
+    return this.httpClient.post<ISharePostRES>(PostEndPoints.SharePost(postId), data);
+  }
 }

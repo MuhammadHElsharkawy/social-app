@@ -1,19 +1,20 @@
+import { IBaseRES } from '../../../core/interfaces/base-res.interface';
 import { IPagination } from '../../../core/interfaces/pagination.interface';
 import { IUser } from '../../../core/interfaces/user.interface';
 import { IComment } from '../comment/interfaces/comment.interface';
 
-export interface IGetPostsRES {
-  success: boolean;
-  message: string;
+export interface IGetPostsRES extends IBaseRES {
   data: IPostsData;
   meta: Meta;
 }
 
-export interface IGetBookmarksRES {
-  success: boolean;
-  message: string;
+export interface IGetBookmarksRES extends IBaseRES {
   data: IBookmarksData;
   meta: Meta;
+}
+
+interface ISinglePostData {
+  post: IPost;
 }
 
 interface IPostsData {
@@ -52,12 +53,19 @@ interface Meta {
   pagination: IPagination;
 }
 
-export interface IDeletePostRES {
-  success: boolean;
-  message: string;
+export interface IDeletePostRES extends IBaseRES {
   data: IDeletePostData;
 }
 
 interface IDeletePostData {
   post: IPost;
+}
+
+// Share Post
+export interface ISharePostREQ {
+  body?: string;
+}
+
+export interface ISharePostRES extends IBaseRES {
+  data: ISinglePostData;
 }
