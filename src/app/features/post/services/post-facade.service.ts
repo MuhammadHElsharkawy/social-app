@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, finalize, map, Observable, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { ILike } from '../interfaces/like.interface';
-import { IDeletePostRES, IPost, PostPrivacy } from '../interfaces/post.interfaces';
+import { IDeletePostRES, IPost, ISharePostREQ, PostPrivacy } from '../interfaces/post.interfaces';
 import { PostApiService } from './post-api.service';
 import { POSTS_FILTER, PostsFilter } from '../../home/interfaces/posts-filter.interface';
 import { toast } from 'ngx-sonner';
@@ -234,6 +234,10 @@ export class PostFacadeService {
   private _uploadingPostDataState = signal<IPostUploading | null>(null);
   public uploadingPostData = this._uploadingPostDataState.asReadonly();
 
+  private addPost(post: IPost): void {
+    this._postsState.update((current) => [post, ...current]);
+  }
+
   createPost(data: ICreatePostREQ): Observable<ICreatePostRES> {
     this._createPostLoadingState.set(true);
 
@@ -264,7 +268,7 @@ export class PostFacadeService {
         };
       }),
       tap({
-        next: (res) => this._postsState.update((current) => [res.data.post, ...current]),
+        next: (res) => this.addPost(res.data.post),
       }),
       finalize(() => {
         this._createPostLoadingState.set(false);
@@ -907,6 +911,33 @@ export class PostFacadeService {
         },
         error: (err) => {
           console.log(err);
+        },
+      });
+  }
+
+  // Share Post
+  private _sharePostLoadingState = signal<boolean>(false);
+  public sharePostLoading = this._sharePostLoadingState.asReadonly();
+
+  sharePost(postId: string, data: ISharePostREQ): void {
+    this._sharePostLoadingState.set(true);
+
+    this.postApiService
+      .sharePost(postId, data)
+      .pipe(
+        finalize(() => this._sharePostLoadingState.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (res) => {
+          this.addPost(res.data.post)
+          toast.success('Post shared successfully');
+        },
+        error: (err) => {
+          toast.error("Couldn't share this post", {
+            id: `sharepost:${postId}`,
+            description: `${err.error.message}`,
+          });
         },
       });
   }

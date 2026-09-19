@@ -14,6 +14,7 @@ import {
   LucideX,
   LucideLock,
   LucideUsers,
+  LucideFaceSlightlySmiling,
 } from '@lucide/angular';
 import { PostLikesComponent } from '../post-likes/post-likes.component';
 import { PostTopCommentComponent } from '../post-top-comment/post-top-comment.component';
@@ -29,6 +30,10 @@ import { IUpdatePostREQ } from '../../create-post/interfaces/create-post.interfa
 import { TimeAgoPipe } from '../../../../shared/pipes/time-ago-pipe';
 import { PostCommentsComponent } from '../../comment/components/post-comments/post-comments.component';
 import { ImageZoomComponent } from '../../../../shared/components/image-zoom/image-zoom.component';
+import { SharePostComponent } from '../share-post/share-post.component';
+import { SharedPostCardComponent } from '../shared-post-card/shared-post-card.component';
+import { EmojiPickerComponent } from '../../../../shared/components/emoji-picker/emoji-picker.component';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-post-card',
@@ -53,8 +58,13 @@ import { ImageZoomComponent } from '../../../../shared/components/image-zoom/ima
     FormsModule,
     PostCommentsComponent,
     TimeAgoPipe,
-    ImageZoomComponent
-],
+    ImageZoomComponent,
+    SharePostComponent,
+    SharedPostCardComponent,
+    EmojiPickerComponent,
+    OverlayModule,
+    LucideFaceSlightlySmiling,
+  ],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
 })
@@ -66,8 +76,9 @@ export class PostCardComponent {
   post = input.required<IPost>();
 
   openPostLikes = signal<boolean>(false);
-
   openPostImage = signal<boolean>(false);
+  openShareDialog = signal<boolean>(false);
+  showEmojiPicker = signal<boolean>(false);
 
   openOptions = signal<boolean>(false);
   isMyPost = computed<boolean>(() => this.authService.getUserId() === this.post().user._id);
@@ -86,6 +97,18 @@ export class PostCardComponent {
         return 'Public';
     }
   });
+
+  openEmojiPicker() {
+    this.showEmojiPicker.set(true);
+  }
+
+  closeEmojiPicker() {
+    this.showEmojiPicker.set(false);
+  }
+
+  addEmoji(emoji: string) {
+    this.body.update((c) => c + emoji);
+  }
 
   handleLikeClick(): void {
     this.postFacadeService.toggleLikePost(this.post()._id);
