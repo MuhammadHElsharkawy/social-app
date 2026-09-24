@@ -8,11 +8,20 @@ export const routes: Routes = [
         (c) => c.HomePageComponent,
       ),
   },
-  //   {
-  //     path: 'profile',
-  //     loadComponent: () =>
-  //       import('../../features/profile/page/profile.component').then((c) => c.ProfileComponent),
-  //   },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('../../features/profile/pages/profile/profile.component').then(
+        (c) => c.ProfileComponent,
+      ),
+  },
+  {
+    path: 'profile/:id',
+    loadComponent: () =>
+      import('../../features/profile/pages/profile/profile.component').then(
+        (c) => c.ProfileComponent,
+      ),
+  },
   //   {
   //     path: 'notifications',
   //     loadComponent: () =>

@@ -34,6 +34,8 @@ import { SharePostComponent } from '../share-post/share-post.component';
 import { SharedPostCardComponent } from '../shared-post-card/shared-post-card.component';
 import { EmojiPickerComponent } from '../../../../shared/components/emoji-picker/emoji-picker.component';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { RouterLink } from '@angular/router';
+import { CopyonclickDirective } from '../../../../shared/directives/copy-on-click.directive';
 
 @Component({
   selector: 'app-post-card',
@@ -64,6 +66,8 @@ import { OverlayModule } from '@angular/cdk/overlay';
     EmojiPickerComponent,
     OverlayModule,
     LucideFaceSlightlySmiling,
+    RouterLink,
+    CopyonclickDirective,
   ],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
@@ -74,6 +78,7 @@ export class PostCardComponent {
   private destroyRef = inject(DestroyRef);
 
   post = input.required<IPost>();
+  styleMode = input<'default' | 'profile'>('default');
 
   openPostLikes = signal<boolean>(false);
   openPostImage = signal<boolean>(false);

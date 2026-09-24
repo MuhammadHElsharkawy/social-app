@@ -1,0 +1,310 @@
+<div [class]="isMe() ? 'space-y-5 sm:space-y-6' : 'space-y-4'">
+  <!-- back button -->
+  @if (!isMe()) {
+    <button
+      (click)="goBack()"
+      class="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+    >
+      <svg lucideArrowLeft class="size-4"></svg>
+      Back
+    </button>
+  }
+
+  @if (profileFacade.getProfileLoading()) {
+    <div
+      class="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500"
+    >
+      Loading profile...
+    </div>
+  } @else if (profileFacade.profile(); as profile) {
+    <section
+      class="overflow-hidden rounded-2xl border border-slate-200 bg-white"
+      [class]="isMe() ? 'shadow-[0_2px_10px_rgba(15,23,42,.06)] sm:rounded-[28px]' : 'shadow-sm'"
+    >
+      <div
+        class="group/cover relative bg-[linear-gradient(112deg,#0f172a_0%,#1e3a5f_36%,#2b5178_72%,#5f8fb8_100%)]"
+        [class]="isMe() ? 'h-44 sm:h-52 lg:h-60 ' : 'h-48'"
+      >
+        @if (isMe()) {
+          <div
+            class="pointer-events-none absolute right-2 top-2 z-10 flex max-w-[90%] flex-wrap items-center justify-end gap-1.5 opacity-100 transition duration-200 sm:right-3 sm:top-3 sm:max-w-none sm:gap-2 sm:opacity-0 sm:group-hover/cover:opacity-100 sm:group-focus-within/cover:opacity-100"
+          >
+            <label
+              class="pointer-events-auto inline-flex cursor-pointer items-center gap-1 rounded-lg bg-black/45 px-2 py-1 text-[11px] font-bold text-white backdrop-blur transition hover:bg-black/60 sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs"
+            >
+              <svg lucideCamera class="size-3.25"></svg>
+              Add cover
+              <input accept="image/*" class="hidden" type="file"
+            /></label>
+          </div>
+        }
+      </div>
+      <div
+        class="relative px-3 pb-5"
+        [class]="isMe() ? '-mt-12 sm:-mt-16 sm:px-8 sm:pb-6' : '-mt-14 sm:px-5'"
+      >
+        @if (isMe()) {
+          <div class="rounded-3xl border border-white/60 bg-white/92 p-5 backdrop-blur-xl sm:p-7">
+            <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div class="min-w-0">
+                <div class="flex items-center gap-4">
+                  <div class="group/avatar relative shrink-0">
+                    <button
+                      type="button"
+                      class="cursor-pointer rounded-full"
+                      (click)="openProfileImage.set(true)"
+                    >
+                      <img
+                        [alt]="profile.user.name + ' profile photo'"
+                        class="h-28 w-28 rounded-full border-4 border-white object-cover shadow-md ring-2 ring-[#dbeafe]"
+                        [src]="profile.user.photo"
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      class="absolute bottom-1 left-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-[#1877f2] opacity-100 shadow-sm ring-1 ring-slate-200 transition duration-200 hover:bg-slate-50 sm:opacity-0 sm:group-hover/avatar:opacity-100 sm:group-focus-within/avatar:opacity-100"
+                      title="View profile photo"
+                      aria-label="View profile photo"
+                      (click)="openProfileImage.set(true)"
+                    >
+                      <svg lucideExpand class="size-4"></svg>
+                    </button>
+                    <label
+                      class="absolute bottom-1 right-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-[#1877f2] text-white opacity-100 shadow-sm transition duration-200 hover:bg-[#166fe5] sm:opacity-0 sm:group-hover/avatar:opacity-100 sm:group-focus-within/avatar:opacity-100"
+                    >
+                      <svg lucideCamera class="size-4.25"></svg>
+                      <input
+                        accept="image/*"
+                        class="hidden"
+                        type="file"
+                        (change)="onFileSelected($event)"
+                      />
+                    </label>
+                  </div>
+                  <div class="min-w-0">
+                    <h2
+                      class="truncate text-2xl font-black tracking-tight text-slate-900 sm:text-4xl"
+                    >
+                      {{ profile.user.name }}
+                    </h2>
+                    <p class="mt-1 text-lg font-semibold text-slate-500 sm:text-xl">
+                      <span
+                        class="cursor-pointer hover:underline"
+                        appCopyOnClick
+                        [copyText]="profile.user.username"
+                      >
+                        @{{ profile.user.username }}
+                      </span>
+                    </p>
+                    <div
+                      class="mt-3 inline-flex items-center gap-2 rounded-full border border-[#d7e7ff] bg-[#eef6ff] px-3 py-1 text-xs font-bold text-[#0b57d0]"
+                    >
+                      <svg lucideUsers class="size-3.25"></svg>
+                      Loomy member
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="grid w-full grid-cols-3 gap-2 lg:w-130">
+                <div
+                  class="rounded-2xl border border-slate-200 bg-white px-3 py-3 text-center sm:px-4 sm:py-4"
+                >
+                  <p
+                    class="text-[11px] font-bold uppercase tracking-wide text-slate-500 sm:text-xs"
+                  >
+                    Followers
+                  </p>
+                  <p class="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">
+                    {{ profile.user.followersCount }}
+                  </p>
+                </div>
+                <div
+                  class="rounded-2xl border border-slate-200 bg-white px-3 py-3 text-center sm:px-4 sm:py-4"
+                >
+                  <p
+                    class="text-[11px] font-bold uppercase tracking-wide text-slate-500 sm:text-xs"
+                  >
+                    Following
+                  </p>
+                  <p class="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">
+                    {{ profile.user.followingCount }}
+                  </p>
+                </div>
+                <div
+                  class="rounded-2xl border border-slate-200 bg-white px-3 py-3 text-center sm:px-4 sm:py-4"
+                >
+                  <p
+                    class="text-[11px] font-bold uppercase tracking-wide text-slate-500 sm:text-xs"
+                  >
+                    Bookmarks
+                  </p>
+                  <p class="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">
+                    {{ profile.user.bookmarksCount }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 grid gap-4 lg:grid-cols-[1.3fr_.7fr]">
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <h3 class="text-sm font-extrabold text-slate-800">About</h3>
+                <div class="mt-3 space-y-2 text-sm text-slate-600">
+                  <p class="flex items-center gap-2">
+                    <svg lucideMail class="size-3.75 text-slate-500"></svg>
+                    {{ profile.user.email }}
+                  </p>
+                  <p class="flex items-center gap-2">
+                    <svg lucideUsers class="size-3.75 text-slate-500"></svg>
+                    Active on Loomy
+                  </p>
+                </div>
+              </div>
+              <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <div class="rounded-2xl border border-[#dbeafe] bg-[#f6faff] px-4 py-3">
+                  <p class="text-xs font-bold uppercase tracking-wide text-[#1f4f96]">My posts</p>
+                  <p class="mt-1 text-2xl font-black text-slate-900">
+                    {{ postFacade.getPostsCount(POSTS_FILTER_BTNS.MY_POSTS) }}
+                  </p>
+                </div>
+                <div class="rounded-2xl border border-[#dbeafe] bg-[#f6faff] px-4 py-3">
+                  <p class="text-xs font-bold uppercase tracking-wide text-[#1f4f96]">
+                    Saved posts
+                  </p>
+                  <p class="mt-1 text-2xl font-black text-slate-900">
+                    {{ postFacade.getPostsCount(POSTS_FILTER_BTNS.SAVED) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <div
+            class="flex flex-wrap items-end justify-between gap-4 rounded-2xl border border-white/70 bg-white/95 p-4"
+          >
+            <div class="flex items-end gap-3">
+              <button
+                type="button"
+                class="cursor-pointer rounded-full"
+                (click)="openProfileImage.set(true)"
+              >
+                <img
+                  [alt]="profile.user.name + ' profile photo'"
+                  class="h-20 w-20 rounded-full border-4 border-white object-cover shadow-sm sm:h-24 sm:w-24"
+                  [src]="profile.user.photo"
+                />
+              </button>
+              <div>
+                <p class="text-xl font-black text-slate-900 sm:text-2xl">
+                  {{ profile.user.name }}
+                </p>
+                <p class="text-sm font-semibold text-slate-500 sm:text-base">
+                  <span
+                    class="cursor-pointer hover:underline"
+                    appCopyOnClick
+                    [copyText]="profile.user.username"
+                  >
+                    @{{ profile.user.username }}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-extrabold transition sm:w-auto"
+              [class]="
+                profile.isFollowing
+                  ? 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-100'
+                  : 'bg-[#1877f2] text-white hover:bg-[#166fe5]'
+              "
+              (click)="profileFacade.toggleFollowUser(profile.user._id)"
+            >
+              @if (profileFacade.toggleFollowUserLoading()) {
+                <svg lucideLoader class="size-4 animate-spin"></svg>
+                Updating...
+              } @else {
+                @if (profile.isFollowing) {
+                  <svg lucideCheck class="size-4"></svg>
+                  Following
+                } @else {
+                  <svg lucideUserPlus class="size-4"></svg>
+                  Follow
+                }
+              }
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+    @if (openProfileImage()) {
+      <app-image-zoom
+        [imageSrc]="profile.user.photo!"
+        [imageAlt]="profile.user.name"
+        (onClose)="openProfileImage.set(false)"
+      ></app-image-zoom>
+    }
+  }
+
+  <section class="space-y-4">
+    @if (isMe()) {
+      <div
+        class="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
+      >
+        <div
+          class="grid w-full grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1.5 sm:inline-flex sm:w-auto sm:gap-0"
+        >
+          <app-posts-filter-btn
+            (btnClick)="onFilterSelect(POSTS_FILTER_BTNS.MY_POSTS)"
+            [isActive]="postFacade.currentFilter() === POSTS_FILTER_BTNS.MY_POSTS"
+            label="My Posts"
+            styleMode="profile"
+          >
+            <svg lucideFileText class="size-3.75"></svg>
+          </app-posts-filter-btn>
+          <app-posts-filter-btn
+            (btnClick)="onFilterSelect(POSTS_FILTER_BTNS.SAVED)"
+            [isActive]="postFacade.currentFilter() === POSTS_FILTER_BTNS.SAVED"
+            label="Saved"
+            styleMode="profile"
+          >
+            <svg lucideBookmark class="size-3.75"></svg>
+          </app-posts-filter-btn>
+        </div>
+        <span class="rounded-full bg-[#e7f3ff] px-3 py-1 text-xs font-bold text-[#1877f2]">
+          {{ postFacade.posts().length }}
+        </span>
+      </div>
+    }
+    @if (postFacade.isPostLoading()) {
+      <div
+        class="rounded-2xl border border-slate-200 bg-white p-5 text-center text-sm text-slate-500"
+      >
+        Loading posts...
+      </div>
+    } @else {
+      <div class="space-y-3">
+        @if (postFacade.posts().length === 0) {
+          <app-empty-posts
+            styleMode="profile"
+            [msg]="
+              postFacade.currentFilter() === 'my-posts'
+                ? 'You have not posted yet.'
+                : 'No saved posts yet.'
+            "
+          ></app-empty-posts>
+        } @else {
+          @for (post of postFacade.posts(); track post._id) {
+            <div>
+              <app-post-card [post]="post"></app-post-card>
+            </div>
+          }
+        }
+      </div>
+    }
+  </section>
+</div>
+
+@if (selectedProfilePicture()) {
+  <app-profile-picture-change
+    [picturePreview]="previewUrl()!"
+    (onClose)="closeProfilePictureChange()"
+  ></app-profile-picture-change>
+}
