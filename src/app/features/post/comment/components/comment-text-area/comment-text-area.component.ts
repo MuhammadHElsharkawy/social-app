@@ -9,8 +9,8 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { EmojiPickerComponent } from '../../../../../shared/components/emoji-picker/emoji-picker.component';
-import { ProfileFacadeService } from '../../../../profile/services/profile-facade.service';
 import { ICommentContent } from '../../interfaces/comment.interface';
+import { UserFacadeService } from '../../../../../core/services/user/user-facade.service';
 
 @Component({
   imports: [
@@ -29,7 +29,7 @@ import { ICommentContent } from '../../interfaces/comment.interface';
   templateUrl: './comment-text-area.component.html',
 })
 export class CommentTextAreaComponent implements OnDestroy {
-  protected readonly profileFacade = inject(ProfileFacadeService);
+  protected readonly userFacade = inject(UserFacadeService);
 
   private wasLoading = signal<boolean>(false);
   clearBeforeSuccess = input<boolean>(true);

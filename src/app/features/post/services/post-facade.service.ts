@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, finalize, map, Observable, tap } from 'rxjs';
+import { finalize, map, Observable, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { ILike } from '../interfaces/like.interface';
 import { IDeletePostRES, IPost, ISharePostREQ, PostPrivacy } from '../interfaces/post.interfaces';
@@ -13,21 +13,15 @@ import {
   IPostUploading,
   IUpdatePostREQ,
 } from '../create-post/interfaces/create-post.interface';
-import { ProfileFacadeService } from '../../profile/services/profile-facade.service';
-import {
-  IComment,
-  ICommentContent,
-  IReply,
-  ISingleCommentRES,
-  ISingleReplyRES,
-} from '../comment/interfaces/comment.interface';
+import { IComment, ICommentContent, IReply } from '../comment/interfaces/comment.interface';
+import { UserFacadeService } from '../../../core/services/user/user-facade.service';
 
 @Service()
 export class PostFacadeService {
   private readonly postApiService = inject(PostApiService);
   private readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly profileFacadeService = inject(ProfileFacadeService);
+  private readonly userFacade = inject(UserFacadeService);
 
   private _postsPage = signal<number>(1);
 
@@ -62,20 +56,28 @@ export class PostFacadeService {
     if (this._hasMorePosts()) this._postsPage.update((p) => p + 1);
   }
 
-  handleFilterChange(newFilter: PostsFilter): void {
+  handleFilterChange(newFilter: PostsFilter, refetch: boolean = true): void {
     const isSameFilter = this._currentFilterState() === newFilter;
     const hasCachedData = this._postsCache.has(newFilter);
 
     this._currentFilterState.set(newFilter);
 
-    if (!isSameFilter && hasCachedData) {
-      this._postsState.set(this._postsCache.get(newFilter)!);
-      return;
+    if (isSameFilter) {
+      if (refetch) {
+        this.resetPosts();
+        this.fetchPosts(newFilter);
+      } else {
+        return;
+      }
+    } else {
+      if (hasCachedData) {
+        this._postsState.set(this._postsCache.get(newFilter)!);
+        return;
+      } else {
+        this.resetPosts();
+        this.fetchPosts(newFilter);
+      }
     }
-
-    this.resetPosts();
-
-    this.fetchPosts(newFilter);
   }
 
   fetchPosts(filter: PostsFilter): void {
@@ -102,7 +104,7 @@ export class PostFacadeService {
     }
   }
 
-  getFeedPosts(limit: number = 5): void {
+  getFeedPosts(limit: number = 50): void {
     if (this._activeLoadingFilterState() === POSTS_FILTER.FEED || !this._hasMorePosts()) return;
 
     if (this._postsPage() === 1) {
@@ -123,7 +125,9 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          this._postsState.update((current) => [...current, ...res.data.posts]);
+          if (this.currentFilter() === 'feed')
+            this._postsState.update((current) => [...current, ...res.data.posts]);
+
           this._postsCache.set(POSTS_FILTER.FEED, this._postsState());
           this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
@@ -133,7 +137,7 @@ export class PostFacadeService {
       });
   }
 
-  getCommunityPosts(limit: number = 5): void {
+  getCommunityPosts(limit: number = 50): void {
     if (this._activeLoadingFilterState() === POSTS_FILTER.COMMUNITY || !this._hasMorePosts())
       return;
 
@@ -155,7 +159,9 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          this._postsState.update((current) => [...current, ...res.data.posts]);
+          if (this.currentFilter() === 'community')
+            this._postsState.update((current) => [...current, ...res.data.posts]);
+
           this._postsCache.set(POSTS_FILTER.COMMUNITY, res.data.posts);
           this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
@@ -165,7 +171,7 @@ export class PostFacadeService {
       });
   }
 
-  getSavedPosts(limit: number = 5): void {
+  getSavedPosts(limit: number = 50): void {
     if (this._activeLoadingFilterState() === POSTS_FILTER.SAVED || !this._hasMorePosts()) return;
 
     if (this._postsPage() === 1) {
@@ -186,7 +192,9 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          this._postsState.update((current) => [...current, ...res.data.bookmarks]);
+          if (this.currentFilter() === 'saved')
+            this._postsState.update((current) => [...current, ...res.data.bookmarks]);
+
           this._postsCache.set(POSTS_FILTER.SAVED, res.data.bookmarks);
           this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
@@ -196,7 +204,7 @@ export class PostFacadeService {
       });
   }
 
-  getUserPosts(userId: string, limit: number = 5): void {
+  getUserPosts(userId: string, limit: number = 50): void {
     if (this._activeLoadingFilterState() === POSTS_FILTER.MY_POSTS || !this._hasMorePosts()) return;
 
     if (this._postsPage() === 1) {
@@ -217,7 +225,9 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          this._postsState.set(res.data.posts);
+          if (this.currentFilter() === 'my-posts')
+            this._postsState.update((current) => [...current, ...res.data.posts]);
+
           this._postsCache.set(POSTS_FILTER.MY_POSTS, res.data.posts);
           this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
@@ -225,6 +235,11 @@ export class PostFacadeService {
           console.log(err);
         },
       });
+  }
+
+  getPostsCount(filter: PostsFilter): number | null {
+    const posts = this._postsCache.get(filter);
+    return posts ? posts?.length : 0;
   }
 
   // Create Post
@@ -252,7 +267,7 @@ export class PostFacadeService {
 
     return this.postApiService.createPost(formData).pipe(
       map((res) => {
-        const user = this.profileFacadeService.myData()!;
+        const user = this.userFacade.user();
 
         if (!user) return res;
 
@@ -722,7 +737,7 @@ export class PostFacadeService {
   }
 
   createTempComment(data: ICommentContent, postId: string): void {
-    const user = this.profileFacadeService.myData();
+    const user = this.userFacade.user();
     if (!user) return;
 
     const now = Date.now();
@@ -919,6 +934,12 @@ export class PostFacadeService {
   private _sharePostLoadingState = signal<boolean>(false);
   public sharePostLoading = this._sharePostLoadingState.asReadonly();
 
+  private updatePostShareCount(postId: string): void {
+    this._postsState.update((current) => {
+      return current.map((p) => (p._id === postId ? { ...p, sharesCount: p.sharesCount + 1 } : p));
+    });
+  }
+
   sharePost(postId: string, data: ISharePostREQ): void {
     this._sharePostLoadingState.set(true);
 
@@ -930,7 +951,8 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          this.addPost(res.data.post)
+          this.addPost(res.data.post);
+          this.updatePostShareCount(postId);
           toast.success('Post shared successfully');
         },
         error: (err) => {

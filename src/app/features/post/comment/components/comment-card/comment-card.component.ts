@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { TextareaAutoResizeDirective } from '../../../../../shared/directives/textarea-auto-resize.directive';
 import { EmojiPickerComponent } from '../../../../../shared/components/emoji-picker/emoji-picker.component';
 import { ImageZoomComponent } from '../../../../../shared/components/image-zoom/image-zoom.component';
+import { CopyonclickDirective } from '../../../../../shared/directives/copy-on-click.directive';
 
 @Component({
   imports: [
@@ -35,6 +36,7 @@ import { ImageZoomComponent } from '../../../../../shared/components/image-zoom/
     TextareaAutoResizeDirective,
     EmojiPickerComponent,
     ImageZoomComponent,
+    CopyonclickDirective
   ],
   selector: 'app-comment-card',
   styleUrl: './comment-card.component.css',

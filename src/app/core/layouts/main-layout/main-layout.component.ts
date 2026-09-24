@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { RouterOutlet } from '@angular/router';
-import { ProfileFacadeService } from '../../../features/profile/services/profile-facade.service';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { UserFacadeService } from '../../services/user/user-facade.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -11,9 +11,9 @@ import { LoadingOverlayComponent } from '../../../shared/components/loading-over
   styleUrl: './main-layout.component.css',
 })
 export class MainLayoutComponent implements OnInit {
-  protected profileFacadeService = inject(ProfileFacadeService);
+  protected userFacade = inject(UserFacadeService);
 
   ngOnInit(): void {
-    this.profileFacadeService.getMyProfile();
+    this.userFacade.getUser();
   }
 }

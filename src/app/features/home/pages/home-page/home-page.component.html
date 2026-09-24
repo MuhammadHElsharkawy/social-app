@@ -6,7 +6,7 @@
   ></app-posts-filter>
   <div class="space-y-4">
     <div>
-      <app-create-post [myData]="profileFacadeService.myData()"></app-create-post>
+      <app-create-post [myData]="userFacade.user()"></app-create-post>
     </div>
     <div class="space-y-4">
       @if (postFacadeService.createPostLoading()) {

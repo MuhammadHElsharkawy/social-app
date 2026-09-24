@@ -10,7 +10,7 @@ import { PostsLoadingComponent } from '../../../post/components/posts-loading/po
 import { PostCardComponent } from '../../../post/components/post-card/post-card.component';
 import { CreatePostComponent } from '../../../post/create-post/components/create-post/create-post.component';
 import { CreatePostLoadingComponent } from '../../../post/create-post/components/create-post-loading/create-post-loading.component';
-import { ProfileFacadeService } from '../../../profile/services/profile-facade.service';
+import { UserFacadeService } from '../../../../core/services/user/user-facade.service';
 
 @Component({
   selector: 'app-home-page',
@@ -31,7 +31,7 @@ import { ProfileFacadeService } from '../../../profile/services/profile-facade.s
 })
 export class HomePageComponent implements OnInit {
   protected postFacadeService = inject(PostFacadeService);
-  protected profileFacadeService = inject(ProfileFacadeService);
+  protected userFacade = inject(UserFacadeService);
 
   ngOnInit(): void {
     this.postFacadeService.handleFilterChange(POSTS_FILTER.FEED);

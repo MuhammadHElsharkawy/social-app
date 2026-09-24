@@ -1,11 +1,12 @@
-@if (profileFacadeService.getMyDataLoading()) {
+@if (userFacade.getUserLoading()) {
   <app-loading-overlay></app-loading-overlay>
 }
 <div
-  class="h-screen overflow-y-auto bg-[#f0f2f5] text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
-  <app-header [myData]="profileFacadeService.myData()"></app-header>
+  class="h-screen overflow-y-auto bg-[#f0f2f5] text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100"
+>
+  <app-header [myData]="userFacade.user()"></app-header>
   <div class="mx-auto max-w-7xl px-3 py-3.5">
-    <main>
+    <main class="min-w-0">
       <router-outlet></router-outlet>
     </main>
   </div>

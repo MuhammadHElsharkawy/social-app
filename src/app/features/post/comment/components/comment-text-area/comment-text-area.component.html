@@ -1,15 +1,17 @@
 <div class="flex items-start gap-2">
-  <img
-    [alt]="profileFacade.myData()?.name"
-    class="h-9 w-9 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700"
-    [src]="profileFacade.myData()?.photo"
-  />
+  @if (userFacade.user(); as user) {
+    <img
+      [alt]="user.name"
+      class="h-9 w-9 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+      [src]="user.photo"
+    />
+  }
   <div
     class="w-full rounded-2xl border border-slate-200 bg-[#f0f2f5] px-2.5 py-1.5 transition-colors focus-within:border-[#c7dafc] focus-within:bg-white dark:border-slate-800 dark:bg-slate-900 dark:focus-within:border-blue-500/60 dark:focus-within:bg-slate-900"
   >
     <textarea
       [(ngModel)]="body"
-      [placeholder]="'Comment as ' + profileFacade.myData()?.name + '...'"
+      [placeholder]="'Comment as ' + userFacade.user()?.name || ''"
       rows="1"
       class="max-h-35 min-h-10 w-full resize-none bg-transparent px-2 py-1.5 text-sm leading-5 text-slate-800 outline-none placeholder:text-slate-500 dark:text-slate-100 dark:placeholder:text-slate-400"
     ></textarea>
@@ -78,9 +80,3 @@
     </button>
   </div>
 }
-
-<!-- @if (showEmojiPicker()) {
-  <div class="ml-11 mt-2">
-    <app-emoji-picker (emojiSelected)="addEmoji($event)" />
-  </div>
-} -->
