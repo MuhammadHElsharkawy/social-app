@@ -8,10 +8,6 @@ import { UserEndPoints } from '../constants/user-endpoints';
 export class ProfileApiService {
   private readonly httpClient = inject(HttpClient);
 
-  getMyProfile(): Observable<IGetMyProfileRES> {
-    return this.httpClient.get<IGetMyProfileRES>(UserEndPoints.GetMyProfile);
-  }
-
   getUserProfile(userId: string): Observable<IGetUserProfileRES> {
     return this.httpClient.get<IGetUserProfileRES>(UserEndPoints.GetUserProfile(userId));
   }

@@ -34,6 +34,6 @@ export class HomePageComponent implements OnInit {
   protected userFacade = inject(UserFacadeService);
 
   ngOnInit(): void {
-    this.postFacadeService.handleFilterChange(POSTS_FILTER.FEED);
+    this.postFacadeService.handleFilterChange({ newFilter: POSTS_FILTER.FEED });
   }
 }

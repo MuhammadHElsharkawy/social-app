@@ -9,5 +9,7 @@ export const UserEndPoints = {
 
   UploadProfilePhoto: `${BASE_URL}/users/upload-photo`,
 
+  UploadCoverPhoto: `${BASE_URL}/users/upload-cover`,
+
   ToggleFollowUser: (userId: string) => `${BASE_URL}/users/${userId}/follow`,
 };

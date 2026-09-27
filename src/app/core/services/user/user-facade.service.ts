@@ -16,6 +16,12 @@ export class UserFacadeService {
   private _getUserLoadingState = signal<boolean>(false);
   public getUserLoading = this._getUserLoadingState.asReadonly();
 
+  private _changeProfilePictureLoadingState = signal<boolean>(false);
+  public changeProfilePictureLoading = this._changeProfilePictureLoadingState.asReadonly();
+
+  private _changeCoverPictureLoadingState = signal<boolean>(false);
+  public changeCoverPictureLoading = this._changeCoverPictureLoadingState.asReadonly();
+
   getUser(): void {
     this._getUserLoadingState.set(true);
 
@@ -30,6 +36,58 @@ export class UserFacadeService {
         },
         error: (err) => {
           toast.error('Something went wrong!', { description: err.error.message });
+        },
+      });
+  }
+
+  private updateProfilePicture(newPicture: string): void {
+    this._userState.update((current) => {
+      if (!current) return null;
+
+      return { ...current, photo: newPicture };
+    });
+  }
+
+  private updateCoverPicture(newCover: string): void {
+    this._userState.update((current) => {
+      if (!current) return null;
+
+      return { ...current, cover: newCover };
+    });
+  }
+
+  changeProfilePicture(picture: File): void {
+    this._changeProfilePictureLoadingState.set(true);
+
+    const data: FormData = new FormData();
+    data.append('photo', picture);
+
+    this.UserApi.changeProfilePicture(data)
+      .pipe(finalize(() => this._changeProfilePictureLoadingState.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.updateProfilePicture(res.data.photo);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  }
+
+  changeCoverPicture(cover: File): void {
+    this._changeCoverPictureLoadingState.set(true);
+
+    const data: FormData = new FormData();
+    data.append('cover', cover);
+
+    this.UserApi.changeCoverPicture(data)
+      .pipe(finalize(() => this._changeCoverPictureLoadingState.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.updateCoverPicture(res.data.cover);
+        },
+        error: (err) => {
+          console.log(err);
         },
       });
   }

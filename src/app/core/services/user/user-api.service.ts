@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IGetUserRES, IToggleFollowUserRES } from '../../interfaces/user.interface';
+import {
+  IChangeCoverPictureRES,
+  IChangeProfilePictureRES,
+  IGetUserRES,
+  IToggleFollowUserRES,
+} from '../../interfaces/user.interface';
 import { UserEndPoints } from '../../../features/profile/constants/user-endpoints';
 
 @Service()
@@ -14,5 +19,13 @@ export class UserApiService {
 
   toggleFollowUser(userId: string): Observable<IToggleFollowUserRES> {
     return this.httpClient.put<IToggleFollowUserRES>(UserEndPoints.ToggleFollowUser(userId), {});
+  }
+
+  changeProfilePicture(picture: FormData): Observable<IChangeProfilePictureRES> {
+    return this.httpClient.put<IChangeProfilePictureRES>(UserEndPoints.UploadProfilePhoto, picture);
+  }
+
+  changeCoverPicture(cover: FormData): Observable<IChangeCoverPictureRES> {
+    return this.httpClient.put<IChangeCoverPictureRES>(UserEndPoints.UploadCoverPhoto, cover);
   }
 }

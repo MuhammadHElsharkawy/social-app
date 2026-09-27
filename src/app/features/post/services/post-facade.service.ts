@@ -56,7 +56,15 @@ export class PostFacadeService {
     if (this._hasMorePosts()) this._postsPage.update((p) => p + 1);
   }
 
-  handleFilterChange(newFilter: PostsFilter, refetch: boolean = true): void {
+  handleFilterChange({
+    newFilter,
+    userId = null,
+    refetch = true,
+  }: {
+    newFilter: PostsFilter;
+    userId?: string | null;
+    refetch?: boolean;
+  }): void {
     const isSameFilter = this._currentFilterState() === newFilter;
     const hasCachedData = this._postsCache.has(newFilter);
 
@@ -65,39 +73,41 @@ export class PostFacadeService {
     if (isSameFilter) {
       if (refetch) {
         this.resetPosts();
-        this.fetchPosts(newFilter);
+        this.fetchPosts(newFilter, userId);
       } else {
-        return;
+        if (hasCachedData) {
+          this._postsState.set(this._postsCache.get(newFilter)!);
+        }
       }
     } else {
       if (hasCachedData) {
         this._postsState.set(this._postsCache.get(newFilter)!);
-        return;
       } else {
         this.resetPosts();
-        this.fetchPosts(newFilter);
+        this.fetchPosts(newFilter, userId);
       }
     }
   }
 
-  fetchPosts(filter: PostsFilter): void {
+  fetchPosts(filter: PostsFilter, userId: string | null = null): void {
     switch (filter) {
       case POSTS_FILTER.FEED:
         this.getFeedPosts();
         break;
       case POSTS_FILTER.MY_POSTS:
-        const userId = this.authService.getUserId();
-        if (!userId) {
-          return;
+        const myId = this.authService.getUserId();
+        if (myId) {
+          this.getUserPosts(myId);
         }
-
-        this.getUserPosts(userId);
         break;
       case POSTS_FILTER.COMMUNITY:
         this.getCommunityPosts();
         break;
       case POSTS_FILTER.SAVED:
         this.getSavedPosts();
+        break;
+      case POSTS_FILTER.USER_POSTS:
+        this.getUserPosts(userId!);
         break;
       default:
         break;
@@ -125,10 +135,13 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          if (this.currentFilter() === 'feed')
+          if (this.currentFilter() === 'feed') {
             this._postsState.update((current) => [...current, ...res.data.posts]);
+            this.cachePosts(POSTS_FILTER.FEED, this._postsState());
+          } else {
+            this.cachePosts(POSTS_FILTER.FEED, res.data.posts);
+          }
 
-          this._postsCache.set(POSTS_FILTER.FEED, this._postsState());
           this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
@@ -159,10 +172,13 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          if (this.currentFilter() === 'community')
+          if (this.currentFilter() === 'community') {
             this._postsState.update((current) => [...current, ...res.data.posts]);
+            this.cachePosts(POSTS_FILTER.COMMUNITY, this._postsState());
+          } else {
+            this.cachePosts(POSTS_FILTER.COMMUNITY, res.data.posts);
+          }
 
-          this._postsCache.set(POSTS_FILTER.COMMUNITY, res.data.posts);
           this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
@@ -192,10 +208,13 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          if (this.currentFilter() === 'saved')
+          if (this.currentFilter() === 'saved') {
             this._postsState.update((current) => [...current, ...res.data.bookmarks]);
+            this.cachePosts(POSTS_FILTER.SAVED, this._postsState());
+          } else {
+            this.cachePosts(POSTS_FILTER.SAVED, res.data.bookmarks);
+          }
 
-          this._postsCache.set(POSTS_FILTER.SAVED, res.data.bookmarks);
           this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
@@ -206,6 +225,8 @@ export class PostFacadeService {
 
   getUserPosts(userId: string, limit: number = 50): void {
     if (this._activeLoadingFilterState() === POSTS_FILTER.MY_POSTS || !this._hasMorePosts()) return;
+
+    const myId = this.authService.getUserId();
 
     if (this._postsPage() === 1) {
       this._isPostLoadingState.set(true);
@@ -225,16 +246,28 @@ export class PostFacadeService {
       )
       .subscribe({
         next: (res) => {
-          if (this.currentFilter() === 'my-posts')
+          if (this.currentFilter() === 'my-posts') {
             this._postsState.update((current) => [...current, ...res.data.posts]);
+            this.cachePosts(POSTS_FILTER.MY_POSTS, this._postsState());
+          } else if (this.currentFilter() === 'user-posts') {
+            this._postsState.update((current) => [...current, ...res.data.posts]);
+            this.cachePosts(POSTS_FILTER.USER_POSTS, this._postsState());
+          } else if (userId === myId) {
+            this.cachePosts(POSTS_FILTER.MY_POSTS, res.data.posts);
+          } else {
+            this.cachePosts(POSTS_FILTER.USER_POSTS, res.data.posts);
+          }
 
-          this._postsCache.set(POSTS_FILTER.MY_POSTS, res.data.posts);
           this.updatePostsPaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
           console.log(err);
         },
       });
+  }
+
+  private cachePosts(filter: PostsFilter, posts: IPost[]): void {
+    this._postsCache.set(filter, posts);
   }
 
   getPostsCount(filter: PostsFilter): number | null {

@@ -16,7 +16,7 @@
     >
       Loading profile...
     </div>
-  } @else if (profileFacade.profile(); as profile) {
+  } @else if (profile(); as profile) {
     <section
       class="overflow-hidden rounded-2xl border border-slate-200 bg-white"
       [class]="isMe() ? 'shadow-[0_2px_10px_rgba(15,23,42,.06)] sm:rounded-[28px]' : 'shadow-sm'"
@@ -305,6 +305,8 @@
 @if (selectedProfilePicture()) {
   <app-profile-picture-change
     [picturePreview]="previewUrl()!"
+    [loading]="userFacade.changeProfilePictureLoading()"
     (onClose)="closeProfilePictureChange()"
+    (onSubmit)="save($event)"
   ></app-profile-picture-change>
 }

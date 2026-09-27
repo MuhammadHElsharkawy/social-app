@@ -38,3 +38,21 @@ export interface IToggleFollowUserData {
   following: boolean;
   followersCount: number;
 }
+
+export interface IChangeProfilePictureRES extends IBaseRES {
+  data: IChangeProfilePictureData;
+}
+
+interface IChangeProfilePictureData {
+  photo: string;
+  postId: string;
+}
+
+export interface IChangeCoverPictureRES extends IBaseRES {
+  data: IChangeCoverPictureData;
+}
+
+interface IChangeCoverPictureData {
+  cover: string;
+  postId: string;
+}
