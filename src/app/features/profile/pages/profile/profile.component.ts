@@ -26,6 +26,7 @@ import { POSTS_FILTER, PostsFilter } from '../../../home/interfaces/posts-filter
 import { EmptyPostsComponent } from '../../../../shared/components/empty-posts/empty-posts.component';
 import { UserFacadeService } from '../../../../core/services/user/user-facade.service';
 import { ProfilePictureChangeComponent } from '../../components/profile-picture-change/profile-picture-change.component';
+import { IProfileView } from '../../interfaces/profile.interface';
 
 @Component({
   imports: [
@@ -60,14 +61,30 @@ export class ProfileComponent implements OnInit {
 
   private routeId = toSignal(this.activatedRoute.paramMap.pipe(map((param) => param.get('id'))));
 
-  userId = this.authService.getUserId();
-
-  readonly activeUserId = computed(() => {
-    return this.routeId() ?? this.userId;
-  });
+  private userId = this.authService.getUserId();
 
   readonly isMe = computed(() => {
     return !this.routeId() || this.routeId() === this.userId;
+  });
+
+  readonly profile = computed<IProfileView | null>(() => {
+    const routeId = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if (routeId) {
+      return this.profileFacade.profile();
+    }
+
+    const user = this.userFacade.user();
+
+    if (!user) {
+      return null;
+    }
+
+    return {
+      user,
+      isFollowing: false,
+      isMyProfile: true,
+    };
   });
 
   goBack(): void {
@@ -79,12 +96,11 @@ export class ProfileComponent implements OnInit {
   readonly POSTS_FILTER_BTNS = POSTS_FILTER;
 
   onFilterSelect(filter: PostsFilter): void {
-    this.postFacade.handleFilterChange(filter, false);
+    this.postFacade.handleFilterChange({ newFilter: filter, refetch: false });
   }
 
   selectedProfilePicture = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
-  // openProfilePictureChange = signal<boolean>(false);
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -103,14 +119,23 @@ export class ProfileComponent implements OnInit {
     this.selectedProfilePicture.set(null);
   }
 
+  save(picture: File) {
+    this.userFacade.changeProfilePicture(picture);
+  }
+
   ngOnInit(): void {
     if (this.isMe()) {
-      this.profileFacade.getMyProfile();
-      this.postFacade.getSavedPosts();
-      this.postFacade.handleFilterChange(this.POSTS_FILTER_BTNS.MY_POSTS);
+      this.postFacade.handleFilterChange({ newFilter: this.POSTS_FILTER_BTNS.SAVED });
+      this.postFacade.handleFilterChange({
+        newFilter: this.POSTS_FILTER_BTNS.MY_POSTS,
+      });
     } else {
       this.profileFacade.getUserProfile(this.routeId()!);
-      this.postFacade.getUserPosts(this.routeId()!);
+      this.postFacade.handleFilterChange({
+        newFilter: this.POSTS_FILTER_BTNS.USER_POSTS,
+        userId: this.routeId(),
+        refetch: true,
+      });
     }
   }
 }

@@ -6,11 +6,13 @@ import { IProfileView } from '../interfaces/profile.interface';
 import { UserApiService } from '../../../core/services/user/user-api.service';
 import { toast } from 'ngx-sonner';
 import { IToggleFollowUserData } from '../../../core/interfaces/user.interface';
+import { UserFacadeService } from '../../../core/services/user/user-facade.service';
 
 @Service()
 export class ProfileFacadeService {
   private readonly profileApiService = inject(ProfileApiService);
   private readonly userApiService = inject(UserApiService);
+  private readonly userFacadeService = inject(UserFacadeService);
   private readonly destroyRef = inject(DestroyRef);
 
   private _profileState = signal<IProfileView | null>(null);
@@ -22,28 +24,40 @@ export class ProfileFacadeService {
   private _toggleFollowUserLoadingState = signal<boolean>(false);
   public toggleFollowUserLoading = this._toggleFollowUserLoadingState.asReadonly();
 
-  getMyProfile(): void {
-    this._getProfileLoadingState.set(true);
+  // getMyProfile(): void {
+  //   this._getProfileLoadingState.set(true);
 
-    this.profileApiService
-      .getMyProfile()
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => this._getProfileLoadingState.set(false)),
-      )
-      .subscribe({
-        next: (res) => {
-          this._profileState.set({
-            user: res.data.user,
-            isMyProfile: true,
-            isFollowing: false,
-          });
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
-  }
+  //   this.profileApiService
+  //     .getMyProfile()
+  //     .pipe(
+  //       takeUntilDestroyed(this.destroyRef),
+  //       finalize(() => this._getProfileLoadingState.set(false)),
+  //     )
+  //     .subscribe({
+  //       next: (res) => {
+  //         this._profileState.set({
+  //           user: res.data.user,
+  //           isMyProfile: true,
+  //           isFollowing: false,
+  //         });
+  //       },
+  //       error: (err) => {
+  //         console.log(err);
+  //       },
+  //     });
+  // }
+
+  // setMyProfile(): void {
+  //   const user = this.userFacadeService.user();
+
+  //   if (!user) return;
+
+  //   this._profileState.set({
+  //     user,
+  //     isFollowing: false,
+  //     isMyProfile: true,
+  //   });
+  // }
 
   getUserProfile(userId: string): void {
     this._getProfileLoadingState.set(true);
