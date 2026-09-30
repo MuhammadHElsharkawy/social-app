@@ -24,18 +24,56 @@
       <div
         class="group/cover relative bg-[linear-gradient(112deg,#0f172a_0%,#1e3a5f_36%,#2b5178_72%,#5f8fb8_100%)]"
         [class]="isMe() ? 'h-44 sm:h-52 lg:h-60 ' : 'h-48'"
+        [style]="
+          profile.user.cover
+            ? `background-image:
+            linear-gradient(rgba(15, 23, 42, 0.22), rgba(15, 23, 42, 0.4)),
+            url('${profile.user.cover}');
+          background-size: cover;
+          background-position: center center;`
+            : ''
+        "
       >
         @if (isMe()) {
           <div
             class="pointer-events-none absolute right-2 top-2 z-10 flex max-w-[90%] flex-wrap items-center justify-end gap-1.5 opacity-100 transition duration-200 sm:right-3 sm:top-3 sm:max-w-none sm:gap-2 sm:opacity-0 sm:group-hover/cover:opacity-100 sm:group-focus-within/cover:opacity-100"
           >
+            @if (profile.user.cover) {
+              <button
+                type="button"
+                class="pointer-events-auto cursor-pointer inline-flex items-center gap-1 rounded-lg bg-black/45 px-2 py-1 text-[11px] font-bold text-white backdrop-blur transition hover:bg-black/60 sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs"
+                (click)="openProfileCover.set(true)"
+              >
+                <svg lucideExpand class="size-3.25"></svg>
+                View cover
+              </button>
+            }
             <label
               class="pointer-events-auto inline-flex cursor-pointer items-center gap-1 rounded-lg bg-black/45 px-2 py-1 text-[11px] font-bold text-white backdrop-blur transition hover:bg-black/60 sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs"
             >
               <svg lucideCamera class="size-3.25"></svg>
-              Add cover
-              <input accept="image/*" class="hidden" type="file"
-            /></label>
+              @if (profile.user.cover) {
+                Change cover
+              } @else {
+                Add cover
+              }
+              <input
+                (change)="onCoverSelected($event)"
+                accept="image/*"
+                class="hidden"
+                type="file"
+              />
+            </label>
+            @if (profile.user.cover) {
+              <button
+                (click)="openDeleteDialog.set(true)"
+                type="button"
+                class="pointer-events-auto cursor-pointer inline-flex items-center gap-1 rounded-lg bg-black/45 px-2 py-1 text-[11px] font-bold text-white backdrop-blur transition hover:bg-black/60 disabled:cursor-not-allowed disabled:opacity-60 sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs"
+              >
+                <svg lucideTrash2 class="size-3.25"></svg>
+                Remove
+              </button>
+            }
           </div>
         }
       </div>
@@ -52,7 +90,7 @@
                     <button
                       type="button"
                       class="cursor-pointer rounded-full"
-                      (click)="openProfileImage.set(true)"
+                      (click)="openProfilePicture.set(true)"
                     >
                       <img
                         [alt]="profile.user.name + ' profile photo'"
@@ -65,7 +103,7 @@
                       class="absolute bottom-1 left-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-[#1877f2] opacity-100 shadow-sm ring-1 ring-slate-200 transition duration-200 hover:bg-slate-50 sm:opacity-0 sm:group-hover/avatar:opacity-100 sm:group-focus-within/avatar:opacity-100"
                       title="View profile photo"
                       aria-label="View profile photo"
-                      (click)="openProfileImage.set(true)"
+                      (click)="openProfilePicture.set(true)"
                     >
                       <svg lucideExpand class="size-4"></svg>
                     </button>
@@ -77,7 +115,7 @@
                         accept="image/*"
                         class="hidden"
                         type="file"
-                        (change)="onFileSelected($event)"
+                        (change)="onProfilePictureSelected($event)"
                       />
                     </label>
                   </div>
@@ -152,7 +190,7 @@
                     <svg lucideMail class="size-3.75 text-slate-500"></svg>
                     {{ profile.user.email }}
                   </p>
-                  <p class="flex items-center gap-2">
+                  <p class="flex items-center gap-2" /* (click)="test()" */>
                     <svg lucideUsers class="size-3.75 text-slate-500"></svg>
                     Active on Loomy
                   </p>
@@ -184,7 +222,7 @@
               <button
                 type="button"
                 class="cursor-pointer rounded-full"
-                (click)="openProfileImage.set(true)"
+                (click)="openProfilePicture.set(true)"
               >
                 <img
                   [alt]="profile.user.name + ' profile photo'"
@@ -234,11 +272,18 @@
         }
       </div>
     </section>
-    @if (openProfileImage()) {
+    @if (openProfilePicture()) {
       <app-image-zoom
         [imageSrc]="profile.user.photo!"
         [imageAlt]="profile.user.name"
-        (onClose)="openProfileImage.set(false)"
+        (onClose)="openProfilePicture.set(false)"
+      ></app-image-zoom>
+    }
+    @if (openProfileCover()) {
+      <app-image-zoom
+        [imageSrc]="profile.user.cover!"
+        [imageAlt]="profile.user.name + 'cover'"
+        (onClose)="openProfileCover.set(false)"
       ></app-image-zoom>
     }
   }
@@ -304,9 +349,32 @@
 
 @if (selectedProfilePicture()) {
   <app-profile-picture-change
-    [picturePreview]="previewUrl()!"
+    [picture]="selectedProfilePicture()!"
     [loading]="userFacade.changeProfilePictureLoading()"
+    type="profile"
     (onClose)="closeProfilePictureChange()"
-    (onSubmit)="save($event)"
+    (onSubmit)="saveProfilePicture($event)"
   ></app-profile-picture-change>
+}
+
+@if (selectedCover()) {
+  <app-profile-picture-change
+    [picture]="selectedCover()!"
+    [loading]="userFacade.changeCoverPictureLoading()"
+    type="cover"
+    (onClose)="closeProfileCoverChange()"
+    (onSubmit)="saveCover($event)"
+  ></app-profile-picture-change>
+}
+
+@if (openDeleteDialog()) {
+  <app-delete-dialog
+    [loading]="userFacade.deleteCoverLoading()"
+    title="Remove cover photo?"
+    desc="This will permanently remove your current cover picture from your profile."
+    deleteLabel="Remove"
+    loadingLabel="Removing..."
+    (onCloseDialog)="openDeleteDialog.set(false)"
+    (onConfirm)="userFacade.deleteCover()"
+  ></app-delete-dialog>
 }

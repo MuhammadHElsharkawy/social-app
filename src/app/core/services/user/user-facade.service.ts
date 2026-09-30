@@ -2,8 +2,9 @@ import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { IToggleFollowUserData, IUser } from '../../interfaces/user.interface';
 import { UserApiService } from './user-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { toast } from 'ngx-sonner';
+import { IUpdateProfilePictureData } from '../../../features/profile/interfaces/profile.interface';
 
 @Service()
 export class UserFacadeService {
@@ -21,6 +22,9 @@ export class UserFacadeService {
 
   private _changeCoverPictureLoadingState = signal<boolean>(false);
   public changeCoverPictureLoading = this._changeCoverPictureLoadingState.asReadonly();
+
+  private _deleteCoverLoadingState = signal<boolean>(false);
+  public deleteCoverLoading = this._deleteCoverLoadingState.asReadonly();
 
   getUser(): void {
     this._getUserLoadingState.set(true);
@@ -56,38 +60,69 @@ export class UserFacadeService {
     });
   }
 
-  changeProfilePicture(picture: File): void {
+  private removeProfileCover(): void {
+    this._userState.update((current) => {
+      if (!current) return null;
+
+      return { ...current, cover: undefined };
+    });
+  }
+
+  changeProfilePicture(data: IUpdateProfilePictureData): void {
     this._changeProfilePictureLoadingState.set(true);
 
-    const data: FormData = new FormData();
-    data.append('photo', picture);
+    const formData: FormData = new FormData();
+    formData.append('photo', data.picture);
+    formData.append('privacy', data.privacy);
 
-    this.UserApi.changeProfilePicture(data)
+    this.UserApi.changeProfilePicture(formData)
       .pipe(finalize(() => this._changeProfilePictureLoadingState.set(false)))
       .subscribe({
         next: (res) => {
           this.updateProfilePicture(res.data.photo);
         },
         error: (err) => {
-          console.log(err);
+          toast.error('Something went wrong!', {
+            description: `${err.error.message}`,
+          });
         },
       });
   }
 
-  changeCoverPicture(cover: File): void {
+  changeCoverPicture(data: IUpdateProfilePictureData): void {
     this._changeCoverPictureLoadingState.set(true);
 
-    const data: FormData = new FormData();
-    data.append('cover', cover);
+    const formData: FormData = new FormData();
+    formData.append('cover', data.picture);
+    formData.append('privacy', data.privacy);
 
-    this.UserApi.changeCoverPicture(data)
+    this.UserApi.changeCoverPicture(formData)
       .pipe(finalize(() => this._changeCoverPictureLoadingState.set(false)))
       .subscribe({
         next: (res) => {
           this.updateCoverPicture(res.data.cover);
         },
         error: (err) => {
-          console.log(err);
+          toast.error('Something went wrong!', {
+            description: `${err.error.message}`,
+          });
+        },
+      });
+  }
+
+  deleteCover(): void {
+    this._deleteCoverLoadingState.set(true);
+
+    this.UserApi.deleteCover()
+      .pipe(finalize(() => this._deleteCoverLoadingState.set(false)))
+      .subscribe({
+        next: () => {
+          this.removeProfileCover();
+        },
+        error: (err) => {
+          toast.error('Something went wrong!', {
+            description: `${err.error.message}`,
+          });
         },
       });
   }

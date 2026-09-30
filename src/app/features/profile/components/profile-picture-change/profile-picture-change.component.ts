@@ -4,28 +4,42 @@ import {
   effect,
   ElementRef,
   input,
+  OnInit,
   output,
   signal,
   ViewChild,
 } from '@angular/core';
-import { IPosition } from '../../interfaces/profile.interface';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { FormsModule } from '@angular/forms';
+import { IOption, SelectInput } from 'reusable-components';
+import { PostPrivacy } from '../../../post/interfaces/post.interfaces';
+import { IUpdateProfilePictureData } from '../../interfaces/profile.interface';
 
 @Component({
-  imports: [ClickOutsideDirective, FormsModule],
+  imports: [ClickOutsideDirective, FormsModule, SelectInput],
   selector: 'app-profile-picture-change',
   styleUrl: './profile-picture-change.component.css',
   templateUrl: './profile-picture-change.component.html',
 })
-export class ProfilePictureChangeComponent {
+export class ProfilePictureChangeComponent implements OnInit {
   private wasLoading = signal<boolean>(false);
 
-  picturePreview = input.required<string>();
+  picture = input.required<File>();
   loading = input<boolean>(false);
+  type = input<'profile' | 'cover'>('cover');
 
   onClose = output();
-  onSubmit = output<File>();
+  onSubmit = output<IUpdateProfilePictureData>();
+
+  previewUrl = signal<string | null>(null);
+
+  privacyOptions: IOption[] = [
+    { label: 'Public', value: 'public' },
+    { label: 'Followers', value: 'following' },
+    { label: 'Only me', value: 'only_me' },
+  ];
+
+  selectedPrivacy = signal<PostPrivacy>('public');
 
   constructor() {
     effect(() => {
@@ -43,7 +57,7 @@ export class ProfilePictureChangeComponent {
   private readonly OUTPUT_SIZE = 512;
 
   zoomLevel = signal<number>(1);
-  imagePosition = signal<IPosition>({ x: 0, y: 0 });
+  imagePosition = signal({ x: 0, y: 0 });
 
   private isDragging = signal<boolean>(false);
 
@@ -172,55 +186,59 @@ export class ProfilePictureChangeComponent {
   }
 
   async savePhoto(): Promise<File> {
-    const image = this.imageElement.nativeElement;
+    if (this.type() === 'cover') {
+      return this.picture();
+    } else {
+      const image = this.imageElement.nativeElement;
 
-    const canvas = document.createElement('canvas');
+      const canvas = document.createElement('canvas');
 
-    canvas.width = this.OUTPUT_SIZE;
-    canvas.height = this.OUTPUT_SIZE;
+      canvas.width = this.OUTPUT_SIZE;
+      canvas.height = this.OUTPUT_SIZE;
 
-    const context = canvas.getContext('2d');
+      const context = canvas.getContext('2d');
 
-    if (!context) {
-      throw new Error('Could not get canvas context');
+      if (!context) {
+        throw new Error('Could not get canvas context');
+      }
+
+      const naturalWidth = this.imageNaturalWidth();
+      const naturalHeight = this.imageNaturalHeight();
+
+      const scale = this.displayedWidth() / naturalWidth;
+
+      const sourceWidth = this.cropWidth() / scale;
+      const sourceHeight = this.cropHeight() / scale;
+
+      const { x, y } = this.imagePosition();
+
+      const sourceX = (naturalWidth - sourceWidth) / 2 - x / scale;
+      const sourceY = (naturalHeight - sourceHeight) / 2 - y / scale;
+
+      context.drawImage(
+        image,
+        sourceX,
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        0,
+        0,
+        this.OUTPUT_SIZE,
+        this.OUTPUT_SIZE,
+      );
+
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(resolve, 'image/jpeg', 0.9);
+      });
+
+      if (!blob) {
+        throw new Error('Failed to create cropped image');
+      }
+
+      return new File([blob], 'profile-photo.jpg', {
+        type: 'image/jpeg',
+      });
     }
-
-    const naturalWidth = this.imageNaturalWidth();
-    const naturalHeight = this.imageNaturalHeight();
-
-    const scale = this.displayedWidth() / naturalWidth;
-
-    const sourceWidth = this.cropWidth() / scale;
-    const sourceHeight = this.cropHeight() / scale;
-
-    const { x, y } = this.imagePosition();
-
-    const sourceX = (naturalWidth - sourceWidth) / 2 - x / scale;
-    const sourceY = (naturalHeight - sourceHeight) / 2 - y / scale;
-
-    context.drawImage(
-      image,
-      sourceX,
-      sourceY,
-      sourceWidth,
-      sourceHeight,
-      0,
-      0,
-      this.OUTPUT_SIZE,
-      this.OUTPUT_SIZE,
-    );
-
-    const blob = await new Promise<Blob | null>((resolve) => {
-      canvas.toBlob(resolve, 'image/jpeg', 0.9);
-    });
-
-    if (!blob) {
-      throw new Error('Failed to create cropped image');
-    }
-
-    return new File([blob], 'profile-photo.jpg', {
-      type: 'image/jpeg',
-    });
   }
 
   handleCloseClick(): void {
@@ -229,6 +247,15 @@ export class ProfilePictureChangeComponent {
 
   async handleSubmit(): Promise<void> {
     const file = await this.savePhoto();
-    this.onSubmit.emit(file);
+    this.onSubmit.emit({ picture: file, privacy: this.selectedPrivacy() });
+  }
+
+  private setPreview(file: File) {
+    if (this.previewUrl()) URL.revokeObjectURL(this.previewUrl()!);
+    this.previewUrl.set(URL.createObjectURL(file));
+  }
+
+  ngOnInit(): void {
+    this.setPreview(this.picture());
   }
 }

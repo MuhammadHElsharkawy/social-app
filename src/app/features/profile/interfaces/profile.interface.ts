@@ -1,5 +1,6 @@
 import { IBaseRES } from '../../../core/interfaces/base-res.interface';
 import { IUser } from '../../../core/interfaces/user.interface';
+import { PostPrivacy } from '../../post/interfaces/post.interfaces';
 
 export interface IGetMyProfileRES extends IBaseRES {
   data: IMyProfileData;
@@ -24,7 +25,7 @@ export interface IProfileView {
   isMyProfile: boolean;
 }
 
-export interface IPosition {
-  x: number;
-  y: number;
+export interface IUpdateProfilePictureData {
+  picture: File;
+  privacy: PostPrivacy;
 }

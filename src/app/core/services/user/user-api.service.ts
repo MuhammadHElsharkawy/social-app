@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {
   IChangeCoverPictureRES,
   IChangeProfilePictureRES,
+  IDeleteCoverRES,
   IGetUserRES,
   IToggleFollowUserRES,
 } from '../../interfaces/user.interface';
@@ -27,5 +28,9 @@ export class UserApiService {
 
   changeCoverPicture(cover: FormData): Observable<IChangeCoverPictureRES> {
     return this.httpClient.put<IChangeCoverPictureRES>(UserEndPoints.UploadCoverPhoto, cover);
+  }
+
+  deleteCover(): Observable<IDeleteCoverRES> {
+    return this.httpClient.delete<IDeleteCoverRES>(UserEndPoints.DeleteProfileCover);
   }
 }

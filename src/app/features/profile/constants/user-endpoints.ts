@@ -7,9 +7,11 @@ export const UserEndPoints = {
 
   GetUserProfile: (userId: string) => `${BASE_URL}/users/${userId}/profile`,
 
+  ToggleFollowUser: (userId: string) => `${BASE_URL}/users/${userId}/follow`,
+
   UploadProfilePhoto: `${BASE_URL}/users/upload-photo`,
 
   UploadCoverPhoto: `${BASE_URL}/users/upload-cover`,
 
-  ToggleFollowUser: (userId: string) => `${BASE_URL}/users/${userId}/follow`,
+  DeleteProfileCover: `${BASE_URL}/users/cover`,
 };

@@ -4,6 +4,7 @@ import {
   LucideBookmark,
   LucideCamera,
   LucideExpand,
+  LucideTrash2,
   LucideFileText,
   LucideMail,
   LucideUserPlus,
@@ -26,7 +27,8 @@ import { POSTS_FILTER, PostsFilter } from '../../../home/interfaces/posts-filter
 import { EmptyPostsComponent } from '../../../../shared/components/empty-posts/empty-posts.component';
 import { UserFacadeService } from '../../../../core/services/user/user-facade.service';
 import { ProfilePictureChangeComponent } from '../../components/profile-picture-change/profile-picture-change.component';
-import { IProfileView } from '../../interfaces/profile.interface';
+import { IProfileView, IUpdateProfilePictureData } from '../../interfaces/profile.interface';
+import { DeleteDialogComponent } from '../../../../shared/components/delete-dialog/delete-dialog.component';
 
 @Component({
   imports: [
@@ -40,12 +42,14 @@ import { IProfileView } from '../../interfaces/profile.interface';
     LucideBookmark,
     LucideCheck,
     LucideLoader,
+    LucideTrash2,
     ImageZoomComponent,
     CopyonclickDirective,
     PostCardComponent,
     PostsFilterBtnComponent,
     EmptyPostsComponent,
     ProfilePictureChangeComponent,
+    DeleteDialogComponent,
   ],
   selector: 'app-profile',
   styleUrl: './profile.component.css',
@@ -59,16 +63,20 @@ export class ProfileComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly location = inject(Location);
 
-  private routeId = toSignal(this.activatedRoute.paramMap.pipe(map((param) => param.get('id'))));
+  protected readonly routeId = toSignal(
+    this.activatedRoute.paramMap.pipe(map((param) => param.get('id'))),
+  );
 
   private userId = this.authService.getUserId();
 
   readonly isMe = computed(() => {
-    return !this.routeId() || this.routeId() === this.userId;
+    const routeId = this.routeId();
+
+    return !routeId || routeId === this.userId;
   });
 
   readonly profile = computed<IProfileView | null>(() => {
-    const routeId = this.activatedRoute.snapshot.paramMap.get('id');
+    const routeId = this.routeId();
 
     if (routeId) {
       return this.profileFacade.profile();
@@ -91,7 +99,8 @@ export class ProfileComponent implements OnInit {
     this.location.back();
   }
 
-  openProfileImage = signal<boolean>(false);
+  openProfilePicture = signal<boolean>(false);
+  openProfileCover = signal<boolean>(false);
 
   readonly POSTS_FILTER_BTNS = POSTS_FILTER;
 
@@ -99,29 +108,40 @@ export class ProfileComponent implements OnInit {
     this.postFacade.handleFilterChange({ newFilter: filter, refetch: false });
   }
 
+  selectedCover = signal<File | null>(null);
   selectedProfilePicture = signal<File | null>(null);
-  previewUrl = signal<string | null>(null);
 
-  onFileSelected(event: Event): void {
+  onCoverSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file: File | null = input.files?.[0] ?? null;
+
+    if (file) this.selectedCover.set(file);
+  }
+
+  onProfilePictureSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file: File | null = input.files?.[0] ?? null;
 
     if (file) this.selectedProfilePicture.set(file);
-    this.setPreview(file!);
-  }
-
-  private setPreview(file: File) {
-    if (this.previewUrl()) URL.revokeObjectURL(this.previewUrl()!);
-    this.previewUrl.set(URL.createObjectURL(file));
   }
 
   closeProfilePictureChange(): void {
     this.selectedProfilePicture.set(null);
   }
 
-  save(picture: File) {
-    this.userFacade.changeProfilePicture(picture);
+  closeProfileCoverChange(): void {
+    this.selectedCover.set(null);
   }
+
+  saveProfilePicture(data: IUpdateProfilePictureData) {
+    this.userFacade.changeProfilePicture(data);
+  }
+
+  saveCover(data: IUpdateProfilePictureData) {
+    this.userFacade.changeCoverPicture(data);
+  }
+
+  openDeleteDialog = signal<boolean>(false);
 
   ngOnInit(): void {
     if (this.isMe()) {
