@@ -36,6 +36,7 @@ import { EmojiPickerComponent } from '../../../../shared/components/emoji-picker
 import { OverlayModule } from '@angular/cdk/overlay';
 import { RouterLink } from '@angular/router';
 import { CopyonclickDirective } from '../../../../shared/directives/copy-on-click.directive';
+import { DeleteDialogComponent } from '../../../../shared/components/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-post-card',
@@ -68,7 +69,8 @@ import { CopyonclickDirective } from '../../../../shared/directives/copy-on-clic
     LucideFaceSlightlySmiling,
     RouterLink,
     CopyonclickDirective,
-  ],
+    DeleteDialogComponent
+],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
 })

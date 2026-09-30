@@ -14,6 +14,8 @@ export class DeleteDialogComponent {
   loading = input<boolean>(false);
   title = input<string>('');
   desc = input<string>('');
+  deleteLabel = input<string>('');
+  loadingLabel = input<string>('Deleting...');
 
   onCloseDialog = output();
   onConfirm = output();

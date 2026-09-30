@@ -56,3 +56,7 @@ interface IChangeCoverPictureData {
   cover: string;
   postId: string;
 }
+
+export interface IDeleteCoverRES extends IBaseRES {
+  data: {};
+}

@@ -36,22 +36,32 @@ export class SelectInput {
     if (this.ngControl) this.ngControl.valueAccessor = this;
   }
 
-  label = input<string>('');
   inputId = input.required<string>();
   placeholder = input<string | null>(null);
   options = input.required<IOption[]>();
-  styleType = input<'auth' | 'create-post'>();
+  styleType = input<'auth' | 'create-post' | 'privacy'>();
 
   selectClasses = computed(() => {
     if (this.styleType() === 'auth') {
       return `
-      w-full rounded-xl border bg-slate-50 py-3 pr-4
+      w-full rounded-xl border border-slate-200
+      focus:border-[#00298d] bg-slate-50 py-3 pr-4
       text-sm text-slate-800 outline-none transition
-      focus:bg-white
-      dark:bg-slate-950/60 dark:text-slate-100
-      dark:focus:bg-slate-900
+      focus:bg-white dark:bg-slate-950/60
+      dark:text-slate-100 dark:focus:bg-slate-900
       ${this.hasIcon() ? 'pl-11' : 'pl-4'}
     `;
+    }
+
+    if (this.styleType() === 'privacy') {
+      return `
+      w-full rounded-lg border border-slate-300
+      bg-white dark:bg-slate-950/60 pr-3 py-2 text-sm
+      dark:text-slate-100 dark:focus:bg-slate-900
+      font-semibold transition text-slate-700
+      outline-none focus:border-[#1877f2]
+      ${this.hasIcon() ? 'pl-11' : 'pl-3'}
+      `;
     }
 
     if (this.styleType() === 'create-post') {

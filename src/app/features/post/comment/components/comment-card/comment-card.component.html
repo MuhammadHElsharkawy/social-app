@@ -233,10 +233,13 @@
     }
   </div>
 </div>
+
 @if (deleteDialogOpen()) {
   <app-delete-dialog
     title="Delete this comment?"
     desc="This comment will be permanently removed."
+    deleteLabel="Delete comment"
+    loadingLabel="Deleting comment..."
     [loading]="postFacade.deleteCommentLoading()"
     (onCloseDialog)="closeDeleteDialog()"
     (onConfirm)="handleConfirmDeleteClick()"
