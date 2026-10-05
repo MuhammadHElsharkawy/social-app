@@ -3,6 +3,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { RouterOutlet } from '@angular/router';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { UserFacadeService } from '../../services/user/user-facade.service';
+import { NotificationsFacadeService } from '../../../features/notifications/services/notifications-facade.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -12,8 +13,10 @@ import { UserFacadeService } from '../../services/user/user-facade.service';
 })
 export class MainLayoutComponent implements OnInit {
   protected userFacade = inject(UserFacadeService);
+  protected notificationsFacade = inject(NotificationsFacadeService);
 
   ngOnInit(): void {
     this.userFacade.getUser();
+    this.notificationsFacade.getUnreadCount();
   }
 }

@@ -33,6 +33,7 @@ export class HeaderComponent {
   private readonly router = inject(Router);
 
   myData = input<IUser | null>();
+  unreadNotificationsCount = input<number>(0);
 
   isOpen = signal<boolean>(false);
 
