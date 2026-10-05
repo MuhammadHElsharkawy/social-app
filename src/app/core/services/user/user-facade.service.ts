@@ -26,6 +26,9 @@ export class UserFacadeService {
   private _deleteCoverLoadingState = signal<boolean>(false);
   public deleteCoverLoading = this._deleteCoverLoadingState.asReadonly();
 
+  private _toggleFollowUserLoadingState = signal<string | null>(null);
+  public toggleFollowUserLoading = this._toggleFollowUserLoadingState.asReadonly();
+
   getUser(): void {
     this._getUserLoadingState.set(true);
 
@@ -123,6 +126,32 @@ export class UserFacadeService {
           toast.error('Something went wrong!', {
             description: `${err.error.message}`,
           });
+        },
+      });
+  }
+
+  private updateFollowingState(newState: IToggleFollowUserData): void {
+    this._userState.update((current) => {
+      if (!current) return null;
+
+      return { ...current, followersCount: newState.followersCount };
+    });
+  }
+
+  toggleFollowUser(userId: string): void {
+    this._toggleFollowUserLoadingState.set(userId);
+
+    this.UserApi.toggleFollowUser(userId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this._toggleFollowUserLoadingState.set(null)),
+      )
+      .subscribe({
+        next: (res) => {
+          this.updateFollowingState(res.data);
+        },
+        error: (err) => {
+          toast.error('Something went wrong!', { description: err.error.message });
         },
       });
   }

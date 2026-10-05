@@ -26,6 +26,7 @@ export interface IUser {
   dateOfBirth?: Date;
   createdAt?: Date;
   passwordChangedAt?: Date;
+  mutualFollowersCount?: number;
 }
 
 export type Gender = 'male' | 'female';

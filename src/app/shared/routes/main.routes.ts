@@ -29,13 +29,13 @@ export const routes: Routes = [
         (c) => c.NotificationsComponent,
       ),
   },
-  //   {
-  //     path: 'suggestions',
-  //     loadComponent: () =>
-  //       import('../../features/followSuggestions/pages/followsuggestions/follow-suggestions.component').then(
-  //         (c) => c.FollowsuggestionsComponent,
-  //       ),
-  //   },
+  {
+    path: 'suggestions',
+    loadComponent: () =>
+      import('../../features/follow-suggestions/pages/follow-suggestions/follow-suggestions.component').then(
+        (c) => c.FollowSuggestionsComponent,
+      ),
+  },
   {
     path: 'settings',
     loadComponent: () =>
