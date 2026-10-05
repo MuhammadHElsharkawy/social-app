@@ -22,13 +22,13 @@ export const routes: Routes = [
         (c) => c.ProfileComponent,
       ),
   },
-  //   {
-  //     path: 'notifications',
-  //     loadComponent: () =>
-  //       import('../../features/notifications/page/notifications.component').then(
-  //         (c) => c.NotificationsComponent,
-  //       ),
-  //   },
+  {
+    path: 'notifications',
+    loadComponent: () =>
+      import('../../features/notifications/pages/notifications/notifications.component').then(
+        (c) => c.NotificationsComponent,
+      ),
+  },
   //   {
   //     path: 'suggestions',
   //     loadComponent: () =>

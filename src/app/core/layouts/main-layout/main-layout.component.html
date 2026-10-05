@@ -4,7 +4,10 @@
 <div
   class="h-screen overflow-y-auto bg-[#f0f2f5] text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100"
 >
-  <app-header [myData]="userFacade.user()"></app-header>
+  <app-header
+    [myData]="userFacade.user()"
+    [unreadNotificationsCount]="notificationsFacade.unreadNotificationsCount()"
+  ></app-header>
   <div class="mx-auto max-w-7xl px-3 py-3.5">
     <main class="min-w-0">
       <router-outlet></router-outlet>

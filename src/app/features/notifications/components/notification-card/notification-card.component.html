@@ -1,0 +1,158 @@
+<!-- <article
+  class="group relative flex gap-3 rounded-xl border p-3 transition sm:rounded-2xl sm:p-4"
+  [class]="
+    notification().isRead
+      ? 'border-slate-200 bg-white hover:bg-slate-50'
+      : 'border-[#dbeafe] bg-[#edf4ff]'
+  "
+  (click)="test()"
+>
+  <div class="relative shrink-0">
+    <button type="button" class="block cursor-pointer">
+      <img
+        [alt]="notification().actor.name"
+        class="h-11 w-11 rounded-full object-cover"
+        [src]="notification().actor.photo"
+      />
+    </button>
+    <span
+      class="absolute -bottom-1 -right-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white ring-2 ring-white"
+    >
+      @switch (notification().type) {
+        @case (notificationType.LikePost) {
+          <svg lucideHeart class="size-3.75 text-rose-500"></svg>
+        }
+        @case (notificationType.CommentPost) {
+          <svg lucideMessageCircle class="size-3.75 text-[#1877f2]"></svg>
+        }
+        @case (notificationType.SharePost) {
+          <svg lucideRepeat2 class="size-3.75 text-emerald-600"></svg>
+        }
+        @case (notificationType.FollowUser) {
+          <svg lucideUserPlus class="size-3.75 text-violet-600"></svg>
+        }
+      }
+    </span>
+  </div>
+  <div class="min-w-0 flex-1">
+    <div class="flex flex-wrap items-start justify-between gap-1.5 sm:gap-2">
+      <p class="text-sm leading-6 text-slate-800">
+        <button type="button" class="font-extrabold hover:text-[#1877f2] hover:underline">
+          {{ notification().actor.name }}
+        </button>
+        {{ notificationTitle() }}
+      </p>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <span class="text-xs font-semibold text-slate-500">
+          {{ notification().createdAt | timeAgo }}
+        </span>
+        <svg lucideDot class="size-5 text-[#1877f2]"></svg>
+      </div>
+    </div>
+    @if (notification().entity.body) {
+      <p class="mt-0.5 text-sm text-slate-600">{{ notification().entity.body }}</p>
+    }
+    @if (notification().entity.name) {
+      <p class="mt-0.5 text-sm text-slate-600">{{ notification().entity.name }}</p>
+    }
+    <div class="mt-2 flex items-center gap-2">
+      <button
+        (click)="onMarkAsRead()"
+        class="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1 text-xs font-bold text-[#1877f2] ring-1 ring-[#dbeafe] transition hover:bg-[#e7f3ff]"
+      >
+        <svg lucideCheck class="size-3.25"></svg>
+        Mark as read
+      </button>
+    </div>
+  </div>
+</article> -->
+<article
+  class="group relative flex gap-3 rounded-xl border p-3 transition sm:rounded-2xl sm:p-4"
+  [class]="
+    notification().isRead
+      ? 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:bg-slate-800/60'
+      : 'border-[#dbeafe] bg-[#edf4ff] hover:bg-[#e4efff] dark:border-blue-900/50 dark:bg-blue-950/40 dark:hover:bg-blue-950/60'
+  "
+  (click)="test()"
+>
+  <!-- Avatar & Type Icon Badge -->
+  <div class="relative shrink-0">
+    <button type="button" class="block cursor-pointer">
+      <img
+        [alt]="notification().actor.name"
+        class="h-11 w-11 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+        [src]="notification().actor.photo"
+      />
+    </button>
+    <span
+      class="absolute -bottom-1 -right-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white ring-2 ring-white dark:bg-slate-900 dark:ring-slate-900"
+    >
+      @switch (notification().type) {
+        @case (notificationType.LikePost) {
+          <svg lucideHeart class="size-3.75 text-rose-500"></svg>
+        }
+        @case (notificationType.CommentPost) {
+          <svg lucideMessageCircle class="size-3.75 text-[#1877f2] dark:text-blue-400"></svg>
+        }
+        @case (notificationType.SharePost) {
+          <svg lucideRepeat2 class="size-3.75 text-emerald-600 dark:text-emerald-400"></svg>
+        }
+        @case (notificationType.FollowUser) {
+          <svg lucideUserPlus class="size-3.75 text-violet-600 dark:text-violet-400"></svg>
+        }
+      }
+    </span>
+  </div>
+
+  <!-- Content Body -->
+  <div class="min-w-0 flex-1">
+    <div class="flex flex-wrap items-start justify-between gap-1.5 sm:gap-2">
+      <p class="text-sm leading-6 text-slate-800 dark:text-slate-200">
+        <button
+          type="button"
+          class="cursor-pointer font-extrabold hover:text-[#1877f2] hover:underline dark:hover:text-blue-400"
+        >
+          {{ notification().actor.name }}
+        </button>
+        {{ notificationTitle() }}
+      </p>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">
+          {{ notification().createdAt | timeAgo }}
+        </span>
+        @if (!notification().isRead) {
+          <svg lucideDot class="size-5 text-[#1877f2] dark:text-blue-400"></svg>
+        }
+      </div>
+    </div>
+
+    @if (notification().entity.body) {
+      <p class="mt-0.5 text-sm text-slate-600 dark:text-slate-400">
+        {{ notification().entity.body }}
+      </p>
+    }
+    @if (notification().entity.name) {
+      <p class="mt-0.5 text-sm text-slate-600 dark:text-slate-400">
+        {{ notification().entity.name }}
+      </p>
+    }
+
+    <!-- Actions -->
+    <div class="mt-2 flex items-center gap-2">
+      @if (notification().isRead) {
+        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+          <svg lucideCheck class="size-3.25"></svg>
+          Read
+        </span>
+      } @else {
+        <button
+          (click)="onMarkAsRead()"
+          class="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-white px-2.5 py-1 text-xs font-bold text-[#1877f2] ring-1 ring-[#dbeafe] transition hover:bg-[#e7f3ff] dark:bg-slate-800 dark:text-blue-400 dark:ring-blue-900/60 dark:hover:bg-slate-700"
+        >
+          <svg lucideCheck class="size-3.25"></svg>
+          Mark as read
+        </button>
+      }
+    </div>
+  </div>
+</article>
