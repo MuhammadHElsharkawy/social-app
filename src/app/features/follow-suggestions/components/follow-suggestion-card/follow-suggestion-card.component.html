@@ -1,0 +1,50 @@
+<div
+  class="rounded-xl border border-slate-200 p-2.5 transition-colors dark:border-slate-800 dark:bg-slate-950/40"
+>
+  <div class="flex items-center justify-between gap-2">
+    <a
+      [routerLink]="'/profile/' + suggestion()._id"
+      class="flex min-w-0 items-center gap-2 rounded-lg px-1 py-1 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/60"
+    >
+      <img
+        [alt]="suggestion().name"
+        class="h-10 w-10 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+        [src]="suggestion().photo"
+      />
+      <div class="min-w-0">
+        <p class="truncate text-sm font-bold text-slate-900 hover:underline dark:text-slate-100">
+          {{ suggestion().name }}
+        </p>
+        <p class="truncate text-xs text-slate-500 dark:text-slate-400">
+          @{{ suggestion().username }}
+        </p>
+      </div>
+    </a>
+    <button
+      (click)="handleFollowClick()"
+      class="inline-flex cursor-pointer items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition bg-[#e7f3ff] text-[#1877f2] hover:bg-[#d8ebff] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-blue-950/60 dark:text-blue-400 dark:hover:bg-blue-900/60"
+    >
+      @if (followLoading()) {
+        <svg lucideLoaderCircle class="size-3.75 animate-spin"></svg>
+        Updating...
+      } @else {
+        <svg lucideUserPlus class="size-3.75"></svg>
+        Follow
+      }
+    </button>
+  </div>
+  <div
+    class="mt-2 flex items-center gap-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400"
+  >
+    <span class="rounded-full bg-slate-100 px-2 py-0.5 dark:bg-slate-800 dark:text-slate-300">
+      {{ suggestion().followersCount }} followers
+    </span>
+    @if (suggestion().mutualFollowersCount && suggestion().mutualFollowersCount! > 0) {
+      <span
+        class="rounded-full bg-[#edf4ff] px-2 py-0.5 text-[#1877f2] dark:text-blue-400 dark:bg-blue-950/60"
+      >
+        {{ suggestion().mutualFollowersCount }} mutual
+      </span>
+    }
+  </div>
+</div>
