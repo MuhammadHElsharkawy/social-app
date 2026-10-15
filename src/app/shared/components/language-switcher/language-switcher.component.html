@@ -1,0 +1,19 @@
+<div class="language-switcher">
+  <button
+    type="button"
+    [class.active]="languageService.currentLanguage() === 'en'"
+    [attr.aria-pressed]="languageService.currentLanguage() === 'en'"
+    (click)="changeLanguage('en')"
+  >
+    English
+  </button>
+
+  <button
+    type="button"
+    [class.active]="languageService.currentLanguage() === 'ar'"
+    [attr.aria-pressed]="languageService.currentLanguage() === 'ar'"
+    (click)="changeLanguage('ar')"
+  >
+    العربية
+  </button>
+</div>

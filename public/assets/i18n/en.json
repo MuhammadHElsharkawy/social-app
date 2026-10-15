@@ -1,15 +1,52 @@
 {
-    "COMMON": {},
+    "COMMON": {
+        "LOGO": "Loomy"
+    },
     "AUTH": {
+        "LAYOUT": {
+            "SUBTITLE": "Connect with friends and the world around you on Loomy.",
+            "FEATURES": {
+                "TITLE": "Welcome to Loomy",
+                "SUBTITLE": "Everything you need in a modern social network",
+                "DESC": "Connect with friends, share your life moments, and stay updated with your personal timeline in real time.",
+                "FEAT1": {
+                    "TITLE": "Rich Posts & Feed",
+                    "DESC": "Share media, like, bookmark, and re-share content on your custom home feed."
+                },
+                "FEAT2": {
+                    "TITLE": "Nested Discussions",
+                    "DESC": "Engage deep in conversations with threaded replies and comment likes."
+                },
+                "FEAT3": {
+                    "TITLE": "Real-time Alerts",
+                    "DESC": "Stay updated with dynamic unread badges for all your likes and interactions."
+                },
+                "FEAT4": {
+                    "TITLE": "Smart Suggestions",
+                    "DESC": "Discover new friends and tailored user suggestions to expand your circle."
+                }
+            }
+        },
         "LOGIN": {
+            "PAGE": "Login",
             "TITLE": "Log in to Loomy",
             "SUBTITLE": "Log in and continue your social journey.",
             "SUBMIT_BTN": "Log in"
         },
         "REGISTER": {
+            "PAGE": "Register",
             "TITLE": "Create a new account",
             "SUBTITLE": "It's quick and easy.",
             "SUBMIT_BTN": "Create Account"
+        },
+        "FORM": {
+            "NAME": "Full Name",
+            "USERNAME": "Username",
+            "EMAIL": "Email",
+            "GENDER": "Select gender",
+            "PASSWORD": "Password",
+            "REPASSWORD": "Confirm Password",
+            "EMAILORUSERNAME": "Email or username"
         }
     }
 }

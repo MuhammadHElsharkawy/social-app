@@ -1,7 +1,11 @@
 <section>
   <div class="head">
-    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Create a new account</h2>
-    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">It's quick and easy.</p>
+    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">
+      {{ 'AUTH.REGISTER.TITLE' | translate }}
+    </h2>
+    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+      {{ 'AUTH.REGISTER.SUBTITLE' | translate }}
+    </p>
   </div>
 
   <form class="mt-5" [formGroup]="registerForm" (ngSubmit)="register()">
@@ -12,7 +16,7 @@
           formControlName="name"
           inputId="registerName"
           type="text"
-          placeholder="Full name"
+          [placeholder]="'AUTH.FORM.NAME' | translate"
           [attr.aria-describedby]="registerNameError.id()"
           [attr.aria-invalid]="
             registerForm.controls['name'].invalid && registerForm.controls['name'].touched
@@ -44,7 +48,7 @@
           formControlName="username"
           inputId="registerUsername"
           type="text"
-          placeholder="Username"
+          [placeholder]="'AUTH.FORM.USERNAME' | translate"
           [attr.aria-describedby]="registerUsernameError.id()"
           [attr.aria-invalid]="
             registerForm.controls['username'].invalid && registerForm.controls['username'].touched
@@ -75,7 +79,7 @@
           formControlName="email"
           inputId="registerEmail"
           type="email"
-          placeholder="Email"
+          [placeholder]="'AUTH.FORM.EMAIL' | translate"
           [attr.aria-describedby]="registerEmailError.id()"
           [attr.aria-invalid]="
             registerForm.controls['email'].invalid && registerForm.controls['email'].touched
@@ -104,7 +108,7 @@
           inputId="registerGender"
           formControlName="gender"
           [options]="genderOptions"
-          placeholder="Select gender"
+          [placeholder]="'AUTH.FORM.GENDER'|translate"
           [attr.aria-describedby]="registerGenderError.id()"
           [attr.aria-invalid]="
             registerForm.controls['gender'].invalid && registerForm.controls['gender'].touched
@@ -164,7 +168,7 @@
           formControlName="password"
           inputId="registerPassword"
           type="password"
-          placeholder="Password"
+          [placeholder]="'AUTH.FORM.PASSWORD' | translate"
           [attr.aria-describedby]="registerPasswordError.id()"
           [attr.aria-invalid]="
             registerForm.controls['password'].invalid && registerForm.controls['password'].touched
@@ -196,7 +200,7 @@
           formControlName="rePassword"
           inputId="registerRePassword"
           type="password"
-          placeholder="Confirm password"
+          [placeholder]="'AUTH.FORM.REPASSWORD' | translate"
           [attr.aria-describedby]="registerRePasswordError.id()"
           [attr.aria-invalid]="
             registerForm.controls['rePassword'].invalid &&
@@ -229,7 +233,7 @@
         class="w-full rounded-xl bg-blue-900 px-4 py-3 font-bold text-white transition enabled:cursor-pointer hover:scale-105 disabled:cursor-no-drop disabled:bg-gray-500 disabled:hover:scale-100 dark:bg-blue-600 dark:hover:bg-blue-500 dark:disabled:bg-slate-700 dark:disabled:text-slate-400"
       >
         @if (!isLoading()) {
-          Create Account <i class="fa-solid fa-arrow-right"></i>
+          {{ 'AUTH.REGISTER.SUBMIT_BTN' | translate }}
         }
         @if (isLoading()) {
           Please wait...
