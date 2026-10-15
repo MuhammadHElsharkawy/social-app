@@ -5,13 +5,22 @@ import { finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LucideKeyRound, LucideUser } from '@lucide/angular';
 import { AuthService } from '../../services/auth.service';
-import { FormErrorMessageComponent } from "../../../../shared/components/form-error-message/form-error-message.component";
+import { FormErrorMessageComponent } from '../../../../shared/components/form-error-message/form-error-message.component';
 import { FieldError, InputComponent } from 'reusable-components';
 import { getSafeReturnUrl } from '../../../../shared/utils/url.util';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, InputComponent, LucideUser, LucideKeyRound, FieldError, FormErrorMessageComponent],
+  imports: [
+    ReactiveFormsModule,
+    InputComponent,
+    LucideUser,
+    LucideKeyRound,
+    FieldError,
+    FormErrorMessageComponent,
+    TranslatePipe,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })

@@ -1,14 +1,27 @@
-import { Component, ElementRef, ViewChild, afterNextRender, inject, output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+  afterNextRender,
+  inject,
+  output,
+} from '@angular/core';
 import { Picker } from 'emoji-mart';
 import data from '@emoji-mart/data';
 import { ThemeService } from '../../../core/services/themes/theme.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-emoji-picker',
   template: ` <div #pickerContainer></div> `,
 })
-export class EmojiPickerComponent {
+export class EmojiPickerComponent implements OnInit {
   private readonly themeService = inject(ThemeService);
+  private platformId = inject(PLATFORM_ID);
+
+  emojiData: any;
 
   @ViewChild('pickerContainer', { static: true })
   private pickerContainer!: ElementRef<HTMLDivElement>;
@@ -37,5 +50,12 @@ export class EmojiPickerComponent {
 
       this.pickerContainer.nativeElement.appendChild(picker as unknown as Node);
     });
+  }
+
+  async ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      const data = await import('@emoji-mart/data');
+      this.emojiData = data;
+    }
   }
 }

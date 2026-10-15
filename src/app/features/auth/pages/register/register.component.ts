@@ -16,6 +16,7 @@ import { REG_EXP } from '../../../../core/constants/regex';
 import { CustomValidators } from '../../../../core/validators/custom-validators';
 import { FieldError, InputComponent, IOption, SelectInput } from 'reusable-components';
 import { getSafeReturnUrl } from '../../../../shared/utils/url.util';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
@@ -30,6 +31,7 @@ import { getSafeReturnUrl } from '../../../../shared/utils/url.util';
     LucideCalendar,
     LucideKeyRound,
     LucideUsers,
+    TranslatePipe
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
