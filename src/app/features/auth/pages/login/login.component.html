@@ -15,7 +15,7 @@
         formControlName="email"
         inputId="loginEmail"
         type="text"
-        [placeholder]="'AUTH.FORM.EMAILORUSERNAME' | translate"
+        [placeholder]="'FORM.EMAILORUSERNAME' | translate"
         [attr.aria-describedby]="loginEmailError.id()"
         [attr.aria-invalid]="
           loginForm.controls['email'].invalid && loginForm.controls['email'].touched
@@ -31,9 +31,9 @@
       <lib-field-error
         #loginEmailError
         [control]="loginForm.controls['email']"
-        label="Email or username"
+        [label]="'FORM.EMAILORUSERNAME' | translate"
         [customMessages]="{
-          minlength: (e) => 'Please enter a valid email or username.',
+          minlength: (e) => 'COMMON.VALIDATION.EMAIL_OR_USERNAME' | translate,
         }"
       ></lib-field-error>
     </div>
@@ -44,7 +44,7 @@
         formControlName="password"
         inputId="loginPassword"
         type="password"
-        [placeholder]="'AUTH.FORM.PASSWORD' | translate"
+        [placeholder]="'FORM.PASSWORD' | translate"
         [attr.aria-describedby]="loginPasswordError.id()"
         [attr.aria-invalid]="
           loginForm.controls['password'].invalid && loginForm.controls['password'].touched
@@ -60,7 +60,7 @@
       <lib-field-error
         #loginPasswordError
         [control]="loginForm.controls['password']"
-        label="Password"
+        [label]="'FORM.PASSWORD' | translate"
       ></lib-field-error>
     </div>
 
@@ -74,7 +74,7 @@
           {{ 'AUTH.LOGIN.SUBMIT_BTN' | translate }}
         }
         @if (isLoading()) {
-          Please wait...
+          {{ 'COMMON.MESSAGES.PLEASE_WAIT' | translate }}
         }
       </button>
     </div>

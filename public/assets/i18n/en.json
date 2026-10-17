@@ -1,6 +1,21 @@
 {
     "COMMON": {
-        "LOGO": "Loomy"
+        "LOGO": "Loomy",
+        "VALIDATION": {
+            "REQUIRED": "{{field}} is required.",
+            "MIN_LENGTH": "{{field}} must be at least {{requiredLength}} characters (currently {{actualLength}}).",
+            "EMAIL": "Enter a valid email address.",
+            "PATTERN": "The format entered for {{field}} isn't valid.",
+            "USERNAME_PATTERN": "Username must be 3-30 chars (a-z, 0-9, _).",
+            "FUTURE_DATE": "",
+            "MUST_MATCH": "",
+            "MUST_DIFFER": "",
+            "ONE_REQUIRED": "",
+            "EMAIL_OR_USERNAME": "Please enter a valid email or username."
+        },
+        "MESSAGES": {
+            "PLEASE_WAIT": "Please wait..."
+        }
     },
     "AUTH": {
         "LAYOUT": {
@@ -38,15 +53,24 @@
             "TITLE": "Create a new account",
             "SUBTITLE": "It's quick and easy.",
             "SUBMIT_BTN": "Create Account"
-        },
-        "FORM": {
-            "NAME": "Full Name",
-            "USERNAME": "Username",
-            "EMAIL": "Email",
-            "GENDER": "Select gender",
-            "PASSWORD": "Password",
-            "REPASSWORD": "Confirm Password",
-            "EMAILORUSERNAME": "Email or username"
+        }
+    },
+    "FORM": {
+        "NAME": "Full Name",
+        "USERNAME": "Username",
+        "EMAIL": "Email",
+        "GENDER": "Select gender",
+        "PASSWORD": "Password",
+        "REPASSWORD": "Confirm Password",
+        "EMAILORUSERNAME": "Email or username"
+    },
+    "POSTS": {
+        "POST_FILTERS": {
+            "feed": "Feed",
+            "my-posts": "My Posts",
+            "community": "Community",
+            "saved": "Saved",
+            "user-posts": "User Posts"
         }
     }
 }

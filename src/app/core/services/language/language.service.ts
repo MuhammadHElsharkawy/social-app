@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { DOCUMENT, inject, PLATFORM_ID, Service, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import { LANGUAGE_STORAGE_KEY } from '../../constants/storage-keys';
 
 export type Language = 'en' | 'ar';
 
@@ -11,14 +12,12 @@ export class LanguageService {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
 
-  private readonly storageKey = 'app-language';
-
   private readonly _currentLanguage = signal<Language>('en');
   readonly currentLanguage = this._currentLanguage.asReadonly();
 
   async initialize(): Promise<void> {
     const savedLanguage = isPlatformBrowser(this.platformId)
-      ? localStorage.getItem(this.storageKey)
+      ? localStorage.getItem(LANGUAGE_STORAGE_KEY)
       : null;
 
     const language: Language = savedLanguage === 'ar' ? 'ar' : 'en';
@@ -36,7 +35,7 @@ export class LanguageService {
     this.applyLanguageSettings(language);
 
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem(this.storageKey, language);
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
     }
 
     await firstValueFrom(this.translate.use(language));

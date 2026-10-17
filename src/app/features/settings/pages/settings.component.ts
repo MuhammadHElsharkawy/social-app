@@ -1,32 +1,28 @@
-import { Component, inject, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { filter } from 'rxjs';
+import { Component, inject } from '@angular/core';
+import { LucideMonitor, LucideMoon, LucideSun } from '@lucide/angular';
+import { ThemeService } from '../../../core/services/themes/theme.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService, Language } from '../../../core/services/language/language.service';
+import { ChangePasswordComponent } from '../components/security-tab/change-password.component';
 
 @Component({
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [
+    LucideSun,
+    LucideMoon,
+    LucideMonitor,
+    // TranslatePipe,
+    ChangePasswordComponent,
+  ],
   selector: 'app-settings',
   styleUrl: './settings.component.css',
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent {
-  private router = inject(Router);
-  activeTab = signal<'settings' | 'security'>('settings');
+  protected readonly themeService = inject(ThemeService);
+  protected languageService = inject(LanguageService);
 
-  constructor() {
-    this.updateActiveTab(this.router.url);
-
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.updateActiveTab(event.urlAfterRedirects || event.url);
-      });
-  }
-
-  private updateActiveTab(url: string) {
-    if (url.includes('security')) {
-      this.activeTab.set('security');
-    } else {
-      this.activeTab.set('settings');
-    }
+  changeLanguage(event: Event): void {
+    const lang = (event.target as HTMLSelectElement).value as Language;
+    this.languageService.changeLanguage(lang);
   }
 }

@@ -15,10 +15,12 @@
       (input)="handleInput($event)"
       (blur)="onBlur()"
       [disabled]="isDisabled()"
-      class="w-full rounded-xl border bg-slate-50 py-3 pr-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:bg-white dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-900"
+      class="w-full rounded-xl border bg-slate-50 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:bg-white dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-900"
       [class]="styleClass()"
-      [class.pl-11]="hasIcon()"
-      [class.pl-4]="!hasIcon()"
+      [class.ps-11]="hasIcon()"
+      [class.ps-4]="!hasIcon()"
+      [class.pe-4]="type() !== 'password'"
+      [class.pe-11]="type() === 'password'"
       [class]="
         isInvalid()
           ? 'border-rose-300 focus:border-rose-400 dark:border-rose-400 dark:focus:border-rose-300'
@@ -29,7 +31,7 @@
       <div>
         <button
           type="button"
-          class="absolute bottom-0 right-1.75 cursor-pointer bg-transparent p-2 text-slate-400 transition hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+          class="absolute bottom-0 inset-e-1.75 cursor-pointer bg-transparent p-2 text-slate-400 transition hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
           (click)="togglePasswordVisibility()"
         >
           @if (isPasswordVisible()) {
@@ -42,7 +44,7 @@
       </div>
     }
 
-    <div class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
+    <div class="pointer-events-none absolute inset-s-3 top-1/2 -translate-y-1/2">
       <ng-content />
     </div>
   </div>
