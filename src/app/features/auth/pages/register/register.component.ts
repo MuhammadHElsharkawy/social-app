@@ -31,7 +31,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     LucideCalendar,
     LucideKeyRound,
     LucideUsers,
-    TranslatePipe
+    TranslatePipe,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',

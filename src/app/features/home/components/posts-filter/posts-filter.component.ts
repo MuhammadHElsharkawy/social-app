@@ -1,11 +1,19 @@
 import { Component, input, output } from '@angular/core';
 import { POSTS_FILTER, PostsFilter } from '../../interfaces/posts-filter.interface';
-import { PostsFilterBtnComponent } from "../posts-filter-btn/posts-filter-btn.component";
+import { PostsFilterBtnComponent } from '../posts-filter-btn/posts-filter-btn.component';
 import { LucideBookmark, LucideEarth, LucideNewspaper, LucideSparkles } from '@lucide/angular';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-posts-filter',
-  imports: [LucideNewspaper, LucideSparkles, LucideEarth, LucideBookmark, PostsFilterBtnComponent],
+  imports: [
+    LucideNewspaper,
+    LucideSparkles,
+    LucideEarth,
+    LucideBookmark,
+    PostsFilterBtnComponent,
+    TranslatePipe,
+  ],
   templateUrl: './posts-filter.component.html',
   styleUrl: './posts-filter.component.css',
 })

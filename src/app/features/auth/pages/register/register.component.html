@@ -16,7 +16,7 @@
           formControlName="name"
           inputId="registerName"
           type="text"
-          [placeholder]="'AUTH.FORM.NAME' | translate"
+          [placeholder]="'FORM.NAME' | translate"
           [attr.aria-describedby]="registerNameError.id()"
           [attr.aria-invalid]="
             registerForm.controls['name'].invalid && registerForm.controls['name'].touched
@@ -32,7 +32,7 @@
         <lib-field-error
           #registerNameError
           [control]="registerForm.controls['name']"
-          label="Full name"
+          [label]="'FORM.NAME' | translate"
           [customMessages]="{
             minlength: (e) => 'Name must be at least 2 characters.',
           }"
@@ -48,7 +48,7 @@
           formControlName="username"
           inputId="registerUsername"
           type="text"
-          [placeholder]="'AUTH.FORM.USERNAME' | translate"
+          [placeholder]="'FORM.USERNAME' | translate"
           [attr.aria-describedby]="registerUsernameError.id()"
           [attr.aria-invalid]="
             registerForm.controls['username'].invalid && registerForm.controls['username'].touched
@@ -64,9 +64,9 @@
         <lib-field-error
           #registerUsernameError
           [control]="registerForm.controls['username']"
-          label="Username"
+          [label]="'FORM.USERNAME' | translate"
           [customMessages]="{
-            pattern: (e) => 'Username must be 3-30 chars (a-z, 0-9, _).',
+            pattern: (e) => 'COMMON.VALIDATION.USERNAME_PATTERN' | translate,
           }"
         ></lib-field-error>
       </div>
@@ -79,7 +79,7 @@
           formControlName="email"
           inputId="registerEmail"
           type="email"
-          [placeholder]="'AUTH.FORM.EMAIL' | translate"
+          [placeholder]="'FORM.EMAIL' | translate"
           [attr.aria-describedby]="registerEmailError.id()"
           [attr.aria-invalid]="
             registerForm.controls['email'].invalid && registerForm.controls['email'].touched
@@ -108,7 +108,7 @@
           inputId="registerGender"
           formControlName="gender"
           [options]="genderOptions"
-          [placeholder]="'AUTH.FORM.GENDER'|translate"
+          [placeholder]="'FORM.GENDER' | translate"
           [attr.aria-describedby]="registerGenderError.id()"
           [attr.aria-invalid]="
             registerForm.controls['gender'].invalid && registerForm.controls['gender'].touched
@@ -168,7 +168,7 @@
           formControlName="password"
           inputId="registerPassword"
           type="password"
-          [placeholder]="'AUTH.FORM.PASSWORD' | translate"
+          [placeholder]="'FORM.PASSWORD' | translate"
           [attr.aria-describedby]="registerPasswordError.id()"
           [attr.aria-invalid]="
             registerForm.controls['password'].invalid && registerForm.controls['password'].touched
@@ -200,7 +200,7 @@
           formControlName="rePassword"
           inputId="registerRePassword"
           type="password"
-          [placeholder]="'AUTH.FORM.REPASSWORD' | translate"
+          [placeholder]="'FORM.REPASSWORD' | translate"
           [attr.aria-describedby]="registerRePasswordError.id()"
           [attr.aria-invalid]="
             registerForm.controls['rePassword'].invalid &&

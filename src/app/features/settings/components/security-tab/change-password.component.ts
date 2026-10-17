@@ -1,5 +1,4 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { LucideKeyRound } from '@lucide/angular';
 import { ChangePasswordService } from '../../services/change-password.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormErrorMessageComponent } from '../../../../shared/components/form-error-message/form-error-message.component';
@@ -14,12 +13,12 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { toast } from 'ngx-sonner';
 
 @Component({
-  imports: [LucideKeyRound, FormErrorMessageComponent, ReactiveFormsModule, InputComponent],
-  selector: 'app-security-tab',
-  styleUrl: './security-tab.component.css',
-  templateUrl: './security-tab.component.html',
+  imports: [FormErrorMessageComponent, ReactiveFormsModule, InputComponent],
+  selector: 'app-change-password',
+  styleUrl: './change-password.component.css',
+  templateUrl: './change-password.component.html',
 })
-export class SecurityTabComponent {
+export class ChangePasswordComponent {
   private readonly changePasswordService = inject(ChangePasswordService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
