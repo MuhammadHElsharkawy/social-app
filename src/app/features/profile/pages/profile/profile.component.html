@@ -299,7 +299,7 @@
           <app-posts-filter-btn
             (btnClick)="onFilterSelect(POSTS_FILTER_BTNS.MY_POSTS)"
             [isActive]="postFacade.currentFilter() === POSTS_FILTER_BTNS.MY_POSTS"
-            label="My Posts"
+            [label]="'POSTS.POST_FILTERS.' + POSTS_FILTER_BTNS.MY_POSTS| translate"
             styleMode="profile"
           >
             <svg lucideFileText class="size-3.75"></svg>
@@ -307,7 +307,7 @@
           <app-posts-filter-btn
             (btnClick)="onFilterSelect(POSTS_FILTER_BTNS.SAVED)"
             [isActive]="postFacade.currentFilter() === POSTS_FILTER_BTNS.SAVED"
-            label="Saved"
+            [label]="'POSTS.POST_FILTERS.' + POSTS_FILTER_BTNS.SAVED | translate"
             styleMode="profile"
           >
             <svg lucideBookmark class="size-3.75"></svg>

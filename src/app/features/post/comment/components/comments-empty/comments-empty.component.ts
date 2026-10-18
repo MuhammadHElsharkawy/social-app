@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { LucideMessageCircle } from '@lucide/angular';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [LucideMessageCircle],
+  imports: [LucideMessageCircle, TranslatePipe],
   selector: 'app-comments-empty',
   template: `
     <div
@@ -14,9 +15,11 @@ import { LucideMessageCircle } from '@lucide/angular';
         <svg lucideMessageCircle class="size-5.5"></svg>
       </div>
 
-      <p class="text-lg font-extrabold text-slate-800 dark:text-slate-100">No comments yet</p>
+      <p class="text-lg font-extrabold text-slate-800 dark:text-slate-100">
+        {{ 'POSTS.POST_COMMENTS.EMPTY_TITLE' | translate }}
+      </p>
       <p class="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">
-        Be the first to comment.
+        {{ 'POSTS.POST_COMMENTS.EMPTY_DESC' | translate }}
       </p>
     </div>
   `,

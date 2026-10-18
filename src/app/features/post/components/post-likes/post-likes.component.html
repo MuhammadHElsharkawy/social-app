@@ -12,7 +12,7 @@
       <div class="flex items-center gap-2">
         <svg lucideUsers class="size-4.25 text-[#1877f2] dark:text-blue-400"></svg>
         <h4 class="text-base font-extrabold text-slate-900 dark:text-slate-100">
-          People who reacted
+          {{ 'POSTS.PEOPLE_WHO_REACTED' | translate }}
         </h4>
       </div>
       <button
@@ -31,7 +31,7 @@
           <p
             class="rounded-xl py-8 text-center text-sm font-semibold text-slate-600 dark:bg-slate-950/40 dark:text-slate-400"
           >
-            Loading likes...
+            {{ 'COMMON.MESSAGES.LOADING_LIKES' | translate }}
           </p>
         } @else {
           @for (like of postLikes(); track like._id) {

@@ -11,6 +11,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { EmojiPickerComponent } from '../../../../../shared/components/emoji-picker/emoji-picker.component';
 import { ICommentContent } from '../../interfaces/comment.interface';
 import { UserFacadeService } from '../../../../../core/services/user/user-facade.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   imports: [
@@ -23,6 +24,7 @@ import { UserFacadeService } from '../../../../../core/services/user/user-facade
     ReactiveFormsModule,
     FormsModule,
     OverlayModule,
+    TranslatePipe,
   ],
   selector: 'app-comment-text-area',
   styleUrl: './comment-text-area.component.css',

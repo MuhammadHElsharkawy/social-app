@@ -308,7 +308,7 @@
               : ''
           "
         >
-          {{ post().likesCount || 0 }} likes
+          {{ post().likesCount || 0 }} {{ 'POSTS.LIKES' | translate }}
         </button>
       </div>
 
@@ -316,14 +316,14 @@
       <div class="flex flex-wrap items-center gap-2 text-xs sm:gap-3 sm:text-sm">
         <span class="inline-flex items-center gap-1">
           <svg lucideRepeat2 class="size-3.25"></svg>
-          {{ post().sharesCount || 0 }} shares
+          {{ post().sharesCount || 0 }} {{ 'POSTS.SHARES' | translate }}
         </span>
-        <span>{{ post().commentsCount || 0 }} comments</span>
+        <span>{{ post().commentsCount || 0 }} {{ 'POSTS.COMMENTS' | translate }}</span>
         <button
           (click)="handleViewDetailsClick()"
           class="cursor-pointer rounded-md px-2 py-1 text-xs font-bold text-[#1877f2] transition hover:bg-[#e7f3ff] dark:text-blue-400 dark:hover:bg-blue-950/60"
         >
-          View details
+          {{ 'POSTS.VIEW_DETAILS' | translate }}
         </button>
       </div>
     </div>
@@ -359,7 +359,7 @@
         <svg lucideThumbsUp class="size-4.5"></svg>
       }
 
-      <span>Like</span>
+      <span>{{ 'POSTS.LIKE' | translate }}</span>
     </button>
 
     <button
@@ -367,7 +367,7 @@
       class="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg p-2 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:text-sm dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
     >
       <svg lucideMessageCircle class="size-4.5"></svg>
-      <span>Comment</span>
+      <span>{{ 'POSTS.COMMENT' | translate }}</span>
     </button>
 
     <button
@@ -375,7 +375,7 @@
       class="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg p-2 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:text-sm dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
     >
       <svg lucideShare2 class="size-4.5"></svg>
-      <span>Share</span>
+      <span>{{ 'POSTS.SHARE' | translate }}</span>
     </button>
   </div>
   @if (post().topComment && !isCommentsOpen()) {

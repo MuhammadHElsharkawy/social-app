@@ -10,6 +10,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../features/auth/services/auth.service';
 import { IUser } from '../../../core/interfaces/user.interface';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
@@ -22,6 +23,7 @@ import { IUser } from '../../../core/interfaces/user.interface';
     ClickOutsideDirective,
     RouterLink,
     RouterLinkActive,
+    TranslatePipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -34,6 +36,11 @@ export class HeaderComponent {
   unreadNotificationsCount = input<number>(0);
 
   isOpen = signal<boolean>(false);
+
+  handleProfileClick(): void {
+    this.isOpen.set(false);
+    this.router.navigate(['/profile']);
+  }
 
   handleSettingsClick(): void {
     this.isOpen.set(false);

@@ -26,10 +26,10 @@
     >
       @if (followLoading()) {
         <svg lucideLoaderCircle class="size-3.75 animate-spin"></svg>
-        Updating...
+        {{ 'COMMON.ACTIONS.UPDATING' | translate }}
       } @else {
         <svg lucideUserPlus class="size-3.75"></svg>
-        Follow
+        {{ 'COMMON.ACTIONS.FOLLOW' | translate }}
       }
     </button>
   </div>
@@ -37,13 +37,13 @@
     class="mt-2 flex items-center gap-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400"
   >
     <span class="rounded-full bg-slate-100 px-2 py-0.5 dark:bg-slate-800 dark:text-slate-300">
-      {{ suggestion().followersCount }} followers
+      {{ suggestion().followersCount }} {{ 'PROFILE.FOLLOWERS' | translate }}
     </span>
     @if (suggestion().mutualFollowersCount && suggestion().mutualFollowersCount! > 0) {
       <span
         class="rounded-full bg-[#edf4ff] px-2 py-0.5 text-[#1877f2] dark:text-blue-400 dark:bg-blue-950/60"
       >
-        {{ suggestion().mutualFollowersCount }} mutual
+        {{ suggestion().mutualFollowersCount }} {{ 'PROFILE.MUTUAL' | translate }}
       </span>
     }
   </div>

@@ -29,6 +29,7 @@ import { UserFacadeService } from '../../../../core/services/user/user-facade.se
 import { ProfilePictureChangeComponent } from '../../components/profile-picture-change/profile-picture-change.component';
 import { IProfileView, IUpdateProfilePictureData } from '../../interfaces/profile.interface';
 import { DeleteDialogComponent } from '../../../../shared/components/delete-dialog/delete-dialog.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   imports: [
@@ -50,6 +51,7 @@ import { DeleteDialogComponent } from '../../../../shared/components/delete-dial
     EmptyPostsComponent,
     ProfilePictureChangeComponent,
     DeleteDialogComponent,
+    TranslatePipe,
   ],
   selector: 'app-profile',
   styleUrl: './profile.component.css',

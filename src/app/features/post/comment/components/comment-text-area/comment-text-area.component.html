@@ -11,7 +11,7 @@
   >
     <textarea
       [(ngModel)]="body"
-      [placeholder]="'Comment as ' + userFacade.user()?.name || ''"
+      [placeholder]="'PLACEHOLDER.CREATE_COMMENT' | translate: { name: userFacade.user()?.name }"
       rows="1"
       class="max-h-35 min-h-10 w-full resize-none bg-transparent px-2 py-1.5 text-sm leading-5 text-slate-800 outline-none placeholder:text-slate-500 dark:text-slate-100 dark:placeholder:text-slate-400"
     ></textarea>

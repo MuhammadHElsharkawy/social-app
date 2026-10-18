@@ -37,6 +37,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { Router, RouterLink } from '@angular/router';
 import { CopyonclickDirective } from '../../../../shared/directives/copy-on-click.directive';
 import { DeleteDialogComponent } from '../../../../shared/components/delete-dialog/delete-dialog.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-post-card',
@@ -69,8 +70,9 @@ import { DeleteDialogComponent } from '../../../../shared/components/delete-dial
     LucideFaceSlightlySmiling,
     RouterLink,
     CopyonclickDirective,
-    DeleteDialogComponent
-],
+    DeleteDialogComponent,
+    TranslatePipe,
+  ],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
 })

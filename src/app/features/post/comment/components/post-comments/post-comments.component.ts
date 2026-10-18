@@ -4,9 +4,10 @@ import { PostFacadeService } from '../../../services/post-facade.service';
 import { CommentsEmptyComponent } from '../comments-empty/comments-empty.component';
 import { CommentTextAreaComponent } from '../comment-text-area/comment-text-area.component';
 import { ICommentContent } from '../../interfaces/comment.interface';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [CommentCardComponent, CommentTextAreaComponent, CommentsEmptyComponent],
+  imports: [CommentCardComponent, CommentTextAreaComponent, CommentsEmptyComponent, TranslatePipe],
   selector: 'app-post-comments',
   styleUrl: './post-comments.component.css',
   templateUrl: './post-comments.component.html',

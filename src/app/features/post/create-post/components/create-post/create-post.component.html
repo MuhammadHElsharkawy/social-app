@@ -32,7 +32,7 @@
     <textarea
       [(ngModel)]="body"
       rows="4"
-      placeholder="What's on your mind, Muhammad?"
+      [placeholder]="'PLACEHOLDER.CREATE_POST' | translate: { name: myData()?.name }"
       class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-[17px] leading-relaxed text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#1877f2] focus:bg-white dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:bg-slate-950"
     ></textarea>
   </div>
@@ -60,7 +60,7 @@
         class="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
       >
         <svg lucideImage class="size-4.5 text-emerald-600 dark:text-emerald-400"></svg>
-        <span class="hidden sm:inline">Photo</span>
+        <span class="hidden sm:inline">{{ 'COMMON.ACTIONS.ADD_PHOTO' | translate }}</span>
         <input accept="image/*" class="hidden" type="file" (change)="onFileSelected($event)" />
       </label>
 
@@ -71,7 +71,7 @@
         class="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
       >
         <svg lucideFaceSlightlySmiling class="size-4.5 text-amber-500 dark:text-amber-400"></svg>
-        <span class="hidden sm:inline">Emoji</span>
+        <span class="hidden sm:inline">{{ 'COMMON.ACTIONS.ADD_EMOJI' | translate }}</span>
       </button>
 
       @if (showEmojiPicker()) {
@@ -91,7 +91,7 @@
         [disabled]="!body() && !selectedFile()"
         class="flex items-center gap-2 rounded-xl bg-[#1877f2] px-5 py-2 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-[#166fe5] enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-500 dark:disabled:bg-slate-800 dark:disabled:text-slate-500 dark:disabled:opacity-100"
       >
-        Post
+        {{ 'COMMON.ACTIONS.POST' | translate }}
         <svg lucideSend class="size-4"></svg>
       </button>
     </div>
