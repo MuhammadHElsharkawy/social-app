@@ -41,4 +41,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('../../features/settings/pages/settings.component').then((c) => c.SettingsComponent),
   },
+  {
+    path: 'posts/:id',
+    loadComponent: () =>
+      import('../../features/post/components/post-details/post-details.component').then(
+        (c) => c.PostDetailsComponent,
+      ),
+  },
 ];

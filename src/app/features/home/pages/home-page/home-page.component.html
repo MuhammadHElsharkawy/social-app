@@ -1,6 +1,6 @@
 <div class="w-full grid lg:gap-4 grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)_300px]">
   <app-posts-filter
-    [selectedFilter]="postFacadeService.currentFilter()"
+    [selectedFilter]="postFacadeService.currentFilter() ?? 'feed'"
     (filterClick)="postFacadeService.handleFilterChange({ newFilter: $event })"
     [loadingFilter]="postFacadeService.activeLoadingFilter()"
   ></app-posts-filter>
@@ -30,7 +30,7 @@
           @if (postFacadeService.hasMorePosts()) {
             <div
               appNearEnd
-              (nearEnd)="postFacadeService.fetchPosts(postFacadeService.currentFilter())"
+              (nearEnd)="postFacadeService.fetchPosts(postFacadeService.currentFilter() ?? 'feed')"
             ></div>
           }
           @if (postFacadeService.isNextPostsPageLoading() && postFacadeService.hasMorePosts()) {

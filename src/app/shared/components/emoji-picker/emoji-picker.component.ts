@@ -9,7 +9,6 @@ import {
   output,
 } from '@angular/core';
 import { Picker } from 'emoji-mart';
-import data from '@emoji-mart/data';
 import { ThemeService } from '../../../core/services/themes/theme.service';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -31,7 +30,7 @@ export class EmojiPickerComponent implements OnInit {
   constructor() {
     afterNextRender(() => {
       const picker = new Picker({
-        data,
+        data: this.emojiData,
         theme: this.themeService.isDarkMode() ? 'dark' : 'light',
         set: 'Facebook',
 
