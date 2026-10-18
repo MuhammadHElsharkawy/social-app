@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {
   IDeletePostRES,
   IGetBookmarksRES,
+  IGetPostRES,
   IGetPostsRES,
   ISharePostREQ,
   ISharePostRES,
@@ -125,5 +126,9 @@ export class PostApiService {
 
   sharePost(postId: string, data: ISharePostREQ): Observable<ISharePostRES> {
     return this.httpClient.post<ISharePostRES>(PostEndPoints.SharePost(postId), data);
+  }
+
+  getPost(postId: string): Observable<IGetPostRES> {
+    return this.httpClient.get<IGetPostRES>(PostEndPoints.GetSinglePost(postId));
   }
 }

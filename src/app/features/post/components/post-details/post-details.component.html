@@ -1,0 +1,17 @@
+<div class="mx-auto max-w-3xl space-y-4">
+  @if (postFacade.getPostLoading()) {
+    <app-post-loading></app-post-loading>
+  } @else {
+    <button
+      (click)="goBack()"
+      class="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+    >
+      <svg lucideArrowLeft class="size-4"></svg>
+      Back
+    </button>
+
+    @if (postFacade.postDetails()) {
+      <app-post-card [post]="postFacade.postDetails()!"></app-post-card>
+    }
+  }
+</div>

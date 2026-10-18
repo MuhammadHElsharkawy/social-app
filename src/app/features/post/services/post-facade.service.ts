@@ -42,7 +42,7 @@ export class PostFacadeService {
   private _activeLoadingFilterState = signal<PostsFilter | null>(null);
   public activeLoadingFilter = this._activeLoadingFilterState.asReadonly();
 
-  private _currentFilterState = signal<PostsFilter>(POSTS_FILTER.FEED);
+  private _currentFilterState = signal<PostsFilter | null>(null);
   public currentFilter = this._currentFilterState.asReadonly();
 
   resetPosts(): void {
@@ -993,6 +993,37 @@ export class PostFacadeService {
             id: `sharepost:${postId}`,
             description: `${err.error.message}`,
           });
+        },
+      });
+  }
+
+  // Get Post
+  private _getPostLoadingState = signal<boolean>(false);
+  public getPostLoading = this._getPostLoadingState.asReadonly();
+
+  private _postDetailsState = signal<IPost | null>(null);
+  public postDetails = this._postDetailsState.asReadonly();
+
+  private postDetailsCache = new Map<string, IPost>();
+
+  getPost(postId: string): void {
+    if (this.postDetailsCache.has(postId)) {
+      this._postDetailsState.set(this.postDetailsCache.get(postId)!);
+      return;
+    }
+
+    this._getPostLoadingState.set(true);
+
+    this.postApiService
+      .getPost(postId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this._getPostLoadingState.set(false)),
+      )
+      .subscribe({
+        next: (res) => {
+          this._postDetailsState.set(res.data.post);
+          this.postDetailsCache.set(postId, res.data.post);
         },
       });
   }

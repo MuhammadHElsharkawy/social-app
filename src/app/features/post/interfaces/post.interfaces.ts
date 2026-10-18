@@ -69,3 +69,8 @@ export interface ISharePostREQ {
 export interface ISharePostRES extends IBaseRES {
   data: ISinglePostData;
 }
+
+// Get Post
+export interface IGetPostRES extends IBaseRES {
+  data: ISinglePostData;
+}

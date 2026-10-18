@@ -34,7 +34,7 @@ import { SharePostComponent } from '../share-post/share-post.component';
 import { SharedPostCardComponent } from '../shared-post-card/shared-post-card.component';
 import { EmojiPickerComponent } from '../../../../shared/components/emoji-picker/emoji-picker.component';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CopyonclickDirective } from '../../../../shared/directives/copy-on-click.directive';
 import { DeleteDialogComponent } from '../../../../shared/components/delete-dialog/delete-dialog.component';
 
@@ -78,6 +78,7 @@ export class PostCardComponent {
   private readonly authService = inject(AuthService);
   protected readonly postFacadeService = inject(PostFacadeService);
   private destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   post = input.required<IPost>();
   styleMode = input<'default' | 'profile'>('default');
@@ -260,4 +261,8 @@ export class PostCardComponent {
       ? 'bg-[#e7f3ff] text-[#1877f2] dark:bg-blue-950/60 dark:text-blue-400'
       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200',
   );
+
+  handleViewDetailsClick(): void {
+    this.router.navigate(['posts', this.post()._id]);
+  }
 }

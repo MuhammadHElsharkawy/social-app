@@ -23,8 +23,8 @@ import { FollowSuggestionsComponent } from '../../../follow-suggestions/pages/fo
     PostCardComponent,
     CreatePostComponent,
     CreatePostLoadingComponent,
-    FollowSuggestionsComponent
-],
+    FollowSuggestionsComponent,
+  ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
@@ -33,6 +33,6 @@ export class HomePageComponent implements OnInit {
   protected userFacade = inject(UserFacadeService);
 
   ngOnInit(): void {
-    this.postFacadeService.handleFilterChange({ newFilter: POSTS_FILTER.FEED });
+    this.postFacadeService.handleFilterChange({ newFilter: POSTS_FILTER.FEED, refetch: false });
   }
 }
