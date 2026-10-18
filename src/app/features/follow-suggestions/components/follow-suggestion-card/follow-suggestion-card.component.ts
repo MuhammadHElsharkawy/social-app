@@ -2,9 +2,10 @@ import { Component, input, output } from '@angular/core';
 import { LucideLoaderCircle, LucideUserPlus } from '@lucide/angular';
 import { IUser } from '../../../../core/interfaces/user.interface';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [LucideUserPlus, LucideLoaderCircle, RouterLink],
+  imports: [LucideUserPlus, LucideLoaderCircle, RouterLink, TranslatePipe],
   selector: 'app-follow-suggestion-card',
   styleUrl: './follow-suggestion-card.component.css',
   templateUrl: './follow-suggestion-card.component.html',

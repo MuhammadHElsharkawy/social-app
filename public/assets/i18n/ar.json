@@ -10,7 +10,21 @@
             "EMAIL_OR_USERNAME": "رجاءً أدخل بريدًا إلكترونيًا أو اسم مستخدم صالحًا."
         },
         "MESSAGES": {
-            "PLEASE_WAIT": "يرجى الانتظار..."
+            "PLEASE_WAIT": "يرجى الانتظار...",
+            "LOADING_LIKES": "جاري تحميل الإعجابات...",
+            "LOADING_COMMENTS": "جاري تحميل التعليقات...",
+            "UPDATING": "جاري التحديث...",
+            "SHARING": "جاري المشاركة..."
+        },
+        "ACTIONS": {
+            "LOGOUT": "تسجيل الخروج",
+            "FOLLOW": "متابعة",
+            "VIEW_MORE": "عرض المزيد",
+            "POST": "نشر",
+            "ADD_EMOJI": "إيموجي",
+            "ADD_PHOTO": "صورة",
+            "SHARE_NOW": "شارك الآن",
+            "CANCEL": "إلغاء"
         }
     },
     "AUTH": {
@@ -60,6 +74,12 @@
         "REPASSWORD": "تأكيد كلمة المرور",
         "EMAILORUSERNAME": "البريد الإلكتروني أو اسم المستخدم"
     },
+    "PLACEHOLDER": {
+        "CREATE_POST": "بما تفكر يا {{name}}؟",
+        "SEARCH_FRIENDS": "ابحث عن الأصدقاء...",
+        "CREATE_COMMENT": "اكتب تعليقًا ك {{name}}",
+        "SHARE_POST": "اكتب شيئًا عن ذلك..."
+    },
     "POSTS": {
         "POST_FILTERS": {
             "feed": "الرئيسية",
@@ -67,6 +87,40 @@
             "community": "المجتمع",
             "saved": "المحفوظات",
             "user-posts": "منشورات المستخدم"
+        },
+        "LIKE": "إعجاب",
+        "LIKES": "إعجابات",
+        "COMMENT": "تعليق",
+        "COMMENTS": "تعليقات",
+        "SHARE": "مشاركة",
+        "SHARES": "مشاركات",
+        "VIEW_DETAILS": "عرض التفاصيل",
+        "ORIGINAL_POST": "المنشور الأصلي",
+        "PEOPLE_WHO_REACTED": "المتفاعلون",
+        "POST_COMMENTS": {
+            "TITLE": "التعليقات",
+            "EMPTY_TITLE": "لا توجد تعليقات بعد",
+            "EMPTY_DESC": "كن أول من يعلق."
+        },
+        "SHARE_POST": {
+            "TITLE": "شارك منشورًا"
         }
+    },
+    "HOME": {
+        "TITLE": "الرئيسية"
+    },
+    "PROFILE": {
+        "TITLE": "الملف الشخصي",
+        "FOLLOWERS": "متابع",
+        "MUTUAL": "صديق مشترك"
+    },
+    "NOTIFICATIONS": {
+        "TITLE": "الإشعارات"
+    },
+    "SETTINGS": {
+        "TITLE": "الإعدادات"
+    },
+    "SUGGESTIONS": {
+        "TITLE": "أصدقاء مقترحة"
     }
 }

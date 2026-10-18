@@ -14,7 +14,22 @@
             "EMAIL_OR_USERNAME": "Please enter a valid email or username."
         },
         "MESSAGES": {
-            "PLEASE_WAIT": "Please wait..."
+            "PLEASE_WAIT": "Please wait...",
+            "LOADING_LIKES": "Loading likes...",
+            "LOADING_COMMENTS": "Loading comments...",
+            "PLEFASE_WAIT": "Please wait...",
+            "UPDATING": "Updating...",
+            "SHARING": "Sharing..."
+        },
+        "ACTIONS": {
+            "LOGOUT": "Logout",
+            "FOLLOW": "Follow",
+            "VIEW_MORE": "View more",
+            "POST": "Post",
+            "ADD_EMOJI": "Emoji",
+            "ADD_PHOTO": "PHOTO",
+            "SHARE_NOW": "Share now",
+            "CANCEL": "Cancel"
         }
     },
     "AUTH": {
@@ -64,6 +79,12 @@
         "REPASSWORD": "Confirm Password",
         "EMAILORUSERNAME": "Email or username"
     },
+    "PLACEHOLDER": {
+        "CREATE_POST": "What's on your mind, {{name}}?",
+        "SEARCH_FRIENDS": "Search friends...",
+        "CREATE_COMMENT": "Comment as {{name}}",
+        "SHARE_POST": "Say something about this..."
+    },
     "POSTS": {
         "POST_FILTERS": {
             "feed": "Feed",
@@ -71,6 +92,40 @@
             "community": "Community",
             "saved": "Saved",
             "user-posts": "User Posts"
+        },
+        "LIKE": "Like",
+        "LIKES": "Likes",
+        "COMMENT": "Comment",
+        "COMMENTS": "Comments",
+        "SHARE": "Share",
+        "SHARES": "Shares",
+        "VIEW_DETAILS": "View details",
+        "ORIGINAL_POST": "Original Post",
+        "PEOPLE_WHO_REACTED": "People who reacted",
+        "POST_COMMENTS": {
+            "TITLE": "comments",
+            "EMPTY_TITLE": "No comments yet",
+            "EMPTY_DESC": "Be the first to comment."
+        },
+        "SHARE_POST": {
+            "TITLE": "Share Post"
         }
+    },
+    "HOME": {
+        "TITLE": "Home"
+    },
+    "PROFILE": {
+        "TITLE": "Profile",
+        "FOLLOWERS": "followers",
+        "MUTUAL": "mutual"
+    },
+    "NOTIFICATIONS": {
+        "TITLE": "Notifications"
+    },
+    "SETTINGS": {
+        "TITLE": "Settings"
+    },
+    "SUGGESTIONS": {
+        "TITLE": "Suggested Friends"
     }
 }

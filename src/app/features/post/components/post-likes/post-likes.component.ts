@@ -3,10 +3,11 @@ import { LucideUsers, LucideX } from '@lucide/angular';
 import { PostLikeCardComponent } from "../post-like-card/post-like-card.component";
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { ILike } from '../../interfaces/like.interface';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-post-likes',
-  imports: [LucideUsers, LucideX, ClickOutsideDirective, PostLikeCardComponent],
+  imports: [LucideUsers, LucideX, ClickOutsideDirective, PostLikeCardComponent, TranslatePipe],
   templateUrl: './post-likes.component.html',
   styleUrl: './post-likes.component.css',
 })

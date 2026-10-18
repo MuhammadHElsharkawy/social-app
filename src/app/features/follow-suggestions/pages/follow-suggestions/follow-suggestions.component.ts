@@ -4,6 +4,7 @@ import { FollowSuggestionCardComponent } from '../../components/follow-suggestio
 import { FollowSuggestionLoadingComponent } from '../../components/follow-suggestion-loading/follow-suggestion-loading.component';
 import { SuggestionsFacadeService } from '../../services/suggestions-facade.service';
 import { UserFacadeService } from '../../../../core/services/user/user-facade.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   imports: [
@@ -11,6 +12,7 @@ import { UserFacadeService } from '../../../../core/services/user/user-facade.se
     LucideSearch,
     FollowSuggestionCardComponent,
     FollowSuggestionLoadingComponent,
+    TranslatePipe,
   ],
   selector: 'app-follow-suggestions',
   styleUrl: './follow-suggestions.component.css',

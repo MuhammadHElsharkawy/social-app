@@ -3,9 +3,10 @@ import { LucideX } from '@lucide/angular';
 import { IPost, ISharePostREQ } from '../../interfaces/post.interfaces';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [LucideX, ClickOutsideDirective, FormsModule],
+  imports: [LucideX, ClickOutsideDirective, FormsModule, TranslatePipe],
   selector: 'app-share-post',
   styleUrl: './share-post.component.css',
   templateUrl: './share-post.component.html',

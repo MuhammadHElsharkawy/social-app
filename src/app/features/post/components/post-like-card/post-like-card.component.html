@@ -1,6 +1,6 @@
 <a
   class="flex items-center gap-3 rounded-xl px-3 py-2 transition hover:bg-slate-100 dark:hover:bg-slate-800/80"
-  href="#/profile/6a78b5768ebe92c2c01e3409"
+  [routerLink]="isMyPost() ? '/profile' : '/profile/' + like()._id"
 >
   <img
     loading="lazy"

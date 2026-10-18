@@ -14,6 +14,7 @@ import { PostFacadeService } from '../../../services/post-facade.service';
 import { IUser } from '../../../../../core/interfaces/user.interface';
 import { ICreatePostREQ } from '../../interfaces/create-post.interface';
 import { toast } from 'ngx-sonner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   imports: [
@@ -28,6 +29,7 @@ import { toast } from 'ngx-sonner';
     FormsModule,
     EmojiPickerComponent,
     ClickOutsideDirective,
+    TranslatePipe,
   ],
   selector: 'app-create-post',
   styleUrl: './create-post.component.css',
