@@ -6,13 +6,7 @@ import { LanguageService, Language } from '../../../core/services/language/langu
 import { ChangePasswordComponent } from '../components/security-tab/change-password.component';
 
 @Component({
-  imports: [
-    LucideSun,
-    LucideMoon,
-    LucideMonitor,
-    // TranslatePipe,
-    ChangePasswordComponent,
-  ],
+  imports: [LucideSun, LucideMoon, LucideMonitor, TranslatePipe, ChangePasswordComponent],
   selector: 'app-settings',
   styleUrl: './settings.component.css',
   templateUrl: './settings.component.html',
