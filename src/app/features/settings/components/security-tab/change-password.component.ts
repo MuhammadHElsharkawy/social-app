@@ -11,9 +11,10 @@ import { Router } from '@angular/router';
 import { InputComponent } from 'reusable-components';
 import { AuthService } from '../../../auth/services/auth.service';
 import { toast } from 'ngx-sonner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [FormErrorMessageComponent, ReactiveFormsModule, InputComponent],
+  imports: [FormErrorMessageComponent, ReactiveFormsModule, InputComponent, TranslatePipe],
   selector: 'app-change-password',
   styleUrl: './change-password.component.css',
   templateUrl: './change-password.component.html',

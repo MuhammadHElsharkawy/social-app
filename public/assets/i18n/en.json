@@ -7,6 +7,7 @@
             "EMAIL": "Enter a valid email address.",
             "PATTERN": "The format entered for {{field}} isn't valid.",
             "USERNAME_PATTERN": "Username must be 3-30 chars (a-z, 0-9, _).",
+            "PASSWORD_PATTERN": "At least 8 characters with uppercase, lowercase, number, and special character.",
             "FUTURE_DATE": "",
             "MUST_MATCH": "",
             "MUST_DIFFER": "",
@@ -19,7 +20,8 @@
             "LOADING_COMMENTS": "Loading comments...",
             "PLEFASE_WAIT": "Please wait...",
             "UPDATING": "Updating...",
-            "SHARING": "Sharing..."
+            "SHARING": "Sharing...",
+            "UPDATING_PASSWORD": "Updating password..."
         },
         "ACTIONS": {
             "LOGOUT": "Logout",
@@ -77,13 +79,19 @@
         "GENDER": "Select gender",
         "PASSWORD": "Password",
         "REPASSWORD": "Confirm Password",
-        "EMAILORUSERNAME": "Email or username"
+        "EMAILORUSERNAME": "Email or username",
+        "CURRENT_PASS": "Current password",
+        "NEW_PASS": "New password",
+        "CONFIRM_PASS": "Confirm new password"
     },
     "PLACEHOLDER": {
         "CREATE_POST": "What's on your mind, {{name}}?",
         "SEARCH_FRIENDS": "Search friends...",
         "CREATE_COMMENT": "Comment as {{name}}",
-        "SHARE_POST": "Say something about this..."
+        "SHARE_POST": "Say something about this...",
+        "CURRENT_PASS": "Enter current password",
+        "NEW_PASS": "Enter new password",
+        "CONFIRM_PASS": "Re-enter new password"
     },
     "POSTS": {
         "POST_FILTERS": {
@@ -123,7 +131,17 @@
         "TITLE": "Notifications"
     },
     "SETTINGS": {
-        "TITLE": "Settings"
+        "TITLE": "Settings",
+        "DESC": "Manage your workspace preferences, appearance, and security credentials.",
+        "GENERAL_TITLE": "General Preferences",
+        "GENERAL_DESC": "Customize visual mode and language options.",
+        "APPEARANCE": "Appearance",
+        "LANGUAGE": "Language"
+    },
+    "CHANGE_PASSWORD": {
+        "TITLE": "Change Password",
+        "DESC": "Keep your account secure by using a strong password.",
+        "SUBMIT_BTN": "Update password"
     },
     "SUGGESTIONS": {
         "TITLE": "Suggested Friends"
