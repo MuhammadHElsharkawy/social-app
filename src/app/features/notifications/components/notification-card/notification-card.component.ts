@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import {
   LucideCheck,
   LucideDot,
@@ -13,6 +13,9 @@ import {
   NotificationType,
 } from '../../interfaces/notification.interface';
 import { TimeAgoPipe } from '../../../../shared/pipes/time-ago-pipe';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ReadMoreDirective } from '../../../../shared/directives/read-more.directive';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [
@@ -23,29 +26,31 @@ import { TimeAgoPipe } from '../../../../shared/pipes/time-ago-pipe';
     LucideDot,
     LucideCheck,
     TimeAgoPipe,
+    TranslatePipe,
   ],
   selector: 'app-notification-card',
   styleUrl: './notification-card.component.css',
   templateUrl: './notification-card.component.html',
 })
 export class NotificationCardComponent {
-  notification = input.required<INotification>();
+  readonly notification = input.required<INotification>();
+  private readonly router = inject(Router);
 
-  readNotification = output<string>();
+  readonly readNotification = output<string>();
 
-  notificationType = NotificationType;
+  readonly notificationType = NotificationType;
   entityType = EntityType;
 
   notificationTitle = (): string => {
     switch (this.notification().type) {
       case this.notificationType.LikePost:
-        return 'iked your post';
+        return 'NOTIFICATIONS.LIKE_POST';
       case this.notificationType.CommentPost:
-        return 'commented on your post';
+        return 'NOTIFICATIONS.COMMENT_POST';
       case this.notificationType.SharePost:
-        return 'shared your post';
+        return 'NOTIFICATIONS.SHARE_POST';
       case this.notificationType.FollowUser:
-        return 'followed you';
+        return 'NOTIFICATIONS.FOLLOWED';
       default:
         return '';
     }
@@ -55,7 +60,8 @@ export class NotificationCardComponent {
     this.readNotification.emit(this.notification()._id);
   }
 
-  test() {
-    // console.log(this.notification())
+  goToNotification(): void {
+    if (this.notification().entityType === this.entityType.Post)
+      this.router.navigate(['posts', this.notification().entityId]);
   }
 }

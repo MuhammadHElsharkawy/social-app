@@ -25,7 +25,8 @@
             "SHARING": "Sharing...",
             "UPDATING_PASSWORD": "Updating password...",
             "FOLLOWING": "Following",
-            "SAVING": "Saving..."
+            "SAVING": "Saving...",
+            "LOADING_MORE": "Loading more..."
         },
         "ACTIONS": {
             "LOGOUT": "Logout",
@@ -42,7 +43,8 @@
             "CHANGE_PHOTO": "Change profile",
             "ADD_COVER": "Add cover",
             "CHANGE_COVER": "Change cover",
-            "REMOVE": "Remove"
+            "REMOVE": "Remove",
+            "READ_ALL": "Mark all as read"
         }
     },
     "AUTH": {
@@ -143,7 +145,16 @@
         "ABOUT": "Personal details"
     },
     "NOTIFICATIONS": {
-        "TITLE": "Notifications"
+        "TITLE": "Notifications",
+        "DESC": "Realtime updates for likes, comments, shares, and follows.",
+        "ALL": "All",
+        "READ": "Read",
+        "UNREAD": "Unread",
+        "MARK_READ": "Mark as read",
+        "LIKE_POST": "iked your post",
+        "COMMENT_POST": "commented on your post",
+        "SHARE_POST": "shared your post",
+        "FOLLOWED": "followed you"
     },
     "SETTINGS": {
         "TITLE": "Settings",

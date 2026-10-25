@@ -11,10 +11,12 @@ import {
 
 @Service()
 export class NotificationsApiService {
-  private httpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
 
-  getAllNotifications(): Observable<IGetNotificationsRES> {
-    return this.httpClient.get<IGetNotificationsRES>(NotificationsEndPoints.GetNotifications());
+  getAllNotifications(page: number = 1, limit: number = 20): Observable<IGetNotificationsRES> {
+    return this.httpClient.get<IGetNotificationsRES>(
+      NotificationsEndPoints.GetNotifications(page, limit),
+    );
   }
 
   getUnreadCount(): Observable<IGetUnreadCountRES> {

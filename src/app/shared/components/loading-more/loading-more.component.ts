@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { LucideLoaderCircle } from '@lucide/angular';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-loading-more',
-  imports: [LucideLoaderCircle],
+  imports: [LucideLoaderCircle, TranslatePipe],
   template: `
     <div class="flex justify-center">
       <div
@@ -13,7 +14,7 @@ import { LucideLoaderCircle } from '@lucide/angular';
           lucideLoaderCircle
           class="animate-spin size-4.5 text-slate-500 dark:text-slate-400"
         ></svg>
-        <span>Loading more posts...</span>
+        <span>{{ 'COMMON.MESSAGES.LOADING_MORE' | translate }}</span>
       </div>
     </div>
   `,
