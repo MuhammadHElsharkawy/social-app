@@ -17,11 +17,15 @@
         "MESSAGES": {
             "PLEASE_WAIT": "Please wait...",
             "LOADING_LIKES": "Loading likes...",
+            "LOADING_POSTS": "Loading posts...",
             "LOADING_COMMENTS": "Loading comments...",
+            "LOADING_PROFILE": "Loading profile...",
             "PLEFASE_WAIT": "Please wait...",
             "UPDATING": "Updating...",
             "SHARING": "Sharing...",
-            "UPDATING_PASSWORD": "Updating password..."
+            "UPDATING_PASSWORD": "Updating password...",
+            "FOLLOWING": "Following",
+            "SAVING": "Saving..."
         },
         "ACTIONS": {
             "LOGOUT": "Logout",
@@ -31,7 +35,14 @@
             "ADD_EMOJI": "Emoji",
             "ADD_PHOTO": "PHOTO",
             "SHARE_NOW": "Share now",
-            "CANCEL": "Cancel"
+            "CANCEL": "Cancel",
+            "BACK": "Back",
+            "SAVE_PHOTO": "Save photo",
+            "VIEW_COVER": "View cover",
+            "CHANGE_PHOTO": "Change profile",
+            "ADD_COVER": "Add cover",
+            "CHANGE_COVER": "Change cover",
+            "REMOVE": "Remove"
         }
     },
     "AUTH": {
@@ -82,7 +93,8 @@
         "EMAILORUSERNAME": "Email or username",
         "CURRENT_PASS": "Current password",
         "NEW_PASS": "New password",
-        "CONFIRM_PASS": "Confirm new password"
+        "CONFIRM_PASS": "Confirm new password",
+        "POST_PRIVACY": "Post privacy"
     },
     "PLACEHOLDER": {
         "CREATE_POST": "What's on your mind, {{name}}?",
@@ -124,8 +136,11 @@
     },
     "PROFILE": {
         "TITLE": "Profile",
-        "FOLLOWERS": "followers",
-        "MUTUAL": "mutual"
+        "FOLLOWERS": "Followers",
+        "FOLLOWING": "Following",
+        "BOOKMARKS": "Bookmarks",
+        "MUTUAL": "mutual",
+        "ABOUT": "Personal details"
     },
     "NOTIFICATIONS": {
         "TITLE": "Notifications"
@@ -145,5 +160,12 @@
     },
     "SUGGESTIONS": {
         "TITLE": "Suggested Friends"
+    },
+    "CHANGE_PHOTO": {
+        "PROFILE_TITLE": "Adjust profile photo",
+        "COVER_TITLE": "Cover post privacy",
+        "PROFILE_DESC": "Drag to reposition and use zoom for perfect framing.",
+        "COVER_DESC": "Choose who can see the post generated for your new cover photo.",
+        "COVER_TIFTLE": "Cover post privacy"
     }
 }

@@ -21,7 +21,7 @@ export class PostsFilterBtnComponent {
         return 'rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 lg:bg-transparent lg:text-slate-600 dark:bg-slate-800/80 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200 lg:dark:bg-transparent';
     }
     if (this.styleMode() === 'profile') {
-      if (this.isActive()) return 'bg-white text-[#1877f2] shadow-sm rounded-lg';
+      if (this.isActive()) return 'bg-white text-[#1877f2] shadow-sm rounded-lg dark:bg-blue-950/60 dark:text-blue-400';
       else
         return 'rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 lg:bg-transparent lg:text-slate-600 dark:bg-slate-800/80 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200 lg:dark:bg-transparent';
     }

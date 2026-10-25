@@ -17,24 +17,24 @@ export class DeleteDialogComponent {
   deleteLabel = input<string>('');
   loadingLabel = input<string>('Deleting...');
 
-  onCloseDialog = output();
-  onConfirm = output();
+  closed = output();
+  submitted = output();
 
   constructor() {
     effect(() => {
       const loading = this.loading();
 
-      if (this.wasLoading() && !loading) this.onCloseDialog.emit();
+      if (this.wasLoading() && !loading) this.closed.emit();
 
       this.wasLoading.set(loading);
     });
   }
 
   closeDeleteDialog(): void {
-    this.onCloseDialog.emit();
+    this.closed.emit();
   }
 
   confirmDelete(): void {
-    this.onConfirm.emit();
+    this.submitted.emit();
   }
 }

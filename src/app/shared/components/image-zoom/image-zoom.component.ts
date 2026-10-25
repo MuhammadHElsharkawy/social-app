@@ -12,9 +12,9 @@ export class ImageZoomComponent {
   imageSrc = input.required<string>();
   imageAlt = input<string>('image');
 
-  onClose = output();
+  closed = output();
 
   handleCloseClick(): void {
-    this.onClose.emit();
+    this.closed.emit();
   }
 }

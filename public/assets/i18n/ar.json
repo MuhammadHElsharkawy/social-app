@@ -13,10 +13,14 @@
         "MESSAGES": {
             "PLEASE_WAIT": "يرجى الانتظار...",
             "LOADING_LIKES": "جاري تحميل الإعجابات...",
+            "LOADING_POSTS": "جاري تحميل المنشورات...",
             "LOADING_COMMENTS": "جاري تحميل التعليقات...",
+            "LOADING_PROFILE": "جاري تحميل الملف الشخصي...",
             "UPDATING": "جاري التحديث...",
             "SHARING": "جاري المشاركة...",
-            "UPDATING_PASSWORD": "جاري تحديث كلمة المرور..."
+            "UPDATING_PASSWORD": "جاري تحديث كلمة المرور...",
+            "FOLLOWING": "تتابع",
+            "SAVING": "جاري الحفظ..."
         },
         "ACTIONS": {
             "LOGOUT": "تسجيل الخروج",
@@ -26,7 +30,14 @@
             "ADD_EMOJI": "إيموجي",
             "ADD_PHOTO": "صورة",
             "SHARE_NOW": "شارك الآن",
-            "CANCEL": "إلغاء"
+            "CANCEL": "إلغاء",
+            "BACK": "رجوع",
+            "SAVE_PHOTO": "حفظ الصورة",
+            "VIEW_COVER": "عرض الغلاف",
+            "ADD_COVER": "إضافة غلاف",
+            "ADD_PROFILE": "إضافة صورة شخصية",
+            "CHANGE_COVER": "تغيير الغلاف",
+            "REMOVE": "حذف"
         }
     },
     "AUTH": {
@@ -77,7 +88,8 @@
         "EMAILORUSERNAME": "البريد الإلكتروني أو اسم المستخدم",
         "CURRENT_PASS": "كلمة المرور الحالية",
         "NEW_PASS": "كلمة المرور الجديدة",
-        "CONFIRM_PASS": "تأكيد كلمة المرور الجديدة"
+        "CONFIRM_PASS": "تأكيد كلمة المرور الجديدة",
+        "POST_PRIVACY": "خصوصية المنشور"
     },
     "PLACEHOLDER": {
         "CREATE_POST": "بما تفكر يا {{name}}؟",
@@ -120,7 +132,10 @@
     "PROFILE": {
         "TITLE": "الملف الشخصي",
         "FOLLOWERS": "متابع",
-        "MUTUAL": "صديق مشترك"
+        "FOLLOWING": "تتابع",
+        "BOOKMARKS": "المحفوظ",
+        "MUTUAL": "صديق مشترك",
+        "ABOUT": "معلومات شخصية"
     },
     "NOTIFICATIONS": {
         "TITLE": "الإشعارات"
@@ -140,5 +155,12 @@
     },
     "SUGGESTIONS": {
         "TITLE": "أصدقاء مقترحة"
+    },
+    "CHANGE_PHOTO": {
+        "PROFILE_TITLE": "ضبط صورة الملف الشخصي",
+        "COVER_TITLE": "خصوصية منشور الغلاف",
+        "PROFILE_DESC": "اسحب لإعادة التمركز واستخدم أداة التكبير للإطار المثالي.",
+        "DESC": "اختر من يمكنه رؤية المنشور الذي تم إنشاؤه لصورة الغلاف الجديدة الخاصة بك.",
+        "COVER_TIFTLE": "خصوصية منشور الغلاف"
     }
 }
