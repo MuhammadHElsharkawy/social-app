@@ -6,11 +6,11 @@ import {
   LucideSettings,
   LucideUser,
 } from '@lucide/angular';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../features/auth/services/auth.service';
 import { IUser } from '../../../core/interfaces/user.interface';
 import { TranslatePipe } from '@ngx-translate/core';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-header',
@@ -20,10 +20,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     LucideMessageCircle,
     LucideMenu,
     LucideSettings,
-    ClickOutsideDirective,
     RouterLink,
     RouterLinkActive,
     TranslatePipe,
+    OverlayModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -50,6 +50,14 @@ export class HeaderComponent {
   handleLogoutClick(): void {
     this.isOpen.set(false);
     this.authService.logOut();
+  }
+
+  openDropdown(): void {
+    this.isOpen.set(true);
+  }
+
+  closeDropdown(): void {
+    this.isOpen.set(false);
   }
 
   toggleDropdown(): void {

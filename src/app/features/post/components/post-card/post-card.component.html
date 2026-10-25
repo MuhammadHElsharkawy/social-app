@@ -241,7 +241,7 @@
     <app-image-zoom
       [imageSrc]="post().image!"
       [imageAlt]="post().user.name + ' post image'"
-      (onClose)="openPostImage.set(false)"
+      (closed)="openPostImage.set(false)"
     ></app-image-zoom>
   }
 
@@ -404,8 +404,8 @@
     desc="This post will be permanently removed from your profile and feed."
     deleteLabel="Delete post"
     loadingLabel="Deleting post..."
-    (onCloseDialog)="closeDeleteDialog()"
-    (onConfirm)="handleConfirmDeleteClick()"
+    (closed)="closeDeleteDialog()"
+    (submitted)="handleConfirmDeleteClick()"
   ></app-delete-dialog>
 }
 
@@ -413,7 +413,7 @@
   <app-share-post
     [post]="post()"
     [loading]="postFacadeService.sharePostLoading()"
-    (onClose)="openShareDialog.set(false)"
+    (closed)="openShareDialog.set(false)"
     (onShare)="postFacadeService.sharePost(post()._id, $event)"
   ></app-share-post>
 }

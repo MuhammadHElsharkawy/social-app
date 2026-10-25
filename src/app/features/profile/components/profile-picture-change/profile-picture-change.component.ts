@@ -14,9 +14,10 @@ import { FormsModule } from '@angular/forms';
 import { IOption, SelectInput } from 'reusable-components';
 import { PostPrivacy } from '../../../post/interfaces/post.interfaces';
 import { IUpdateProfilePictureData } from '../../interfaces/profile.interface';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [ClickOutsideDirective, FormsModule, SelectInput],
+  imports: [ClickOutsideDirective, FormsModule, SelectInput, TranslatePipe],
   selector: 'app-profile-picture-change',
   styleUrl: './profile-picture-change.component.css',
   templateUrl: './profile-picture-change.component.html',
@@ -25,11 +26,11 @@ export class ProfilePictureChangeComponent implements OnInit {
   private wasLoading = signal<boolean>(false);
 
   picture = input.required<File>();
-  loading = input<boolean>(false);
+  loading = input<boolean>(true);
   type = input<'profile' | 'cover'>('cover');
 
-  onClose = output();
-  onSubmit = output<IUpdateProfilePictureData>();
+  closed = output();
+  submitted = output<IUpdateProfilePictureData>();
 
   previewUrl = signal<string | null>(null);
 
@@ -45,7 +46,7 @@ export class ProfilePictureChangeComponent implements OnInit {
     effect(() => {
       const loading = this.loading();
 
-      if (this.wasLoading() && !loading) this.onClose.emit();
+      if (this.wasLoading() && !loading) this.closed.emit();
 
       this.wasLoading.set(loading);
     });
@@ -242,12 +243,12 @@ export class ProfilePictureChangeComponent implements OnInit {
   }
 
   handleCloseClick(): void {
-    this.onClose.emit();
+    this.closed.emit();
   }
 
   async handleSubmit(): Promise<void> {
     const file = await this.savePhoto();
-    this.onSubmit.emit({ picture: file, privacy: this.selectedPrivacy() });
+    this.submitted.emit({ picture: file, privacy: this.selectedPrivacy() });
   }
 
   private setPreview(file: File) {

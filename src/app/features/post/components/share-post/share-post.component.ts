@@ -17,7 +17,7 @@ export class SharePostComponent {
   post = input.required<IPost>();
   loading = input<boolean>(false);
 
-  onClose = output();
+  closed = output();
   onShare = output<ISharePostREQ>();
 
   body = signal<string>('');
@@ -26,14 +26,14 @@ export class SharePostComponent {
     effect(() => {
       const loading = this.loading();
 
-      if (this.wasLoading() && !loading) this.onClose.emit();
+      if (this.wasLoading() && !loading) this.closed.emit();
 
       this.wasLoading.set(loading);
     });
   }
 
   handleCloseClick(): void {
-    this.onClose.emit();
+    this.closed.emit();
   }
 
   handleShareClick(): void {
