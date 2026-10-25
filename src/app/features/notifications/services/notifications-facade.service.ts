@@ -7,43 +7,60 @@ import { toast } from 'ngx-sonner';
 
 @Service()
 export class NotificationsFacadeService {
-  private NotificationsApi = inject(NotificationsApiService);
-  private destroyRef = inject(DestroyRef);
+  private readonly NotificationsApi = inject(NotificationsApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private _notificationsListState = signal<INotification[]>([]);
-  public notificationsList = this._notificationsListState.asReadonly();
+  private readonly _notificationsPage = signal<number>(1);
+  private readonly _hasMore = signal<boolean>(true);
+  private readonly _notificationsListState = signal<INotification[]>([]);
 
-  notificationsFilter = signal<NotificationsFilter>('all');
+  readonly hasMore = this._hasMore.asReadonly();
+  readonly notificationsList = this._notificationsListState.asReadonly();
+
+  readonly notificationsFilter = signal<NotificationsFilter>('all');
 
   filteredNotificationsList = computed<INotification[]>(() => {
     if (this.notificationsFilter() === 'unread')
-      return this._notificationsListState().filter((n) => (!n.isRead));
+      return this._notificationsListState().filter((n) => !n.isRead);
     else return this._notificationsListState();
   });
 
   private _getNotificationsLoadingState = signal<boolean>(false);
-  public getNotificationsLoading = this._getNotificationsLoadingState.asReadonly();
-
   private _readAllLoadingState = signal<boolean>(false);
-  public readAllLoading = this._readAllLoadingState.asReadonly();
-
   private _unreadNotificationsCountState = signal<number>(0);
+  private _nextPageLoadingState = signal<boolean>(false);
+
+  public nextPageLoading = this._nextPageLoadingState.asReadonly();
+  public getNotificationsLoading = this._getNotificationsLoadingState.asReadonly();
+  public readAllLoading = this._readAllLoadingState.asReadonly();
   public unreadNotificationsCount = this._unreadNotificationsCountState.asReadonly();
 
-  getAllNotifications(): void {
-    this._getNotificationsLoadingState.set(true);
+  private updatePaginationState(numberOfPages: number): void {
+    this._hasMore.set(this._notificationsPage() < numberOfPages);
+    if (this._hasMore()) this._notificationsPage.update((p) => p + 1);
+  }
 
-    this.NotificationsApi.getAllNotifications()
+  getAllNotifications(): void {
+    if (this._getNotificationsLoadingState() || !this._hasMore()) return;
+
+    if (this._notificationsPage() === 1) {
+      this._getNotificationsLoadingState.set(true);
+    } else {
+      this._nextPageLoadingState.set(true);
+    }
+
+    this.NotificationsApi.getAllNotifications(this._notificationsPage())
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this._getNotificationsLoadingState.set(false)),
       )
       .subscribe({
         next: (res) => {
-          this._notificationsListState.set(res.data.notifications);
+          this._notificationsListState.update((current) => [...current, ...res.data.notifications]);
+          this.updatePaginationState(res.meta.pagination.numberOfPages);
         },
         error: (err) => {
-          console.log(err);
+          toast.error('Something went wrong!', { description: err.error.message });
         },
       });
   }

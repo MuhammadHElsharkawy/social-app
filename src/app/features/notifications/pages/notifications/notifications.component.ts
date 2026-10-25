@@ -5,6 +5,9 @@ import { NotificationsFacadeService } from '../../services/notifications-facade.
 import { NotificationLoadingComponent } from '../../components/notification-loading/notification-loading.component';
 import { NotificationsEmptyComponent } from '../../components/notifications-empty/notifications-empty.component';
 import { NotificationsFilter } from '../../interfaces/notification.interface';
+import { TranslatePipe } from '@ngx-translate/core';
+import { NearEndDirective } from '../../../../shared/directives/near-end.directive';
+import { LoadingMoreComponent } from '../../../../shared/components/loading-more/loading-more.component';
 
 @Component({
   imports: [
@@ -12,7 +15,10 @@ import { NotificationsFilter } from '../../interfaces/notification.interface';
     NotificationCardComponent,
     NotificationLoadingComponent,
     NotificationsEmptyComponent,
-  ],
+    TranslatePipe,
+    NearEndDirective,
+    LoadingMoreComponent
+],
   selector: 'app-notifications',
   styleUrl: './notifications.component.css',
   templateUrl: './notifications.component.html',
